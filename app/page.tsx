@@ -391,7 +391,7 @@ if (isConnected) {
   const canvas = document.getElementById('bondingCurveChart') as HTMLCanvasElement | null;
   if (canvas) {
   const ctx = canvas.getContext('2d');
-  }  
+  
 
   if (chartRef.current) {
     chartRef.current.destroy();
@@ -453,6 +453,7 @@ if (isConnected) {
     },
   });
   }
+  }  
 }}catch{};
 }
 
