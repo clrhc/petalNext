@@ -790,7 +790,7 @@ useEffect(() => {
   }}>
     ETH
   </span>
-    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 ETH" onChange={(e) => setBuyValue(e.target.value)} value={buyValue} type="number" />
+    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 ETH" onChange={(e) => setBuyValue(Number(e.target.value))} value={buyValue} type="number" />
     </div>
    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(2)} ETH</p>
      <div style={{ position: 'relative' }}>
@@ -824,7 +824,7 @@ useEffect(() => {
   }}>
     PETAL
   </span>
-    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 PETAL" onChange={(e) => setSellValue(e.target.value)} value={sellValue} type="number" />
+    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 PETAL" onChange={(e) => setSellValue(Number(e.target.value))} value={sellValue} type="number" />
     </div>
     <p className="rightSide">Balance: {Number(ethers.formatUnits(String(petalBalance), 18)).toFixed(2)} PETAL</p>
       <div style={{ position: 'relative' }}>
@@ -858,7 +858,7 @@ useEffect(() => {
     color: '#FFF'
   }}>
     %
-  </span><input id="refInput" className="inputText slipBox userText outlineTeal" placeholder="Slippage" onChange={(e) => setSlippage(e.target.value)} value={slippage} type="number" />
+  </span><input id="refInput" className="inputText slipBox userText outlineTeal" placeholder="Slippage" onChange={(e) => setSlippage(Number(e.target.value))} value={slippage} type="number" />
     </div></div>
     {swapState === 0 ? <>
     <div style={{ position: 'relative' }}>
@@ -872,7 +872,7 @@ useEffect(() => {
   }}>
     ETH
   </span>
-    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 ETH" onChange={(e) => setBuyValue(e.target.value)} value={buyValue} type="number" />
+    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 ETH" onChange={(e) => setBuyValue(Number(e.target.value))} value={buyValue} type="number" />
     </div>
    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(2)} ETH</p>
      <div style={{ position: 'relative' }}>
@@ -906,7 +906,7 @@ useEffect(() => {
   }}>
     VIRTUE
   </span>
-    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 VIRTUE" onChange={(e) => setSellValue(e.target.value)} value={sellValue} type="number" />
+    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 VIRTUE" onChange={(e) => setSellValue(Number(e.target.value))} value={sellValue} type="number" />
     </div>
     <p className="rightSide">Balance: {Number(ethers.formatUnits(String(virtueBalance), 18)).toFixed(2)} VIRTUE</p>
       <div style={{ position: 'relative' }}>
@@ -944,7 +944,7 @@ useEffect(() => {
     color: '#FFF'
   }}>
     %
-  </span><input id="refInput" className="inputText slipBox userText outlineTeal" placeholder="Slippage" onChange={(e) => setSlippage(e.target.value)} value={slippage} type="number" />
+  </span><input id="refInput" className="inputText slipBox userText outlineTeal" placeholder="Slippage" onChange={(e) => setSlippage(Number(e.target.value))} value={slippage} type="number" />
     </div></div>
     {swapState === 0 ? <>
     <div style={{ position: 'relative' }}>
@@ -958,7 +958,7 @@ useEffect(() => {
   }}>
     WEED
   </span>
-    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 WEED" onChange={(e) => setBuyValue(e.target.value)} value={buyValue} type="number" />
+    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 WEED" onChange={(e) => setBuyValue(Number(e.target.value))} value={buyValue} type="number" />
     </div>
    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(weedBalance), 18)).toFixed(2)} WEED</p>
      <div style={{ position: 'relative' }}>
@@ -991,7 +991,7 @@ useEffect(() => {
   }}>
     METH
   </span>
-    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 METH" onChange={(e) => setSellValue(e.target.value)} value={sellValue} type="number" />
+    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 METH" onChange={(e) => setSellValue(Number(e.target.value))} value={sellValue} type="number" />
     </div>
     <p className="rightSide">Balance: {Number(ethers.formatUnits(String(methBalance), 18)).toFixed(2)} METH</p>
       <div style={{ position: 'relative' }}>
@@ -1034,7 +1034,7 @@ useEffect(() => {
   }}>
     ETH
   </span>
-    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 ETH" onChange={(e) => setBidValue(e.target.value)} value={bidValue} type="number" />
+    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 ETH" onChange={(e) => setBidValue(Number(e.target.value))} value={bidValue} type="number" />
     </div>
    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(2)} ETH</p>
    <div className="swapButtons"><p className={`${bidState && "tealActive"}`} onClick={() => setBidState(true)}>HIGHER</p><p className={`${!bidState && "tealActive"}`} onClick={() => setBidState(false)}>LOWER</p></div>
@@ -1071,7 +1071,7 @@ useEffect(() => {
   }}>
     ETH
   </span>
-    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 ETH" onChange={(e) => setBidValue(e.target.value)} value={bidValue} type="number" />
+    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 ETH" onChange={(e) => setBidValue(Number(e.target.value))} value={bidValue} type="number" />
     </div>
    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(2)} ETH</p>
    <div className="swapButtons"><p className={`${bidState && "tealActive"}`} onClick={() => setBidState(true)}>HIGHER</p><p className={`${!bidState && "tealActive"}`} onClick={() => setBidState(false)}>LOWER</p></div>
@@ -1108,7 +1108,7 @@ useEffect(() => {
   }}>
     ETH
   </span>
-    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 ETH" onChange={(e) => setBidValue(e.target.value)} value={bidValue} type="number" />
+    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 ETH" onChange={(e) => setBidValue(Number(e.target.value))} value={bidValue} type="number" />
     </div>
    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(2)} ETH</p>
    <div className="swapButtons"><p className={`${bidState && "tealActive"}`} onClick={() => setBidState(true)}>HIGHER</p><p className={`${!bidState && "tealActive"}`} onClick={() => setBidState(false)}>LOWER</p></div>
