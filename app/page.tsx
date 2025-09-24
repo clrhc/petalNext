@@ -119,6 +119,7 @@ export default function Home() {
   const sekaiContract = new ethers.Contract(Data.virtueNFT, nft.abi, provider);
   const uniswapRouterContract = new ethers.Contract(Data.uniswapRouter, uniswapRouter.abi, provider);
   const chartRef = useRef<Chart | null>(null);
+  type Address = `0x${string}`;
 
   useEffect(() =>{
     async function init(){
@@ -477,7 +478,7 @@ if (isConnected) {
       if(networkId === baseId){
          await writeContract({ 
           abi: referral.abi,
-          address: Data.referralAddress,
+          address: Data.referralAddress as Address,
           functionName: 'register',
           args: [userRef,newRef],
        });}
@@ -488,7 +489,7 @@ if (isConnected) {
        if(networkId === baseId){
          await writeContract({ 
           abi: referral.abi,
-          address: Data.referralAddress,
+          address: Data.referralAddress as Address,
           functionName: 'register',
           args: [userRef,newRef],
        });}
@@ -498,7 +499,7 @@ if (isConnected) {
     if(networkId === baseId){
       await writeContract({
         abi: factory.abi,
-        address: Data.petalFactory,
+        address: Data.petalFactory as Address,
         functionName: 'buy',
         args: [Data.petalToken, ethers.parseUnits((buyValue / (Number(spotPrice) / 1e18) - (((buyValue / (Number(spotPrice) / 1e18)) / 100) * 3 + ((buyValue / (Number(spotPrice) / 1e18)) / 100) * slippage)).toFixed(18),18), address],
         value: ethers.parseUnits(String(buyValue)),
@@ -510,7 +511,7 @@ if (isConnected) {
     if(networkId === baseId){
       await writeContract({
         abi: factory.abi,
-        address: Data.petalFactory,
+        address: Data.petalFactory as Address,
         functionName: 'sell',
         args: [Data.petalToken, ethers.parseUnits(String(sellValue)), ethers.parseUnits((sellValue * (Number(spotPrice) / 1e18) - ((sellValue * (Number(spotPrice) / 1e18) / 100) * 3) - ((sellValue * (Number(spotPrice) / 1e18) / 100) * slippage)).toFixed(18),18), address],
       })
@@ -521,7 +522,7 @@ if (isConnected) {
     if(networkId === baseId){
       await writeContract({
         abi: factory.abi,
-        address: Data.virtueFactory,
+        address: Data.virtueFactory as Address,
         functionName: 'buy',
         args: [Data.virtueToken, ethers.parseUnits((buyValue / (Number(virtuePrice) / 1e18) - (((buyValue / (Number(virtuePrice) / 1e18)) / 100) * 3 + ((buyValue / (Number(virtuePrice) / 1e18)) / 100) * slippage)).toFixed(18),18), address],
         value: ethers.parseUnits(String(buyValue)),
@@ -533,7 +534,7 @@ if (isConnected) {
     if(networkId === baseId){
       await writeContract({
         abi: factory.abi,
-        address: Data.virtueFactory,
+        address: Data.virtueFactory as Address,
         functionName: 'sell',
         args: [Data.virtueToken, ethers.parseUnits(String(sellValue)), ethers.parseUnits((sellValue * (Number(virtuePrice) / 1e18) - ((sellValue * (Number(virtuePrice) / 1e18) / 100) * 3) - ((sellValue * (Number(virtuePrice) / 1e18) / 100) * slippage)).toFixed(18),18), address],
       });
@@ -544,7 +545,7 @@ if (isConnected) {
     if(networkId === baseId){
       await writeContract({
         abi: prediction.abi,
-        address: predContract,
+        address: predContract as Address,
         functionName: 'bid',
         args: [ethers.parseUnits(String(bidValue)),bidState],
         value: ethers.parseUnits(String(bidValue)),
@@ -556,7 +557,7 @@ if (isConnected) {
     if(networkId === baseId){
       await writeContract({
         abi: prediction.abi,
-        address: predContract,
+        address: predContract as Address,
         functionName: 'resolveBid',
       });
     }
@@ -566,7 +567,7 @@ if (isConnected) {
     if(networkId === baseId){
       await writeContract({
         abi: rewards.abi,
-        address: Data.petalRewards,
+        address: Data.petalRewards as Address,
         functionName: 'claimRewards',
       });
     }
@@ -576,7 +577,7 @@ if (isConnected) {
     if(networkId === baseId){
       await writeContract({
         abi: factory.abi,
-        address: Data.petalToken,
+        address: Data.petalToken as Address,
         functionName: 'approve',
         args: [Data.petalFactory, ethers.parseUnits(String(100000000))],
       });
@@ -587,7 +588,7 @@ if (isConnected) {
     if(networkId === baseId){
       await writeContract({
         abi: factory.abi,
-        address: Data.virtueToken,
+        address: Data.virtueToken as Address,
         functionName: 'approve',
         args: [Data.virtueFactory, ethers.parseUnits(String(100000000000))],
       });
@@ -598,7 +599,7 @@ if (isConnected) {
       if(networkId === baseId){
         await writeContract({
           abi: token.abi,
-          address: contract,
+          address: contract as Address,
           functionName: 'approve',
           args: [Data.uniswapRouter, ethers.parseUnits(String(1000000000))],
         });
@@ -609,7 +610,7 @@ if (isConnected) {
   if (networkId === baseId) {
       await writeContract({
         abi: uniswapRouter.abi,
-        address: Data.uniswapRouter,
+        address: Data.uniswapRouter as Address,
         functionName: 'swapExactTokensForTokensSupportingFeeOnTransferTokens',
         args: [ethers.parseUnits(String(buyValue)), ethers.parseUnits((buyValue / (Number(weedMethPrice) / 1e18) - (((buyValue / (Number(weedMethPrice) / 1e18)) / 100) * slippage)).toFixed(18),18), [Data.petalFactory, contract], address, String(Number((Date.now()/1000)+10000).toFixed(0))],
         });
@@ -620,7 +621,7 @@ if (isConnected) {
   if (networkId === baseId) {
       await writeContract({
         abi: uniswapRouter.abi,
-        address: Data.uniswapRouter,
+        address: Data.uniswapRouter as Address,
         functionName: 'swapExactTokensForTokensSupportingFeeOnTransferTokens',
         args: [ethers.parseUnits(String(sellValue)), ethers.parseUnits((sellValue * (Number(weedMethPrice) / 1e18) - ((sellValue * (Number(weedMethPrice) / 1e18) / 100) * slippage)).toFixed(18),18), [contract, Data.petalFactory], address, String(Number((Date.now()/1000)+10000).toFixed(0))],
         });
@@ -631,7 +632,7 @@ if (isConnected) {
       if(networkId === baseId){
         await writeContract({
           abi: uniswapRouter.abi,
-          address: Data.uniswapRouter,
+          address: Data.uniswapRouter as Address,
           functionName: 'swapExactTokensForETHSupportingFeeOnTransferTokens',
           args: [ethers.parseUnits(String(sellValue)), ethers.parseUnits((sellValue * (Number(virtuePrice) / 1e18) - ((sellValue * (Number(virtuePrice) / 1e18) / 100) * 3) - ((sellValue * (Number(virtuePrice) / 1e18) / 100) * slippage)).toFixed(18),18), [contract, Data.WETH], address, String(Number((Date.now()/1000)+10000).toFixed(0))],
         })
@@ -642,7 +643,7 @@ if (isConnected) {
       if(networkId === baseId){
         await writeContract({
           abi: uniswapRouter.abi,
-          address: Data.uniswapRouter,
+          address: Data.uniswapRouter as Address,
           functionName: 'swapExactETHForTokensSupportingFeeOnTransferTokens',
           args: [ethers.parseUnits((buyValue / (Number(virtuePrice) / 1e18) - (((buyValue / (Number(virtuePrice) / 1e18)) / 100) * 3 + ((buyValue / (Number(virtuePrice) / 1e18)) / 100) * slippage)).toFixed(18),18), [Data.WETH, contract], address, String(Number((Date.now()/1000)+10000).toFixed(0))],
           value: ethers.parseUnits(String(buyValue)),
