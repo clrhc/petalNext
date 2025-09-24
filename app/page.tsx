@@ -2,7 +2,6 @@
 import './globals.css';
 import React,{useState, useEffect, useRef} from 'react';
 import Data from './data.json';
-import { useMiniKit } from '@coinbase/onchainkit/minikit';
 import Wallet from './wallet';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import { useAppKit } from "@reown/appkit/react";
@@ -42,14 +41,6 @@ Chart.register(
 
 
 export default function Home() {
-
-    const { setFrameReady, isFrameReady } = useMiniKit();
-
-   useEffect(() => {
-    if (!isFrameReady) {
-      setFrameReady();
-    }
-  }, [setFrameReady, isFrameReady]);
 
   const ethers = require("ethers");
   const { address, isConnected } = useAccount();

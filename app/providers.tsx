@@ -1,5 +1,6 @@
 'use client';
 import type { ReactNode } from 'react'; 
+import {useEffect} from 'react';
 import { sdk } from '@farcaster/miniapp-sdk';
 import { createAppKit } from '@reown/appkit/react';
 import { WagmiProvider } from 'wagmi';
@@ -43,7 +44,7 @@ createAppKit({
 });
 
 export function Providers({ children }: { children: ReactNode }) {
-  useEffect(() => {
+    useEffect(() => {
         sdk.actions.ready();
     }, []);
   return (
