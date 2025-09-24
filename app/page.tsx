@@ -395,7 +395,7 @@ if (isConnected) {
 
   if (chartRef.current) {
     chartRef.current.destroy();
-  }
+  
 
   chartRef.current = new Chart(ctx, {
     type: 'line',
@@ -452,6 +452,7 @@ if (isConnected) {
       },
     },
   });
+  }
 }}catch{};
 }
 
