@@ -153,6 +153,12 @@ if (isConnected) {
   setNewCheck (checkNewRef_  !== "0x0000000000000000000000000000000000000000");}catch{};
 
    try{
+  const address = userInfo[4];
+
+  if (!address || !/^0x[a-fA-F0-9]{40}$/.test(address)) {
+  console.error("Invalid address:", address);
+  return;
+  }
   const ethBalancePromise     = provider.getBalance(address);
   const petalBalancePromise   = petalContract.balanceOf(address);
   const petalLaunchedPromise =  factoryContract.tokenLaunched(Data.petalToken);
