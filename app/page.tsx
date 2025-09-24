@@ -196,21 +196,18 @@ if (isConnected) {
   const virtueAllowancePromise = virtueContract.allowance(address, Data.virtueFactory);
   const virtueRouterAllowancePromise = virtueContract.allowance(address, Data.uniswapRouter);
   const virtueCurvePromise = virtueFactory.bondingCurves(Data.virtueToken);
-  const virtueInPromise = virtueFactory.bondingCurves(Data.virtueToken);
   const [
     virtueBalance_,
     virtueLaunched_,
     virtueAllowance_,
     virtueRouterAllowance_,
-    virtueCurve_,
-    virtueIn_
+    virtueCurve_
   ] = await Promise.all([
     virtueBalancePromise,
     virtueLaunchedPromise,
     virtueAllowancePromise,
     virtueRouterAllowancePromise,
-    virtueCurvePromise,
-    virtueInPromise
+    virtueCurvePromise
   ]);
 
   if(virtueLaunched_){
