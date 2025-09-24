@@ -651,16 +651,21 @@ if (isConnected) {
       }
     }
 
-  useEffect(() => {
-    if(userInfo.length === 5 && address === userInfo[3]){
-    const displayStat = document.getElementById('displayStat');
-    const walletSpan = document.getElementById('walletSpan');
-    if(hoverWallet){
+useEffect(() => {
+  const displayStat = document.getElementById('displayStat');
+  const walletSpan = document.getElementById('walletSpan');
+
+  if (!walletSpan) return;
+
+  if (userInfo.length === 5 && address === userInfo[3]) {
+    if (!displayStat) return;
+
+    if (hoverWallet) {
       displayStat.style.display = 'initial';
       walletSpan.style.borderBottom = 'transparent';
       walletSpan.style.borderBottomLeftRadius = '0px';
       walletSpan.style.borderBottomRightRadius = '0px';
-    }else{
+    } else {
       displayStat.style.display = 'none';
       displayStat.style.border = '2px solid rgba(0, 255, 255, 0.8)';
       displayStat.style.borderTop = 'transparent';
@@ -668,17 +673,16 @@ if (isConnected) {
       walletSpan.style.borderBottomLeftRadius = '12px';
       walletSpan.style.borderBottomRightRadius = '12px';
     }
-  }else{
-    const walletSpan = document.getElementById('walletSpan');
-    if(hoverWallet){
+  } else {
+    if (hoverWallet) {
       walletSpan.style.borderBottom = '2px solid rgba(0, 255, 255, 0.8)';
-    }else{
+    } else {
       walletSpan.style.borderBottom = '2px solid rgba(0, 255, 255, 0.1)';
       walletSpan.style.borderBottomLeftRadius = '12px';
       walletSpan.style.borderBottomRightRadius = '12px';
     }
   }
-  });
+}, [userInfo, address, hoverWallet]);
 
    useEffect(() => {
     const handleResize = () => {
