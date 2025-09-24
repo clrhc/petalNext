@@ -140,7 +140,7 @@ if (isConnected) {
     Number(userInfo_[1]),
     String(userInfo_[2]),
     String(userInfo_[3]),
-    String(userInfo_[4]),
+    String(address),
   ]);}catch{};
   try{
   const checkUserRefPromise   = referralContract.refStore(userRef);
