@@ -357,7 +357,7 @@ if (isConnected) {
 ]);
   setNftBalance(Number(nftBalance_));
   setRewardsAvailable(Number(rewards_));
-}catch(){};
+}catch{};
 }
   try{
   const bondingCurve_ = await factoryContract.bondingCurves(Data.petalToken);
