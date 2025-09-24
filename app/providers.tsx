@@ -22,7 +22,7 @@ const metadata = {
 };
 
 // 3. Set the networks (as a non-empty tuple)
-const networks = [sepolia] as [typeof baseSepolia]; 
+const networks = [sepolia] as [typeof sepolia]; 
 
 // 4. Create Wagmi Adapter
 const wagmiAdapter = new WagmiAdapter({
