@@ -5,6 +5,7 @@ import Data from './data.json';
 import Wallet from './wallet';
 import {ethers} from 'ethers';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
+import { Contract } from 'viem';
 import { useAppKit } from "@reown/appkit/react";
 import referral from './abis/referral.json';
 import prediction from './abis/prediction.json';
@@ -541,7 +542,7 @@ if (isConnected) {
     }
   }
 
-    const bidPrediction = async (predContract) => {
+    const bidPrediction = async (predContract: Contract) => {
     if(networkId === baseId){
       await writeContract({
         abi: prediction.abi,
@@ -553,7 +554,7 @@ if (isConnected) {
     }
   }
 
-   const resolveBid = async (predContract) => {
+   const resolveBid = async (predContract: Contract) => {
     if(networkId === baseId){
       await writeContract({
         abi: prediction.abi,
@@ -595,7 +596,7 @@ if (isConnected) {
     }
   }
 
-    const approveRouter = async (contract) => {
+    const approveRouter = async (contract: Contract) => {
       if(networkId === baseId){
         await writeContract({
           abi: token.abi,
@@ -606,7 +607,7 @@ if (isConnected) {
       }
     }
 
-    const buyRouter = async (contract) => {
+    const buyRouter = async (contract: Contract) => {
   if (networkId === baseId) {
       await writeContract({
         abi: uniswapRouter.abi,
@@ -617,7 +618,7 @@ if (isConnected) {
       }
     };
 
-     const sellRouter = async (contract) => {
+     const sellRouter = async (contract: Contract) => {
   if (networkId === baseId) {
       await writeContract({
         abi: uniswapRouter.abi,
@@ -628,7 +629,7 @@ if (isConnected) {
       }
     };
 
-    const sellEth = async (contract) => {
+    const sellEth = async (contract: Contract) => {
       if(networkId === baseId){
         await writeContract({
           abi: uniswapRouter.abi,
@@ -639,7 +640,7 @@ if (isConnected) {
       }
     }
 
-      const buyEth = async (contract) => {
+      const buyEth = async (contract: Contract) => {
       if(networkId === baseId){
         await writeContract({
           abi: uniswapRouter.abi,
