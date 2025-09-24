@@ -466,11 +466,11 @@ if (isConnected) {
       }
   });
 
-  const checkRef = (e) => {
-    const input = e.target.value;
-    const regex = /^[a-zA-Z0-9]*$/;
-    setError(!regex.test(input));
-  }
+  const checkRef = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const input = e.target.value;
+  const regex = /^[a-zA-Z0-9]*$/;
+  setError(!regex.test(input));
+};
 
    const handleKeyDown = async (e) => {
     if (e.key === 'Enter') {
