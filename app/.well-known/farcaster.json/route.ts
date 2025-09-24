@@ -13,18 +13,18 @@ return Response.json({
     "signature": ""
   },
   "baseBuilder": {
-    "allowedAddresses": [""] // add your Base Account address here
+    "allowedAddresses": ["0x0870df064d160f40c8f6c966dca25db9326b23f4"] // add your Base Account address here
   },
   "miniapp": {
     "version": "1",
-    "name": "Example Mini App",
-    "homeUrl": "https://ex.co",
-    "iconUrl": "https://ex.co/i.png",
+    "name": "Petal Finance",
+    "homeUrl": "https://petal.wtf",
+    "iconUrl": "https://petal.wtf/i.png",
     "splashImageUrl": "https://ex.co/l.png",
     "splashBackgroundColor": "#000000",
     "webhookUrl": "https://ex.co/api/webhook",
-    "subtitle": "Fast, fun, social",
-    "description": "A fast, fun way to challenge friends in real time.",
+    "subtitle": "Petal Finance",
+    "description": "V2 DeFi and Meme Markets.",
     "screenshotUrls": [
       "https://ex.co/s1.png",
       "https://ex.co/s2.png",
@@ -33,9 +33,9 @@ return Response.json({
     "primaryCategory": "social",
     "tags": ["example", "miniapp", "baseapp"],
     "heroImageUrl": "https://ex.co/og.png",
-    "tagline": "Play instantly",
-    "ogTitle": "Example Mini App",
-    "ogDescription": "Challenge friends in real time.",
+    "tagline": "Register Now for Free Rewards!",
+    "ogTitle": "Petal Financce",
+    "ogDescription": "V2 DeFi and Meme Markets.",
     "ogImageUrl": "https://ex.co/og.png",
     "noindex": true
   }
