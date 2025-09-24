@@ -1,0 +1,444 @@
+@import url('https://fonts.cdnfonts.com/css/nexa-bold');
+@import url('https://fonts.cdnfonts.com/css/netraly-personal-use');
+@import url('https://fonts.cdnfonts.com/css/segoe-ui-4');
+
+*{
+  font-family: 'Segoe UI 400', sans-serif;
+  font-weight: 700;
+}
+
+html, body {
+  overflow-x: hidden;
+}
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #008080; /* Teal base */
+  background-image:
+    linear-gradient(120deg, rgba(0, 0, 0, 0.4) 0%, transparent 50%),
+    linear-gradient(240deg, rgba(0, 0, 0, 0.3) 20%, transparent 70%),
+    linear-gradient(135deg, #004040 0%, #000000 100%);
+  background-blend-mode: overlay;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #e0ffff;
+}
+
+.refDiv{
+  background-color: rgba(0, 255, 255, 0.05); /* subtle teal glass effect */
+  border: 2px solid rgba(0, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 20px;
+  min-height: 400px;
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.05);
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+.menuButtons, .swapButtons{
+  display: flex;
+  justify-content: center;
+}
+
+.menuButtons p, .swapButtons p{
+  background-color: rgba(0, 255, 255, 0.05); /* subtle teal glass effect */
+  border: 2px solid rgba(0, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 10px;
+  margin: 10px 5px 10px 10px;
+  width: 85px;
+  border-bottom: transparent;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  transform: translateY(10px);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.05);
+  display: grid;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+}
+
+.swapButtons p{
+  width: 100px;
+  height: 30px;
+  border: 2px solid rgba(0, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.nav{
+  display: grid;
+  align-items: center;
+  position: absolute;
+  border-radius: 12px;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50svw;
+  height: 100px;
+  background-color: rgba(33,33,33,0.4);
+}
+
+.logoSpan{
+  position: absolute;
+  top: 0;
+  left: 20px;
+}
+
+.logo{
+  position: absolute;
+  left: 20px;
+  width: 64px;
+  height: 64px;
+}
+
+.logoText{
+    position: absolute;
+  left: 90px;
+  font-size: 2rem;
+  font-family: 'Netraly Personal Use', sans-serif;
+  letter-spacing: 2px;
+}
+
+.heading{
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+
+.heading h2{
+  font-family: 'Nexa', sans-serif;
+  font-weight: 700;
+  font-size: 3rem;
+  margin: 0;
+  padding: 0;
+}
+
+.heading p{
+  text-align: center;
+}
+
+.heading img{
+  width: 100px;
+  margin: 0 auto;
+}
+
+.walletButtons{
+  position: absolute;
+  right: 20px;
+  text-align: center;
+  background-color: rgba(0, 255, 255, 0.05); /* subtle teal glass effect */
+  border: 2px solid rgba(0, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0px 10px 0px 10px;
+  width: 100px;
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.05);
+}
+
+.userStats{
+  display: none;
+  position: absolute;
+  right: 20px;
+  top: 77px;
+  background-color: rgba(0, 255, 255, 0.05); /* subtle teal glass effect */
+  border: 2px solid rgba(0, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0px 10px 0px 10px;
+  width: 100px;
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.05);
+  border-top: transparent;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
+.xpNav{
+   display: flex;
+   align-items: center;
+   position: absolute;
+   right: 160px;
+   font-size: 2rem;
+}
+
+.xpText{
+  display: flex;
+  align-items: center;
+}
+
+.xpText img{
+  width: 30px;
+  height: 30px;
+}
+
+.xpNav img{
+  width: 45px;
+  height: 45px;
+}
+
+.walletButtons p {
+  font-family: 'Nexa', sans-serif;
+}
+
+.walletButtons:hover, .enterButton:hover, .swapButtons p:hover{
+  border: 2px solid rgba(0, 255, 255, 0.8);
+}
+
+.enterButton{
+  display: grid;
+  justify-content: center;
+  text-align: center;
+  background-color: rgba(0, 255, 255, 0.05); /* subtle teal glass effect */
+  border: 2px solid rgba(0, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0px 10px 0px 10px;
+  width: 100px;
+  margin: 0 auto;
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.05);
+}
+
+.inputText{
+  border-radius: 12px;
+  padding: 10px;
+  margin: 20px;
+  font-size: 2rem;
+  color: #fff;
+  background: rgba(33,33,33,0.4);
+  height: 30px;
+  outline: none;
+  border: none;
+}
+
+.pointer{
+  cursor: pointer;
+}
+
+.rightSide{
+  display: grid;
+  justify-content: right;
+  margin: 0;
+  transform: translate(-20px,-15px);
+}
+
+.outlineRed{
+  border: 2px solid red;
+}
+
+.outlineGreen{
+  outline: 2px solid green;
+}
+
+.outlineTeal{
+  outline: 2px solid teal;
+}
+
+.outlineTeal:focus{
+  outline: 2px solid rgba(0, 255, 255, 0.8);
+}
+
+.homeHeader{
+  display: grid;
+  justify-content: center;
+  padding-top: 200px;
+  width: 100svw;
+}
+
+.tealActive{
+  border: 2px solid rgba(0, 255, 255, 0.8) !important;
+}
+
+.botBor{
+  border-bottom: transparent !important;
+}
+
+.slipBox{
+  width: 50px;
+}
+
+.ethPrice{
+  text-align: center;
+  display: grid;
+  justify-content: center;
+}
+
+.bidPrice{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+  /* width */
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #333; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 255, 0.3); 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 255, 0.6); 
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number], input[type=text] {
+  -moz-appearance: textfield;
+}
+
+
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/* Loading bar styling */
+#loading-bar {
+  position: fixed;
+  top: 0;
+  left: -50%;
+  width: 50%;
+  height: 3px;
+  background: white;
+  box-shadow: 0 0 10px white;
+  animation: loadingMove 1s linear infinite;
+  z-index: 9999;
+}
+
+/* Animation keyframes */
+@keyframes loadingMove {
+  0% {
+    left: -50%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.slipBox{
+  width: 100px;
+  font-size: 1.5rem;
+  height: 29px;
+}
+
+.virtueLink{
+  text-decoration: underline;
+  color: white;
+}
+
+@media(max-width: 960px){
+  .walletButtons{
+    right: 5px;
+    top: 40px;
+  }
+  .xpNav{
+    top: 35px;
+    left: 15px;
+  }
+  .xpNav p{
+    font-size: 1.25rem;
+  }
+  .xpNav img{
+    width: 32px;
+    height: 32px;
+  }
+  .logoSpan{
+    left: 5px;
+    top: -10px;
+  }
+  .logo{
+    left: 0px;
+    width: 32px;
+    height: 32px;
+    transform: translateY(25%);
+  }
+  .logoText{
+    left: 42px;
+    font-size: 1.25rem;
+  }
+  .heading h2{
+    font-size: 1.25rem;
+  }
+  .heading img{
+    width: 50px;
+  }
+  #bondingCurveChart{
+    display: grid;
+    width: 90svw;
+    margin: 0 auto;
+  }
+  .coinInfo{
+    display: grid;
+    justify-content: left;
+    max-width: 90svw;
+    text-align: left;
+    font-size: 1rem;
+  }
+  .menuButtons p{
+    padding: 5px;
+    font-size: 0.75rem;
+    width: 55px;
+    margin: 5px 0px 10px 5px;
+  }
+  .refDiv{
+    display: revert;
+    margin: 0 auto;
+    width: 85svw;
+  }
+
+  .refDiv h3{
+    font-size: 0.75rem;
+  }
+
+  .refDiv p{
+    font-size: 0.75rem;
+  }
+  .inputBox{
+    width: 70svw;
+  }
+  .ethPrice{
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 960px) and (min-width: 600px) {
+  .inputAfter {
+    right: 100px !important;
+  }
+  .rightSide{
+    transform: translate(-100px, -15px);
+  }
+}
+
