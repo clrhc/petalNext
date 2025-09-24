@@ -3,6 +3,7 @@ import './globals.css';
 import React,{useState, useEffect, useRef} from 'react';
 import Data from './data.json';
 import Wallet from './wallet';
+import {ethers} from 'ethers';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import { useAppKit } from "@reown/appkit/react";
 import referral from './abis/referral.json';
@@ -42,7 +43,6 @@ Chart.register(
 
 export default function Home() {
 
-  const ethers = require("ethers");
   const { address, isConnected } = useAccount();
   const {open} = useAppKit();
   const [baseId] = useState(11155111);
@@ -64,7 +64,6 @@ export default function Home() {
   const [rewardsAvailable, setRewardsAvailable] = useState(0);
   const [petalAllowance, setPetalAllowance] = useState(0);
   const [virtueAllowance, setVirtueAllowance] = useState(0);
-  const [virtueRouterAllowance, setVirtueRouterAllowance] = useState(0);
   const [weedAllowance, setWeedAllowance] = useState(0);
   const [methAllowance, setMethAllowance] = useState(0);
   const [checkBidEth, setCheckBidEth] = useState(0);
@@ -126,11 +125,11 @@ export default function Home() {
      
 if (isConnected) {
      try{
-  let userInfoPromise       = referralContract.userInfo(address);
-  let checkUserRefPromise   = referralContract.refStore(userRef);
-  let checkNewRefPromise    = referralContract.refStore(newRef);
+  const userInfoPromise       = referralContract.userInfo(address);
+  const checkUserRefPromise   = referralContract.refStore(userRef);
+  const checkNewRefPromise    = referralContract.refStore(newRef);
  
-  let [
+  const [
     userInfo_,
     checkUserRef_,
     checkNewRef_
@@ -152,16 +151,16 @@ if (isConnected) {
   ]);
 
   setUserCheck(checkUserRef_ !== "0x0000000000000000000000000000000000000000");
-  setNewCheck (checkNewRef_  !== "0x0000000000000000000000000000000000000000");}catch(error){};
+  setNewCheck (checkNewRef_  !== "0x0000000000000000000000000000000000000000");}catch(){};
 
    try{
-  let ethBalancePromise     = provider.getBalance(address);
-  let petalBalancePromise   = petalContract.balanceOf(address);
-  let petalLaunchedPromise =  factoryContract.tokenLaunched(Data.petalToken);
-  let petalAllowancePromise = petalContract.allowance(address, Data.petalFactory);
-  let petalRouterAllowancePromise = petalContract.allowance(address, Data.uniswapRouter);
-  let petalCurvePromise = factoryContract.bondingCurves(Data.petalToken);
-  let [
+  const ethBalancePromise     = provider.getBalance(address);
+  const petalBalancePromise   = petalContract.balanceOf(address);
+  const petalLaunchedPromise =  factoryContract.tokenLaunched(Data.petalToken);
+  const petalAllowancePromise = petalContract.allowance(address, Data.petalFactory);
+  const petalRouterAllowancePromise = petalContract.allowance(address, Data.uniswapRouter);
+  const petalCurvePromise = factoryContract.bondingCurves(Data.petalToken);
+  const [
     ethBalance_,
     petalBalance_,
     petalLaunched_,
@@ -178,7 +177,7 @@ if (isConnected) {
   ]);
 
   if(petalLaunched_){
-  let petalEthPricePromise = await uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[Data.petalToken,Data.WETH]);
+  const petalEthPricePromise = await uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[Data.petalToken,Data.WETH]);
   setSpotPrice(petalEthPricePromise[1]);
   setPetalAllowance(petalRouterAllowance_);
   }else{
@@ -189,16 +188,16 @@ if (isConnected) {
   setEthBalance(ethBalance_);
   setPetalBalance(petalBalance_);
   setPetalLaunched(petalLaunched_);
-  }catch(error){};
+  }catch(){};
 
     try{
-  let virtueBalancePromise   = virtueContract.balanceOf(address);
-  let virtueLaunchedPromise = virtueFactory.tokenLaunched(Data.virtueToken);
-  let virtueAllowancePromise = virtueContract.allowance(address, Data.virtueFactory);
-  let virtueRouterAllowancePromise = virtueContract.allowance(address, Data.uniswapRouter);
-  let virtueCurvePromise = virtueFactory.bondingCurves(Data.virtueToken);
-  let virtueInPromise = virtueFactory.bondingCurves(Data.virtueToken);
-  let [
+  const virtueBalancePromise   = virtueContract.balanceOf(address);
+  const virtueLaunchedPromise = virtueFactory.tokenLaunched(Data.virtueToken);
+  const virtueAllowancePromise = virtueContract.allowance(address, Data.virtueFactory);
+  const virtueRouterAllowancePromise = virtueContract.allowance(address, Data.uniswapRouter);
+  const virtueCurvePromise = virtueFactory.bondingCurves(Data.virtueToken);
+  const virtueInPromise = virtueFactory.bondingCurves(Data.virtueToken);
+  const [
     virtueBalance_,
     virtueLaunched_,
     virtueAllowance_,
@@ -215,7 +214,7 @@ if (isConnected) {
   ]);
 
   if(virtueLaunched_){
-  let virtueEthPricePromise = await uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[Data.virtueToken,Data.WETH]);
+  const virtueEthPricePromise = await uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[Data.virtueToken,Data.WETH]);
   setVirtuePrice(virtueEthPricePromise[1]);
   setVirtueAllowance(virtueRouterAllowance_);
   }else{
@@ -226,15 +225,15 @@ if (isConnected) {
   setVirtueBalance(virtueBalance_);
   setVirtueLaunched(virtueLaunched_);
   setVirtueIn(Number(virtueCurve_[2]));
-  }catch(error){};
+  }catch(){};
 
     try{
-  let weedBalancePromise     = factoryContract.balanceOf(address);
-  let weedAllowancePromise   = factoryContract.allowance(address, Data.uniswapRouter);
-  let weedMethPricePromise = uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[Data.METH, Data.petalFactory]);
-  let methBalancePromise = methContract.balanceOf(address);
-  let methAllowancePromise = methContract.allowance(address, Data.uniswapRouter);
-  let [
+  const weedBalancePromise     = factoryContract.balanceOf(address);
+  const weedAllowancePromise   = factoryContract.allowance(address, Data.uniswapRouter);
+  const weedMethPricePromise = uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[Data.METH, Data.petalFactory]);
+  const methBalancePromise = methContract.balanceOf(address);
+  const methAllowancePromise = methContract.allowance(address, Data.uniswapRouter);
+  const [
     weedBalance_,
     weedAllowance_,
     weedMethPrice_,
@@ -253,15 +252,15 @@ if (isConnected) {
   setWeedMethPrice(weedMethPrice_[1]);
   setMethBalance(methBalance_);
   setMethAllowance(methAllowance_);
-  }catch(error){};
+  }catch(){};
 
   try{
-  let checkBidPromiseEth  = ethPredictionContract.checkBid(address);
-  let userBidPromiseEth   = ethPredictionContract.userBid(address);
-  let epochPromiseEth     = ethPredictionContract.epochCheck();
-  let answerPromiseEth    = ethusdContract.latestAnswer();
-  let roundPromiseEth = ethusdContract.latestRound();
-  let [
+  const checkBidPromiseEth  = ethPredictionContract.checkBid(address);
+  const userBidPromiseEth   = ethPredictionContract.userBid(address);
+  const epochPromiseEth     = ethPredictionContract.epochCheck();
+  const answerPromiseEth    = ethusdContract.latestAnswer();
+  const roundPromiseEth = ethusdContract.latestRound();
+  const [
     checkBidEth_,
     userBidEth_,
     epochEth_,
@@ -275,23 +274,23 @@ if (isConnected) {
     roundPromiseEth
   ]);
 
-  let previousRoundDataEth_ = await ethusdContract.getRoundData(roundEth_-epochEth_);
+  const previousRoundDataEth_ = await ethusdContract.getRoundData(roundEth_-epochEth_);
   if(Number(checkBidEth_) > 0){
-    let getResultDataEth_ = await ethusdContract.getRoundData(userBidEth_.roundId+epochEth_);
+    const getResultDataEth_ = await ethusdContract.getRoundData(userBidEth_.roundId+epochEth_);
     setRoundAnswerEth(getResultDataEth_.answer);
   }
   setCheckBidEth(Number(checkBidEth_));
   setUserBidEth(userBidEth_);
   setEpochEth(epochEth_);
   setAnswerEth(answerEth_);
-  setPreviousAnswerEth(previousRoundDataEth_.answer);}catch(error){};
+  setPreviousAnswerEth(previousRoundDataEth_.answer);}catch(){};
   try{
-  let checkBidPromiseBtc  = btcPredictionContract.checkBid(address);
-  let userBidPromiseBtc   = btcPredictionContract.userBid(address);
-  let epochPromiseBtc     = btcPredictionContract.epochCheck();
-  let answerPromiseBtc    = btcusdContract.latestAnswer();
-  let roundPromiseBtc = btcusdContract.latestRound();
-    let [
+  const checkBidPromiseBtc  = btcPredictionContract.checkBid(address);
+  const userBidPromiseBtc   = btcPredictionContract.userBid(address);
+  const epochPromiseBtc     = btcPredictionContract.epochCheck();
+  const answerPromiseBtc    = btcusdContract.latestAnswer();
+  const roundPromiseBtc = btcusdContract.latestRound();
+    const [
     checkBidBtc_,
     userBidBtc_,
     epochBtc_,
@@ -305,23 +304,23 @@ if (isConnected) {
     roundPromiseBtc
   ]);
 
-  let previousRoundDataBtc_ = await btcusdContract.getRoundData(roundBtc_-epochBtc_);
+  const previousRoundDataBtc_ = await btcusdContract.getRoundData(roundBtc_-epochBtc_);
   if(Number(checkBidBtc_) > 0){
-    let getResultDataBtc_ = await btcusdContract.getRoundData(userBidBtc_.roundId+epochBtc_);
+    const getResultDataBtc_ = await btcusdContract.getRoundData(userBidBtc_.roundId+epochBtc_);
     setRoundAnswerBtc(getResultDataBtc_.answer);
   }
   setCheckBidBtc(Number(checkBidBtc_));
   setUserBidBtc(userBidBtc_);
   setEpochBtc(epochBtc_);
   setAnswerBtc(answerBtc_);
-  setPreviousAnswerBtc(previousRoundDataBtc_.answer);}catch(error){}
+  setPreviousAnswerBtc(previousRoundDataBtc_.answer);}catch(){}
   try{
-  let checkBidPromiseLink  = linkPredictionContract.checkBid(address);
-  let userBidPromiseLink   = linkPredictionContract.userBid(address);
-  let epochPromiseLink     = linkPredictionContract.epochCheck();
-  let answerPromiseLink    = linkusdContract.latestAnswer();
-  let roundPromiseLink = linkusdContract.latestRound();
-    let [
+  const checkBidPromiseLink  = linkPredictionContract.checkBid(address);
+  const userBidPromiseLink   = linkPredictionContract.userBid(address);
+  const epochPromiseLink     = linkPredictionContract.epochCheck();
+  const answerPromiseLink    = linkusdContract.latestAnswer();
+  const roundPromiseLink = linkusdContract.latestRound();
+    const [
     checkBidLink_,
     userBidLink_,
     epochLink_,
@@ -335,21 +334,21 @@ if (isConnected) {
     roundPromiseLink
   ]);
 
-  let previousRoundDataLink_ = await linkusdContract.getRoundData(roundLink_-epochLink_);
+  const previousRoundDataLink_ = await linkusdContract.getRoundData(roundLink_-epochLink_);
   if(Number(checkBidLink_) > 0){
-    let getResultDataLink_ = await linkusdContract.getRoundData(userBidLink_.roundId+epochLink_);
+    const getResultDataLink_ = await linkusdContract.getRoundData(userBidLink_.roundId+epochLink_);
     setRoundAnswerLink(getResultDataLink_.answer);
   }
   setCheckBidLink(Number(checkBidLink_));
   setUserBidLink(userBidLink_);
   setEpochLink(epochLink_);
   setAnswerLink(answerLink_);
-  setPreviousAnswerLink(previousRoundDataLink_.answer);}catch(error){};
+  setPreviousAnswerLink(previousRoundDataLink_.answer);}catch(){};
       try{
-  let nftBalancePromise  = sekaiContract.balanceOf(address);
-  let rewardsPromise = rewardsContract.checkRewards(address);
+  const nftBalancePromise  = sekaiContract.balanceOf(address);
+  const rewardsPromise = rewardsContract.checkRewards(address);
 
-  let[
+  const[
   nftBalance_,
   rewards_
 ] = await Promise.all([
@@ -358,12 +357,12 @@ if (isConnected) {
 ]);
   setNftBalance(Number(nftBalance_));
   setRewardsAvailable(Number(rewards_));
-}catch(error){};
+}catch(){};
 }
   try{
-  let bondingCurve_ = await factoryContract.bondingCurves(Data.petalToken);
-  let tokenVirtualReserve = Number(bondingCurve_[1]);
-  let ethVirtualReserve = Number(bondingCurve_[4]);
+  const bondingCurve_ = await factoryContract.bondingCurves(Data.petalToken);
+  const tokenVirtualReserve = Number(bondingCurve_[1]);
+  const ethVirtualReserve = Number(bondingCurve_[4]);
   setEthIn(Number(bondingCurve_[2]));
 
   if (bondingCurve_[6] === spotPrice) {
@@ -448,7 +447,7 @@ if (isConnected) {
       },
     },
   });
-}}catch(error){};
+}}catch(){};
 }
 
     const interval = setInterval(() => init(), 1000);
@@ -458,7 +457,7 @@ if (isConnected) {
   });
 
   const checkRef = (e) => {
-    let input = e.target.value;
+    const input = e.target.value;
     const regex = /^[a-zA-Z0-9]*$/;
     setError(!regex.test(input));
   }
@@ -643,8 +642,8 @@ if (isConnected) {
 
   useEffect(() => {
     if(userInfo.length === 5 & address === userInfo[3]){
-    let displayStat = document.getElementById('displayStat');
-    let walletSpan = document.getElementById('walletSpan');
+    const displayStat = document.getElementById('displayStat');
+    const walletSpan = document.getElementById('walletSpan');
     if(hoverWallet){
       displayStat.style.display = 'initial';
       walletSpan.style.borderBottom = 'transparent';
@@ -659,7 +658,7 @@ if (isConnected) {
       walletSpan.style.borderBottomRightRadius = '12px';
     }
   }else{
-    let walletSpan = document.getElementById('walletSpan');
+    const walletSpan = document.getElementById('walletSpan');
     if(hoverWallet){
       walletSpan.style.borderBottom = '2px solid rgba(0, 255, 255, 0.8)';
     }else{

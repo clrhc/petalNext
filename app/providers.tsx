@@ -5,7 +5,6 @@ import { sdk } from '@farcaster/miniapp-sdk';
 import { createAppKit } from '@reown/appkit/react';
 import { WagmiProvider } from 'wagmi';
 import { sepolia } from '@reown/appkit/networks';
-import { base } from 'wagmi/chains';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 
