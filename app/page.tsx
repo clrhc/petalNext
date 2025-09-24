@@ -384,7 +384,7 @@ if (isConnected) {
 
     const pricePerToken = Number(ethVirtualReserve * 10 ** 18 / remainingVirtual) / 1e18;
 
-    tokensBought.push(Number(deltaTokens / 10 ** 18).toFixed(0)); // Convert to normal tokens
+    tokensBought.push(Math.round(deltaTokens / 1e18));
     prices.push(pricePerToken); // ETH price
   }
 
