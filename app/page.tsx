@@ -118,7 +118,7 @@ export default function Home() {
   const rewardsContract = new ethers.Contract(Data.petalRewards, rewards.abi, provider);
   const sekaiContract = new ethers.Contract(Data.virtueNFT, nft.abi, provider);
   const uniswapRouterContract = new ethers.Contract(Data.uniswapRouter, uniswapRouter.abi, provider);
-  const chartRef = useRef(null);
+  const chartRef = useRef<Chart | null>(null);
 
   useEffect(() =>{
     async function init(){
