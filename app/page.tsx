@@ -746,7 +746,7 @@ useEffect(() => {
     <div className="refDiv">
     {tab === 0 && <>{userInfo[0] < 1 ? <><span>You have yet to register. Begin by using a referral and creating your own referral code. Default referral: PETAL</span>
     <span>Get rewarded VIRTUE, PETAL and WEED on registration</span>
-    <input id="refInput" className={`inputBox inputBox inputText userText ${userRef.length > 0 ? !error & userCheck ? "outlineGreen" : "outlineRed": "outlineTeal"}`} placeholder="User Referral" onChange={(e) => {checkRef(e);setUserRef(e.target.value)}} value={userRef} type="text" />
+    <input id="refInput" className={`inputBox inputBox inputText userText ${userRef.length > 0 ? !error && userCheck ? "outlineGreen" : "outlineRed": "outlineTeal"}`} placeholder="User Referral" onChange={(e) => {checkRef(e);setUserRef(e.target.value)}} value={userRef} type="text" />
     {userRef.length > 0 && <>{!error && <>{userCheck ? <><p className="rightSide" style={{color: 'green'}}>Is Valid</p></>:<><p className="rightSide" style={{color: 'red'}}>Referral Does Not Exist</p></>}</>}</>}
     <input className={`inputBox inputText newText ${newRef.length > 0 ? !error & newCheck ? "outlineRed" : "outlineGreen" : "outlineTeal"}`} id="refInput" placeholder="Create Your Referral" onChange={(e) => {checkRef(e);setNewRef(e.target.value)}} value={newRef}  onKeyDown={(e) => handleKeyDown(e)} type="text" />
     {newRef.length > 0 && <>{!error && <>{newCheck ? <><p className="rightSide" style={{color: 'red'}}>Referral Already Taken</p></>:<><p className="rightSide" style={{color: 'green'}}>Referral Code Available</p></>}</>}</>}
