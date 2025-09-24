@@ -46,7 +46,7 @@ export default function Home() {
   const { address, isConnected } = useAccount();
   const {open} = useAppKit();
   const [baseId] = useState(11155111);
-  const [userInfo, setUserInfo] = useState<[number, number, string, string, `0x${string}` | undefined]>([0, 0, '', '', undefined]);
+  const [userInfo, setUserInfo] = useState<[number, number, string, string, string]>([0, 0, '', '', '']);
   const [userRef, setUserRef] = useState("");
   const [newRef, setNewRef] = useState("");
   const [hoverWallet, setHoverWallet] = useState(false);
@@ -131,7 +131,7 @@ if (isConnected) {
     Number(userInfo_[1]),
     String(userInfo_[2]),
     String(userInfo_[3]),
-    address
+    String(userInfo_[4]),
   ]);}catch{};
   try{
   const checkUserRefPromise   = referralContract.refStore(userRef);
