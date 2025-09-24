@@ -46,7 +46,7 @@ export default function Home() {
   const { address, isConnected } = useAccount();
   const {open} = useAppKit();
   const [baseId] = useState(11155111);
-  const [userInfo, setUserInfo] = useState<[number, number, string, string]>([0, 0, '', '']);
+  const [userInfo, setUserInfo] = useState<[number, number, string, string, `0x${string}` | undefined]>([0, 0, '', '', undefined]);
   const [userRef, setUserRef] = useState("");
   const [newRef, setNewRef] = useState("");
   const [hoverWallet, setHoverWallet] = useState(false);
