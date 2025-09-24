@@ -124,17 +124,22 @@ export default function Home() {
     async function init(){
      
 if (isConnected) {
-     try{
-  const userInfoPromise       = referralContract.userInfo(address);
+    try{
+  const userInfo_       = await referralContract.userInfo(address);
+    setUserInfo([
+    Number(userInfo_[0]),
+    Number(userInfo_[1]),
+    String(userInfo_[2]),
+    String(userInfo_[3]),
+    address
+  ]);}catch{};
+  try{
   const checkUserRefPromise   = referralContract.refStore(userRef);
   const checkNewRefPromise    = referralContract.refStore(newRef);
- 
-  const [
-    userInfo_,
+   let [
     checkUserRef_,
     checkNewRef_
   ] = await Promise.all([
-    userInfoPromise,
     checkUserRefPromise,
     checkNewRefPromise
   ]);
@@ -142,13 +147,7 @@ if (isConnected) {
   checkUserRef_ = String(checkUserRef_);
   checkNewRef_  = String(checkNewRef_);
 
-  setUserInfo([
-    Number(userInfo_[0]),
-    Number(userInfo_[1]),
-    String(userInfo_[2]),
-    String(userInfo_[3]),
-    address
-  ]);
+
 
   setUserCheck(checkUserRef_ !== "0x0000000000000000000000000000000000000000");
   setNewCheck (checkNewRef_  !== "0x0000000000000000000000000000000000000000");}catch{};
