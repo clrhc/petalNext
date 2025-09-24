@@ -807,7 +807,7 @@ useEffect(() => {
     <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 PETAL" value={String(Number(buyValue / (Number(spotPrice) / 1e18)-((buyValue / (Number(spotPrice) / 1e18)/100)*3)).toFixed(4))} type="number" readOnly />
   </div>
   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(petalBalance), 18)).toFixed(2)} PETAL</p>
-    {buyValue > 0 ? <><p onClick={() => petalLaunched ? buyEth(Data.petalToken) : buyToken()} className="enterButton pointer">Buy</p>
+    {buyValue > 0 ? <><p onClick={() => petalLaunched ? buyEth(Data.petalToken as Address) : buyToken()} className="enterButton pointer">Buy</p>
     </>:<></>}<p style={{textAlign: 'center'}}>1 ETH = {Number(1/Number(Number(spotPrice) / 10 ** 18)).toFixed(4)} PETAL</p>
     <p style={{textAlign: 'center'}}>3% Tax</p>
     {!petalLaunched && <><p style={{textAlign: 'center'}}>ETH To Bond: {Number(ethers.formatUnits(String(ethIn), 18)).toFixed(3)} / 40 ETH</p></>}
@@ -842,7 +842,7 @@ useEffect(() => {
     </div>
     <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(2)} ETH</p>
     {sellValue > 0 ? <>
-    {sellValue*10**18 > petalAllowance ? <><p onClick={() => petalLaunched ? approveRouter(Data.petalToken) : approveToken()} className="enterButton pointer">Approve</p></>:<><p onClick={() => petalLaunched ? sellRouter(Data.petalToken) : sellToken()} className="enterButton pointer">Sell</p></>}</>:<></>}
+    {sellValue*10**18 > petalAllowance ? <><p onClick={() => petalLaunched ? approveRouter(Data.petalToken as Address) : approveToken()} className="enterButton pointer">Approve</p></>:<><p onClick={() => petalLaunched ? sellRouter(Data.petalToken as Address) : sellToken()} className="enterButton pointer">Sell</p></>}</>:<></>}
       <p style={{textAlign: 'center'}}>1 PETAL = {Number(Number(spotPrice) / 10 ** 18).toFixed(10)} ETH</p>
       <p style={{textAlign: 'center'}}>3% Tax</p>
       {!petalLaunched && <><p style={{textAlign: 'center'}}>ETH To Bond: {Number(ethers.formatUnits(String(ethIn), 18)).toFixed(3)} / 40 ETH</p></>}
@@ -889,7 +889,7 @@ useEffect(() => {
     <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 VIRTUE" value={String(Number(buyValue / (Number(virtuePrice) / 1e18)-((buyValue / (Number(virtuePrice) / 1e18)/100)*3)).toFixed(4))} type="number" readOnly />
   </div>
   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(virtueBalance), 18)).toFixed(2)} VIRTUE</p>
-    {buyValue > 0 ? <><p onClick={() => virtueLaunched ? buyEth(Data.virtueToken) : buyVirtue()} className="enterButton pointer">Buy</p>
+    {buyValue > 0 ? <><p onClick={() => virtueLaunched ? buyEth(Data.virtueToken as Address) : buyVirtue()} className="enterButton pointer">Buy</p>
     </>:<></>}<p style={{textAlign: 'center'}}>1 ETH = {Number(1/Number(Number(virtuePrice) / 10 ** 18)).toFixed(4)} VIRTUE</p>
     <p style={{textAlign: 'center'}}>3% Tax</p>
     {!virtueLaunched && <><p style={{textAlign: 'center'}}>ETH To Bond: {Number(ethers.formatUnits(String(virtueIn), 18)).toFixed(3)} / 4 ETH</p></>}
@@ -924,7 +924,7 @@ useEffect(() => {
     </div>
     <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(2)} ETH</p>
     {sellValue > 0 ? <>
-    {sellValue*10**18 > virtueAllowance ? <><p onClick={() => virtueLaunched ? approveRouter(Data.virtueToken) : approveVirtue()} className="enterButton pointer">Approve</p></>:<><p onClick={() => virtueLaunched ? sellEth(Data.virtueToken) : sellVirtue()} className="enterButton pointer">Sell</p></>}</>:<></>}
+    {sellValue*10**18 > virtueAllowance ? <><p onClick={() => virtueLaunched ? approveRouter(Data.virtueToken as Address) : approveVirtue()} className="enterButton pointer">Approve</p></>:<><p onClick={() => virtueLaunched ? sellEth(Data.virtueToken as Address) : sellVirtue()} className="enterButton pointer">Sell</p></>}</>:<></>}
       <p style={{textAlign: 'center'}}>1 VIRTUE = {Number(Number(virtuePrice) / 10 ** 18).toFixed(10)} ETH</p>
       <p style={{textAlign: 'center'}}>3% Tax</p>
       {!virtueLaunched && <><p style={{textAlign: 'center'}}>ETH To Bond: {Number(ethers.formatUnits(String(virtueIn), 18)).toFixed(3)} / 4 ETH</p></>}
@@ -976,7 +976,7 @@ useEffect(() => {
   </div>
   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(methBalance), 18)).toFixed(2)} METH</p>
     {buyValue > 0 ? <>
-    {buyValue*10**18 > weedAllowance ? <><p onClick={() => approveRouter(Data.petalFactory)} className="enterButton pointer">Approve</p></>:<><p onClick={() => buyRouter(Data.METH)} className="enterButton pointer">Buy</p></>}
+    {buyValue*10**18 > weedAllowance ? <><p onClick={() => approveRouter(Data.petalFactory as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => buyRouter(Data.METH as Address)} className="enterButton pointer">Buy</p></>}
     </>:<></>}<p style={{textAlign: 'center'}}>1 WEED = {Number(1/Number(Number(weedMethPrice) / 10 ** 18)).toFixed(4)} METH</p>
     </>:
     <>
@@ -1009,7 +1009,7 @@ useEffect(() => {
     </div>
     <p className="rightSide">Balance: {Number(ethers.formatUnits(String(weedBalance), 18)).toFixed(2)} WEED</p>
     {sellValue > 0 ? <>
-    {sellValue*10**18 > methAllowance ? <><p onClick={() => approveRouter(Data.METH)} className="enterButton pointer">Approve</p></>:<><p onClick={() => sellRouter(Data.METH)} className="enterButton pointer">Sell</p></>}</>:<></>}
+    {sellValue*10**18 > methAllowance ? <><p onClick={() => approveRouter(Data.METH as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => sellRouter(Data.METH as Address)} className="enterButton pointer">Sell</p></>}</>:<></>}
       <p style={{textAlign: 'center'}}>1 METH = {Number(Number(weedMethPrice) / 10 ** 18).toFixed(10)} WEED</p>
       </>}</>}
       </>}
@@ -1040,7 +1040,7 @@ useEffect(() => {
    <div className="swapButtons"><p className={`${bidState && "tealActive"}`} onClick={() => setBidState(true)}>HIGHER</p><p className={`${!bidState && "tealActive"}`} onClick={() => setBidState(false)}>LOWER</p></div>
    <p style={{textAlign: 'center'}}>Next price in {epochEth} epoch(s)</p> 
     <br/>
-    {bidValue > 0 ? <><p onClick={() => bidPrediction(Data.ethPrediction)} className="enterButton pointer">Bid</p>
+    {bidValue > 0 ? <><p onClick={() => bidPrediction(Data.ethPrediction as Address)} className="enterButton pointer">Bid</p>
     </>:<></>}<p style={{textAlign: 'center'}}>1 ETH = {Number(1/Number(Number(2000000000000) / 10 ** 18)*1).toFixed(2)} PETAL</p><p style={{textAlign: 'center'}}>1 ETH = {Number(1/Number(Number(2000000000000) / 10 ** 18)*3).toFixed(2)} WEED</p><p style={{textAlign: 'center'}}>3% Tax</p><p style={{textAlign: 'center'}}>Win = Receive PETAL + WEED + ETH Back(-3% Tax)</p><p style={{textAlign: 'center'}}>Loss = Receive WEED + LOSE ETH</p></>:<>
     <span style={{display: 'grid', alignItems: 'center', margin: '0 auto', width: '50%'}}>
     <div className="ethPrice"><span><p>BID {userBidEth.higher ? <>HIGHER</>:<>LOWER</>}</p></span></div>
@@ -1048,7 +1048,7 @@ useEffect(() => {
     <div className="bidPrice"><span><p>RESULT</p></span><span><h2>{checkBidEth === 0 ? <>PENDING</>:<>{Number(ethers.formatUnits(String(roundAnswerEth),8)).toFixed(2)}</>}</h2></span></div>
     </span>
     <span className="winnings"><p style={{textAlign: 'center'}}>WINNINGS</p><p style={{textAlign: 'center'}}>{Number(Number(ethers.formatUnits(userBidEth.amountBid,18))/Number(Number(2000000000000) / 10 ** 18)*3).toFixed(2)} WEED</p>{checkBidEth === 1 && <><p style={{textAlign: 'center'}}>{Number(Number(ethers.formatUnits(userBidEth.amountBid,18))/Number(Number(2000000000000) / 10 ** 18)*1).toFixed(2)} PETAL</p><p style={{textAlign: 'center'}}>{Number(ethers.formatUnits(userBidEth.amountBid, 18)).toFixed(4)} ETH</p></>}</span>
-    {checkBidEth > 0 ? <><p onClick={() => resolveBid(Data.ethPrediction)} className="enterButton pointer">Resolve Bid</p>
+    {checkBidEth > 0 ? <><p onClick={() => resolveBid(Data.ethPrediction as Address)} className="enterButton pointer">Resolve Bid</p>
     </>:<></>}
     </>}
     </>:<></>}
@@ -1077,7 +1077,7 @@ useEffect(() => {
    <div className="swapButtons"><p className={`${bidState && "tealActive"}`} onClick={() => setBidState(true)}>HIGHER</p><p className={`${!bidState && "tealActive"}`} onClick={() => setBidState(false)}>LOWER</p></div>
    <p style={{textAlign: 'center'}}>Next price in {epochBtc} epoch(s)</p> 
     <br/>
-    {bidValue > 0 ? <><p onClick={() => bidPrediction(Data.btcPrediction)} className="enterButton pointer">Bid</p>
+    {bidValue > 0 ? <><p onClick={() => bidPrediction(Data.btcPrediction as Address)} className="enterButton pointer">Bid</p>
     </>:<></>}<p style={{textAlign: 'center'}}>1 ETH = {Number(1/Number(Number(2000000000000) / 10 ** 18)*1).toFixed(2)} PETAL</p><p style={{textAlign: 'center'}}>1 ETH = {Number(1/Number(Number(2000000000000) / 10 ** 18)*3).toFixed(2)} WEED</p><p style={{textAlign: 'center'}}>3% Tax</p><p style={{textAlign: 'center'}}>Win = Receive PETAL + WEED + ETH Back(-3% Tax)</p><p style={{textAlign: 'center'}}>Loss = Receive WEED + LOSE ETH</p></>:<>
     <span style={{display: 'grid', alignItems: 'center', margin: '0 auto', width: '50%'}}>
     <div className="ethPrice"><span><p>BID {userBidBtc.higher ? <>HIGHER</>:<>LOWER</>}</p></span></div>
@@ -1085,7 +1085,7 @@ useEffect(() => {
     <div className="bidPrice"><span><p>RESULT</p></span><span><h2>{checkBidBtc === 0 ? <>PENDING</>:<>{Number(ethers.formatUnits(String(roundAnswerBtc),8)).toFixed(2)}</>}</h2></span></div>
     </span>
     <span className="winnings"><p style={{textAlign: 'center'}}>WINNINGS</p><p style={{textAlign: 'center'}}>{Number(Number(ethers.formatUnits(userBidBtc.amountBid,18))/Number(Number(2000000000000) / 10 ** 18)*3).toFixed(2)} WEED</p>{checkBidBtc === 1 && <><p style={{textAlign: 'center'}}>{Number(Number(ethers.formatUnits(userBidBtc.amountBid,18))/Number(Number(2000000000000) / 10 ** 18)*1).toFixed(2)} PETAL</p><p style={{textAlign: 'center'}}>{Number(ethers.formatUnits(userBidBtc.amountBid, 18)).toFixed(4)} ETH</p></>}</span>
-    {checkBidBtc > 0 ? <><p onClick={() => resolveBid(Data.btcPrediction)} className="enterButton pointer">Resolve Bid</p>
+    {checkBidBtc > 0 ? <><p onClick={() => resolveBid(Data.btcPrediction as Address)} className="enterButton pointer">Resolve Bid</p>
     </>:<></>}
     </>}
     </>:<></>}
@@ -1114,7 +1114,7 @@ useEffect(() => {
    <div className="swapButtons"><p className={`${bidState && "tealActive"}`} onClick={() => setBidState(true)}>HIGHER</p><p className={`${!bidState && "tealActive"}`} onClick={() => setBidState(false)}>LOWER</p></div>
    <p style={{textAlign: 'center'}}>Next price in {epochLink} epoch(s)</p> 
     <br/>
-    {bidValue > 0 ? <><p onClick={() => bidPrediction(Data.linkPrediction)} className="enterButton pointer">Bid</p>
+    {bidValue > 0 ? <><p onClick={() => bidPrediction(Data.linkPrediction as Address)} className="enterButton pointer">Bid</p>
     </>:<></>}<p style={{textAlign: 'center'}}>1 ETH = {Number(1/Number(Number(2000000000000) / 10 ** 18)*1).toFixed(2)} PETAL</p><p style={{textAlign: 'center'}}>1 ETH = {Number(1/Number(Number(2000000000000) / 10 ** 18)*3).toFixed(2)} WEED</p><p style={{textAlign: 'center'}}>3% Tax</p><p style={{textAlign: 'center'}}>Win = Receive PETAL + WEED + ETH Back(-3% Tax)</p><p style={{textAlign: 'center'}}>Loss = Receive WEED + LOSE ETH</p></>:<>
     <span style={{display: 'grid', alignItems: 'center', margin: '0 auto', width: '50%'}}>
     <div className="ethPrice"><span><p>BID {userBidLink.higher ? <>HIGHER</>:<>LOWER</>}</p></span></div>
@@ -1122,7 +1122,7 @@ useEffect(() => {
     <div className="bidPrice"><span><p>RESULT</p></span><span><h2>{checkBidLink === 0 ? <>PENDING</>:<>{Number(ethers.formatUnits(String(roundAnswerLink),8)).toFixed(2)}</>}</h2></span></div>
     </span>
     <span className="winnings"><p style={{textAlign: 'center'}}>WINNINGS</p><p style={{textAlign: 'center'}}>{Number(Number(ethers.formatUnits(userBidLink.amountBid,18))/Number(Number(2000000000000) / 10 ** 18)*3).toFixed(2)} WEED</p>{checkBidLink === 1 && <><p style={{textAlign: 'center'}}>{Number(Number(ethers.formatUnits(userBidLink.amountBid,18))/Number(Number(2000000000000) / 10 ** 18)*1).toFixed(2)} PETAL</p><p style={{textAlign: 'center'}}>{Number(ethers.formatUnits(userBidLink.amountBid, 18)).toFixed(4)} ETH</p></>}</span>
-    {checkBidLink > 0 ? <><p onClick={() => resolveBid(Data.linkPrediction)} className="enterButton pointer">Resolve Bid</p>
+    {checkBidLink > 0 ? <><p onClick={() => resolveBid(Data.linkPrediction as Address)} className="enterButton pointer">Resolve Bid</p>
     </>:<></>}
     </>}
     </>:<></>}
