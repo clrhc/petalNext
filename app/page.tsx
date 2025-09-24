@@ -472,7 +472,7 @@ if (isConnected) {
   setError(!regex.test(input));
 };
 
-   const handleKeyDown = async (e) => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if(networkId === baseId){
          await writeContract({ 
