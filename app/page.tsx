@@ -652,7 +652,7 @@ if (isConnected) {
     }
 
   useEffect(() => {
-    if(userInfo.length === 5 & address === userInfo[3]){
+    if(userInfo.length === 5 && address === userInfo[3]){
     const displayStat = document.getElementById('displayStat');
     const walletSpan = document.getElementById('walletSpan');
     if(hoverWallet){
