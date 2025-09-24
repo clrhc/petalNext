@@ -5,7 +5,6 @@ import Data from './data.json';
 import Wallet from './wallet';
 import {ethers} from 'ethers';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
-import { Contract } from 'viem';
 import { useAppKit } from "@reown/appkit/react";
 import referral from './abis/referral.json';
 import prediction from './abis/prediction.json';
@@ -542,7 +541,7 @@ if (isConnected) {
     }
   }
 
-    const bidPrediction = async (predContract: Contract) => {
+    const bidPrediction = async (predContract: any) => {
     if(networkId === baseId){
       await writeContract({
         abi: prediction.abi,
@@ -554,7 +553,7 @@ if (isConnected) {
     }
   }
 
-   const resolveBid = async (predContract: Contract) => {
+   const resolveBid = async (predContract: any) => {
     if(networkId === baseId){
       await writeContract({
         abi: prediction.abi,
@@ -596,18 +595,18 @@ if (isConnected) {
     }
   }
 
-    const approveRouter = async (contract: Contract) => {
+    const approveRouter = async (contract: any) => {
       if(networkId === baseId){
         await writeContract({
           abi: token.abi,
-          address: contract as Address,
+          address: any as Address,
           functionName: 'approve',
           args: [Data.uniswapRouter, ethers.parseUnits(String(1000000000))],
         });
       }
     }
 
-    const buyRouter = async (contract: Contract) => {
+    const buyRouter = async (contract: any) => {
   if (networkId === baseId) {
       await writeContract({
         abi: uniswapRouter.abi,
@@ -618,7 +617,7 @@ if (isConnected) {
       }
     };
 
-     const sellRouter = async (contract: Contract) => {
+     const sellRouter = async (contract: any) => {
   if (networkId === baseId) {
       await writeContract({
         abi: uniswapRouter.abi,
@@ -629,7 +628,7 @@ if (isConnected) {
       }
     };
 
-    const sellEth = async (contract: Contract) => {
+    const sellEth = async (contract: any) => {
       if(networkId === baseId){
         await writeContract({
           abi: uniswapRouter.abi,
@@ -640,7 +639,7 @@ if (isConnected) {
       }
     }
 
-      const buyEth = async (contract: Contract) => {
+      const buyEth = async (contract: any) => {
       if(networkId === baseId){
         await writeContract({
           abi: uniswapRouter.abi,
