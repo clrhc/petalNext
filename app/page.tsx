@@ -791,7 +791,7 @@ if (isConnected) {
   }}>
     PETAL
   </span>
-    <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 PETAL" value={String(Number(buyValue / (Number(spotPrice) / 1e18)-((buyValue / (Number(spotPrice) / 1e18)/100)*3)).toFixed(8))} type="number" readOnly />
+    <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 PETAL" value={String(Number(buyValue / (Number(spotPrice) / 1e18)-((buyValue / (Number(spotPrice) / 1e18)/100)*3)).toFixed(4))} type="number" readOnly />
   </div>
   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(petalBalance), 18)).toFixed(2)} PETAL</p>
     {buyValue.length > 0 ? <><p onClick={() => petalLaunched ? buyEth(Data.petalToken) : buyToken()} className="enterButton pointer">Buy</p>
@@ -873,7 +873,7 @@ if (isConnected) {
   }}>
     VIRTUE
   </span>
-    <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 VIRTUE" value={String(Number(buyValue / (Number(virtuePrice) / 1e18)-((buyValue / (Number(virtuePrice) / 1e18)/100)*3)).toFixed(8))} type="number" readOnly />
+    <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 VIRTUE" value={String(Number(buyValue / (Number(virtuePrice) / 1e18)-((buyValue / (Number(virtuePrice) / 1e18)/100)*3)).toFixed(4))} type="number" readOnly />
   </div>
   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(virtueBalance), 18)).toFixed(2)} VIRTUE</p>
     {buyValue.length > 0 ? <><p onClick={() => virtueLaunched ? buyEth(Data.virtueToken) : buyVirtue()} className="enterButton pointer">Buy</p>
