@@ -748,10 +748,10 @@ useEffect(() => {
     <span>Get rewarded VIRTUE, PETAL and WEED on registration</span>
     <input id="refInput" className={`inputBox inputBox inputText userText ${userRef.length > 0 ? !error && userCheck ? "outlineGreen" : "outlineRed": "outlineTeal"}`} placeholder="User Referral" onChange={(e) => {checkRef(e);setUserRef(e.target.value)}} value={userRef} type="text" />
     {userRef.length > 0 && <>{!error && <>{userCheck ? <><p className="rightSide" style={{color: 'green'}}>Is Valid</p></>:<><p className="rightSide" style={{color: 'red'}}>Referral Does Not Exist</p></>}</>}</>}
-    <input className={`inputBox inputText newText ${newRef.length > 0 ? !error & newCheck ? "outlineRed" : "outlineGreen" : "outlineTeal"}`} id="refInput" placeholder="Create Your Referral" onChange={(e) => {checkRef(e);setNewRef(e.target.value)}} value={newRef}  onKeyDown={(e) => handleKeyDown(e)} type="text" />
+    <input className={`inputBox inputText newText ${newRef.length > 0 ? !error && newCheck ? "outlineRed" : "outlineGreen" : "outlineTeal"}`} id="refInput" placeholder="Create Your Referral" onChange={(e) => {checkRef(e);setNewRef(e.target.value)}} value={newRef}  onKeyDown={(e) => handleKeyDown(e)} type="text" />
     {newRef.length > 0 && <>{!error && <>{newCheck ? <><p className="rightSide" style={{color: 'red'}}>Referral Already Taken</p></>:<><p className="rightSide" style={{color: 'green'}}>Referral Code Available</p></>}</>}</>}
     {error && <p>Referral can only contain letters and numbers (no spaces)</p>}
-    {userRef.length > 0 & newRef.length > 0 & !error & userCheck & !newCheck ? <><p onClick={() => register()} className="enterButton pointer">Enter</p></>:<></>}
+    {userRef.length > 0 && newRef.length > 0 && !error && userCheck && !newCheck ? <><p onClick={() => register()} className="enterButton pointer">Enter</p></>:<></>}
     </>:<>
     {userInfo.length === 5 && <><div className="refInfo">
     <h3>ID:
