@@ -43,6 +43,14 @@ Chart.register(
 
 export default function Home() {
 
+
+  type CurrentBid = {
+  roundId: string;
+  priceBid: string;
+  priceBidTime: string;
+  higher: boolean;
+  amountBid: string;
+  };
   const { address, isConnected } = useAccount();
   const {open} = useAppKit();
   const [baseId] = useState(11155111);
@@ -69,9 +77,9 @@ export default function Home() {
   const [checkBidEth, setCheckBidEth] = useState(0);
   const [checkBidBtc, setCheckBidBtc] = useState(0);
   const [checkBidLink, setCheckBidLink] = useState(0);
-  const [userBidEth, setUserBidEth] = useState([]);
-  const [userBidBtc, setUserBidBtc] = useState([]);
-  const [userBidLink, setUserBidLink] = useState([]);
+  const [userBidEth, setUserBidEth] = useState<CurrentBid>({roundId: '0',priceBid: '0',priceBidTime: '0',higher: false,amountBid: '0'});
+  const [userBidBtc, setUserBidBtc] = useState<CurrentBid>({roundId: '0',priceBid: '0',priceBidTime: '0',higher: false,amountBid: '0'});
+  const [userBidLink, setUserBidLink] = useState<CurrentBid>({roundId: '0',priceBid: '0',priceBidTime: '0',higher: false,amountBid: '0'});
   const [epochEth, setEpochEth] = useState(0);
   const [epochBtc, setEpochBtc] = useState(0);
   const [epochLink, setEpochLink] = useState(0);
