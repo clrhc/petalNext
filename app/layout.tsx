@@ -9,31 +9,25 @@ import { Providers } from './providers';
  * Metadata for the page
  */
 export async function generateMetadata(): Promise<Metadata> {
-  const URL = process.env.NEXT_PUBLIC_URL;
-  return {
-    title: "Petal Finance",
-    description:
-      "Petal Finance",
-    other: {
-      "fc:frame": JSON.stringify({
-        version: "next",
-         imageUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
-        button: {
-          title: `Launch ${process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME}`,
-          action: {
-            type: "launch_frame",
-            name: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME,
-            url: URL,
-            splashImageUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
-            iconUrl: process.env.NEXT_PUBLIC_IMAGE_URL,
-            splashBackgroundColor:
-              "#FFF",
-          },
+    return {
+        other: {
+        'fc:miniapp': JSON.stringify({
+            version: 'next',
+            imageUrl: 'https://your-app.com/embed-image',
+            button: {
+                title: `Petal Finance`,
+                action: {
+                    type: 'launch_miniapp',
+                    name: 'Petal Finance',
+                    url: 'https://petal.wtf',
+                    splashImageUrl: 'https://your-app.com/splash-image',
+                    splashBackgroundColor: '#000000',
+                },
+            },
+        }),
         },
-      }),
-    },
-  };
-}
+    };
+    }
 
 export default function RootLayout({
   children,
