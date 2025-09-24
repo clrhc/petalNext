@@ -436,8 +436,8 @@ if (isConnected) {
           ticks: {
             color: '#aaa',
             callback: function (value) {
-              return parseFloat(value).toFixed(10);
-            },
+            return Number(value).toFixed(10);
+          },
           },
           grid: { color: '#333' },
         },
