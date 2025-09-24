@@ -776,7 +776,7 @@ useEffect(() => {
     color: '#FFF'
   }}>
     %
-  </span><input id="refInput" className="inputText slipBox userText outlineTeal" placeholder="Slippage" onChange={(e) => setSlippage(e.target.value)} value={slippage} type="number" />
+  </span><input id="refInput" className="inputText slipBox userText outlineTeal" placeholder="Slippage" onChange={(e) => setSlippage(Number(e.target.value))} value={slippage} type="number" />
     </div></div>
     {swapState === 0 ? <>
     <div style={{ position: 'relative' }}>
