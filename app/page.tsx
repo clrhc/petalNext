@@ -541,7 +541,7 @@ if (isConnected) {
     }
   }
 
-    const bidPrediction = async (predContract: any) => {
+    const bidPrediction = async (predContract: Address) => {
     if(networkId === baseId){
       await writeContract({
         abi: prediction.abi,
@@ -553,7 +553,7 @@ if (isConnected) {
     }
   }
 
-   const resolveBid = async (predContract: any) => {
+   const resolveBid = async (predContract: Address) => {
     if(networkId === baseId){
       await writeContract({
         abi: prediction.abi,
@@ -595,7 +595,7 @@ if (isConnected) {
     }
   }
 
-    const approveRouter = async (contract: any) => {
+    const approveRouter = async (contract: Address) => {
       if(networkId === baseId){
         await writeContract({
           abi: token.abi,
@@ -606,7 +606,7 @@ if (isConnected) {
       }
     }
 
-    const buyRouter = async (contract: any) => {
+    const buyRouter = async (contract: Address) => {
   if (networkId === baseId) {
       await writeContract({
         abi: uniswapRouter.abi,
@@ -617,7 +617,7 @@ if (isConnected) {
       }
     };
 
-     const sellRouter = async (contract: any) => {
+     const sellRouter = async (contract: Address) => {
   if (networkId === baseId) {
       await writeContract({
         abi: uniswapRouter.abi,
@@ -628,7 +628,7 @@ if (isConnected) {
       }
     };
 
-    const sellEth = async (contract: any) => {
+    const sellEth = async (contract: Address) => {
       if(networkId === baseId){
         await writeContract({
           abi: uniswapRouter.abi,
@@ -639,7 +639,7 @@ if (isConnected) {
       }
     }
 
-      const buyEth = async (contract: any) => {
+      const buyEth = async (contract: Address) => {
       if(networkId === baseId){
         await writeContract({
           abi: uniswapRouter.abi,
