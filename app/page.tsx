@@ -151,7 +151,7 @@ if (isConnected) {
   ]);
 
   setUserCheck(checkUserRef_ !== "0x0000000000000000000000000000000000000000");
-  setNewCheck (checkNewRef_  !== "0x0000000000000000000000000000000000000000");}catch(){};
+  setNewCheck (checkNewRef_  !== "0x0000000000000000000000000000000000000000");}catch{};
 
    try{
   const ethBalancePromise     = provider.getBalance(address);
@@ -188,7 +188,7 @@ if (isConnected) {
   setEthBalance(ethBalance_);
   setPetalBalance(petalBalance_);
   setPetalLaunched(petalLaunched_);
-  }catch(){};
+  }catch{};
 
     try{
   const virtueBalancePromise   = virtueContract.balanceOf(address);
@@ -225,7 +225,7 @@ if (isConnected) {
   setVirtueBalance(virtueBalance_);
   setVirtueLaunched(virtueLaunched_);
   setVirtueIn(Number(virtueCurve_[2]));
-  }catch(){};
+  }catch{};
 
     try{
   const weedBalancePromise     = factoryContract.balanceOf(address);
@@ -252,7 +252,7 @@ if (isConnected) {
   setWeedMethPrice(weedMethPrice_[1]);
   setMethBalance(methBalance_);
   setMethAllowance(methAllowance_);
-  }catch(){};
+  }catch{};
 
   try{
   const checkBidPromiseEth  = ethPredictionContract.checkBid(address);
@@ -283,7 +283,7 @@ if (isConnected) {
   setUserBidEth(userBidEth_);
   setEpochEth(epochEth_);
   setAnswerEth(answerEth_);
-  setPreviousAnswerEth(previousRoundDataEth_.answer);}catch(){};
+  setPreviousAnswerEth(previousRoundDataEth_.answer);}catch{};
   try{
   const checkBidPromiseBtc  = btcPredictionContract.checkBid(address);
   const userBidPromiseBtc   = btcPredictionContract.userBid(address);
@@ -313,7 +313,7 @@ if (isConnected) {
   setUserBidBtc(userBidBtc_);
   setEpochBtc(epochBtc_);
   setAnswerBtc(answerBtc_);
-  setPreviousAnswerBtc(previousRoundDataBtc_.answer);}catch(){}
+  setPreviousAnswerBtc(previousRoundDataBtc_.answer);}catch{}
   try{
   const checkBidPromiseLink  = linkPredictionContract.checkBid(address);
   const userBidPromiseLink   = linkPredictionContract.userBid(address);
@@ -343,7 +343,7 @@ if (isConnected) {
   setUserBidLink(userBidLink_);
   setEpochLink(epochLink_);
   setAnswerLink(answerLink_);
-  setPreviousAnswerLink(previousRoundDataLink_.answer);}catch(){};
+  setPreviousAnswerLink(previousRoundDataLink_.answer);}catch{};
       try{
   const nftBalancePromise  = sekaiContract.balanceOf(address);
   const rewardsPromise = rewardsContract.checkRewards(address);
@@ -447,7 +447,7 @@ if (isConnected) {
       },
     },
   });
-}}catch(){};
+}}catch{};
 }
 
     const interval = setInterval(() => init(), 1000);
