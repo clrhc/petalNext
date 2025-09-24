@@ -190,8 +190,8 @@ if (isConnected) {
   setPetalAllowance(petalAllowance_);
   }
 
-  setEthBalance(ethBalance_);
-  setPetalBalance(petalBalance_);
+  setEthBalance(Number(ethBalance_));
+  setPetalBalance(Number(petalBalance_));
   setPetalLaunched(petalLaunched_);
   }catch{};
 
@@ -224,7 +224,7 @@ if (isConnected) {
   setVirtuePrice(virtueCurve_[6]);
   }
 
-  setVirtueBalance(virtueBalance_);
+  setVirtueBalance(Number(virtueBalance_));
   setVirtueLaunched(virtueLaunched_);
   setVirtueIn(Number(virtueCurve_[2]));
   }catch{};
@@ -249,7 +249,7 @@ if (isConnected) {
     methAllowancePromise
   ]);
 
-  setWeedBalance(weedBalance_);
+  setWeedBalance(Number(weedBalance_));
   setWeedAllowance(weedAllowance_);
   setWeedMethPrice(weedMethPrice_[1]);
   setMethBalance(methBalance_);
