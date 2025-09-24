@@ -156,7 +156,6 @@ if (isConnected) {
   const address = userInfo[4];
 
   if (!address || !/^0x[a-fA-F0-9]{40}$/.test(address)) {
-  console.error("Invalid address:", address);
   return;
   }
   const ethBalancePromise     = provider.getBalance(address);
@@ -395,6 +394,10 @@ if (isConnected) {
 
   if (chartRef.current) {
     chartRef.current.destroy();
+
+    if (!ctx) {
+  return;
+  }
   
 
   chartRef.current = new Chart(ctx, {
