@@ -599,7 +599,7 @@ if (isConnected) {
       if(networkId === baseId){
         await writeContract({
           abi: token.abi,
-          address: any as Address,
+          address: contract as Address,
           functionName: 'approve',
           args: [Data.uniswapRouter, ethers.parseUnits(String(1000000000))],
         });
