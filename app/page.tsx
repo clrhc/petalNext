@@ -131,7 +131,27 @@ export default function Home() {
 
   useEffect(() =>{
     async function init(){
-     
+if(!isConnected){
+     try{
+  const petalLaunchedPromise =  factoryContract.tokenLaunched(Data.petalToken);
+  const petalCurvePromise = factoryContract.bondingCurves(Data.petalToken);
+  const [
+    petalLaunched_,
+    petalCurve_
+  ] = await Promise.all([
+    petalLaunchedPromise,
+    petalCurvePromise
+  ]);
+  setPetalLaunched(petalLaunched_);
+  if(petalLaunched_){
+  const petalEthPricePromise = await uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[Data.petalToken,Data.WETH]);
+  setSpotPrice(petalEthPricePromise[1]);
+  }else{
+  setSpotPrice(petalCurve_[6]);
+  setEthIn(Number(petalCurve_[2]));
+  }
+  }catch{};
+}
 if (isConnected) {
     try{
   const userInfo_       = await referralContract.userInfo(address);
@@ -188,7 +208,7 @@ if (isConnected) {
     petalRouterAllowancePromise,
     petalCurvePromise
   ]);
-
+  setPetalLaunched(petalLaunched_);
   if(petalLaunched_){
   const petalEthPricePromise = await uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[Data.petalToken,Data.WETH]);
   setSpotPrice(petalEthPricePromise[1]);
@@ -200,7 +220,6 @@ if (isConnected) {
 
   setEthBalance(Number(ethBalance_));
   setPetalBalance(petalBalance_);
-  setPetalLaunched(petalLaunched_);
   }catch{};
 
     try{
@@ -380,14 +399,18 @@ if (isConnected) {
 useEffect(() => {
   const loadChart = async () => {
     try {
-      if (!address || !Data.petalToken) return;
-
+      // Always try to get bonding curve data (doesn't require wallet connection)
       const bondingCurve_ = await factoryContract.bondingCurves(Data.petalToken);
 
       const tokenVirtualReserve = Number(bondingCurve_[1]);
       const ethVirtualReserve = Number(bondingCurve_[4]);
-      setEthIn(Number(bondingCurve_[2]));
 
+      // Set ETH in if available
+      if (bondingCurve_[2]) {
+        setEthIn(Number(bondingCurve_[2]));
+      }
+
+      // Only skip drawing chart if spot price matches
       if (Number(bondingCurve_[6]) === Number(spotPrice)) {
         return;
       }
@@ -484,8 +507,10 @@ useEffect(() => {
     }
   };
 
+  // Run once on load and again if any of these change
   loadChart();
-}, [address, Data.petalToken, spotPrice]);
+}, [spotPrice, Data.petalToken, address]);
+
 
   const checkRef = (e: React.ChangeEvent<HTMLInputElement>) => {
   const input = e.target.value;
