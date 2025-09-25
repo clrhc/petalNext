@@ -54,7 +54,7 @@ export default function Home() {
   };
   const { address, isConnected } = useAccount();
   const {open} = useAppKit();
-  const [baseId] = useState(11155111);
+  const [baseId] = useState(8453);
   const [userInfo, setUserInfo] = useState<[number, number, string, string, string]>([0, 0, '', '', '']);
   const [userRef, setUserRef] = useState("");
   const [newRef, setNewRef] = useState("");
@@ -68,13 +68,19 @@ export default function Home() {
   const [petalBalance, setPetalBalance] = useState(0);
   const [virtueBalance, setVirtueBalance] = useState(0);
   const [weedBalance, setWeedBalance] = useState(0);
-  const [methBalance, setMethBalance] = useState(0);
+  const [catgirlBalance, setCatgirlBalance] = useState(0);
+  const [femboyBalance, setFemboyBalance] = useState(0);
+  const [cheeseBalance, setCheeseBalance] = useState(0);
+  const [beetleBalance, setBeetleBalance] = useState(0);
   const [nftBalance, setNftBalance]  = useState(0);
   const [rewardsAvailable, setRewardsAvailable] = useState(0);
   const [petalAllowance, setPetalAllowance] = useState(0);
   const [virtueAllowance, setVirtueAllowance] = useState(0);
   const [weedAllowance, setWeedAllowance] = useState(0);
-  const [methAllowance, setMethAllowance] = useState(0);
+  const [catgirlAllowance, setCatgirlAllowance] = useState(0);
+  const [femboyAllowance, setFemboyAllowance] = useState(0);
+  const [cheeseAllowance, setCheeseAllowance] = useState(0);
+  const [beetleAllowance, setBeetleAllowance] = useState(0);
   const [checkBidEth, setCheckBidEth] = useState(0);
   const [checkBidBtc, setCheckBidBtc] = useState(0);
   const [checkBidLink, setCheckBidLink] = useState(0);
@@ -96,7 +102,10 @@ export default function Home() {
   const [slippage, setSlippage] = useState(1);
   const [spotPrice, setSpotPrice] = useState(0);
   const [virtuePrice, setVirtuePrice] = useState(0);
-  const [weedMethPrice, setWeedMethPrice] = useState(0);
+  const [weedCatgirlPrice, setWeedCatgirlPrice] = useState(0);
+  const [weedFemboyPrice, setWeedFemboyPrice] = useState(0);
+  const [weedCheesePrice, setWeedCheesePrice] = useState(0);
+  const [weedBeetlePrice, setWeedBeetlePrice] = useState(0);
   const [buyValue, setBuyValue] = useState(0);
   const [bidValue, setBidValue] = useState(0);
   const [sellValue, setSellValue] = useState(0);
@@ -111,7 +120,7 @@ export default function Home() {
   const [isMobile, setIsMobile] = useState(false);
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
-  const provider = new ethers.JsonRpcProvider('https://ethereum-sepolia-rpc.publicnode.com');
+  const provider = new ethers.JsonRpcProvider('https://base.llamarpc.com');
   const referralContract = new ethers.Contract(Data.referralAddress, referral.abi, provider);
   const ethPredictionContract = new ethers.Contract(Data.ethPrediction, prediction.abi, provider);
   const btcPredictionContract = new ethers.Contract(Data.btcPrediction, prediction.abi, provider);
@@ -123,7 +132,10 @@ export default function Home() {
   const virtueContract = new ethers.Contract(Data.virtueToken, implementation.abi, provider);
   const virtueFactory = new ethers.Contract(Data.virtueFactory, factory.abi, provider);
   const factoryContract = new ethers.Contract(Data.petalFactory, factory.abi, provider);
-  const methContract = new ethers.Contract(Data.METH, token.abi, provider);
+  const catgirlContract = new ethers.Contract(Data.CATGIRL, token.abi, provider);
+  const femboyContract = new ethers.Contract(Data.FEMBOY, token.abi, provider);
+  const cheeseContract = new ethers.Contract(Data.CHEESE, token.abi, provider);
+  const beetleContract = new ethers.Contract(Data.BEETLE, token.abi, provider);
   const rewardsContract = new ethers.Contract(Data.petalRewards, rewards.abi, provider);
   const sekaiContract = new ethers.Contract(Data.virtueNFT, nft.abi, provider);
   const uniswapRouterContract = new ethers.Contract(Data.uniswapRouter, uniswapRouter.abi, provider);
@@ -266,29 +278,66 @@ if (isConnected) {
     try{
   const weedBalancePromise     = factoryContract.balanceOf(address);
   const weedAllowancePromise   = factoryContract.allowance(address, Data.uniswapRouter);
-  const weedMethPricePromise = uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[Data.METH, Data.petalFactory]);
-  const methBalancePromise = methContract.balanceOf(address);
-  const methAllowancePromise = methContract.allowance(address, Data.uniswapRouter);
+  const weedCatgirlPricePromise = uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[Data.CATGIRL, Data.petalFactory]);
+  const catgirlBalancePromise = catgirlContract.balanceOf(address);
+  const catgirlAllowancePromise = catgirlContract.allowance(address, Data.uniswapRouter);
+  const weedFemboyPricePromise = uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[Data.FEMBOY, Data.petalFactory]);
+  const femboyBalancePromise = femboyContract.balanceOf(address);
+  const femboyAllowancePromise = femboyContract.allowance(address, Data.uniswapRouter);
+  const weedCheesePricePromise = uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[Data.CHEESE, Data.petalFactory]);
+  const cheeseBalancePromise = cheeseContract.balanceOf(address);
+  const cheeseAllowancePromise = cheeseContract.allowance(address, Data.uniswapRouter);
+  const weedBeetlePricePromise = uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[Data.BEETLE, Data.petalFactory]);
+  const beetleBalancePromise = beetleContract.balanceOf(address);
+  const beetleAllowancePromise = beetleContract.allowance(address, Data.uniswapRouter);
   const [
     weedBalance_,
     weedAllowance_,
-    weedMethPrice_,
-    methBalance_,
-    methAllowance_
+    weedCatgirlPrice_,
+    catgirlBalance_,
+    catgirlAllowance_,
+    weedFemboyPrice_,
+    femboyBalance_,
+    femboyAllowance_,
+    weedCheesePrice_,
+    cheeseBalance_,
+    cheeseAllowance_,
+    weedBeetlePrice_,
+    beetleBalance_,
+    beetleAllowance_
   ] = await Promise.all([
     weedBalancePromise,
     weedAllowancePromise,
-    weedMethPricePromise,
-    methBalancePromise,
-    methAllowancePromise
+    weedCatgirlPricePromise,
+    catgirlBalancePromise,
+    catgirlAllowancePromise,
+    weedFemboyPricePromise,
+    femboyBalancePromise,
+    femboyAllowancePromise,
+    weedCheesePricePromise,
+    cheeseBalancePromise,
+    cheeseAllowancePromise,
+    weedBeetlePricePromise,
+    beetleBalancePromise,
+    beetleAllowancePromise
   ]);
 
   setWeedBalance(weedBalance_);
   setWeedAllowance(weedAllowance_);
-  setWeedMethPrice(weedMethPrice_[1]);
-  setMethBalance(methBalance_);
-  setMethAllowance(methAllowance_);
+  setWeedCatgirlPrice(weedCatgirlPrice_[1]);
+  setCatgirlBalance(catgirlBalance_);
+  setCatgirlAllowance(catgirlAllowance_);
+   setWeedFemboyPrice(weedFemboyPrice_[1]);
+  setFemboyBalance(femboyBalance_);
+  setFemboyAllowance(femboyAllowance_);
+   setWeedCheesePrice(weedCheesePrice_[1]);
+  setCheeseBalance(cheeseBalance_);
+  setCheeseAllowance(cheeseAllowance_);
+  setWeedBeetlePrice(weedBeetlePrice_[1]);
+  setBeetleBalance(beetleBalance_);
+  setBeetleAllowance(beetleAllowance_);
   }catch{};
+
 
   try{
   const checkBidPromiseEth  = ethPredictionContract.checkBid(address);
@@ -296,18 +345,33 @@ if (isConnected) {
   const epochPromiseEth     = ethPredictionContract.epochCheck();
   const answerPromiseEth    = ethusdContract.latestAnswer();
   const roundPromiseEth = ethusdContract.latestRound();
+  const checkBidPromiseBtc  = btcPredictionContract.checkBid(address);
+  const userBidPromiseBtc   = btcPredictionContract.userBid(address);
+  const epochPromiseBtc     = btcPredictionContract.epochCheck();
+  const answerPromiseBtc    = btcusdContract.latestAnswer();
+  const roundPromiseBtc = btcusdContract.latestRound();
   const [
     checkBidEth_,
     userBidEth_,
     epochEth_,
     answerEth_,
-    roundEth_
+    roundEth_,
+    checkBidBtc_,
+    userBidBtc_,
+    epochBtc_,
+    answerBtc_,
+    roundBtc_
   ] = await Promise.all([
     checkBidPromiseEth,
     userBidPromiseEth,
     epochPromiseEth,
     answerPromiseEth,
-    roundPromiseEth
+    roundPromiseEth,
+    checkBidPromiseBtc,
+    userBidPromiseBtc,
+    epochPromiseBtc,
+    answerPromiseBtc,
+    roundPromiseBtc
   ]);
 
   const previousRoundDataEth_ = await ethusdContract.getRoundData(roundEth_-epochEth_);
@@ -319,26 +383,7 @@ if (isConnected) {
   setUserBidEth(userBidEth_);
   setEpochEth(epochEth_);
   setAnswerEth(answerEth_);
-  setPreviousAnswerEth(previousRoundDataEth_.answer);}catch{};
-  try{
-  const checkBidPromiseBtc  = btcPredictionContract.checkBid(address);
-  const userBidPromiseBtc   = btcPredictionContract.userBid(address);
-  const epochPromiseBtc     = btcPredictionContract.epochCheck();
-  const answerPromiseBtc    = btcusdContract.latestAnswer();
-  const roundPromiseBtc = btcusdContract.latestRound();
-    const [
-    checkBidBtc_,
-    userBidBtc_,
-    epochBtc_,
-    answerBtc_,
-    roundBtc_
-  ] = await Promise.all([
-    checkBidPromiseBtc,
-    userBidPromiseBtc,
-    epochPromiseBtc,
-    answerPromiseBtc,
-    roundPromiseBtc
-  ]);
+  setPreviousAnswerEth(previousRoundDataEth_.answer);
 
   const previousRoundDataBtc_ = await btcusdContract.getRoundData(roundBtc_-epochBtc_);
   if(Number(checkBidBtc_) > 0){
@@ -349,25 +394,32 @@ if (isConnected) {
   setUserBidBtc(userBidBtc_);
   setEpochBtc(epochBtc_);
   setAnswerBtc(answerBtc_);
-  setPreviousAnswerBtc(previousRoundDataBtc_.answer);}catch{}
+  setPreviousAnswerBtc(previousRoundDataBtc_.answer);}catch{};
+
   try{
   const checkBidPromiseLink  = linkPredictionContract.checkBid(address);
   const userBidPromiseLink   = linkPredictionContract.userBid(address);
   const epochPromiseLink     = linkPredictionContract.epochCheck();
   const answerPromiseLink    = linkusdContract.latestAnswer();
   const roundPromiseLink = linkusdContract.latestRound();
+  const nftBalancePromise  = sekaiContract.balanceOf(address);
+  const rewardsPromise = rewardsContract.checkRewards(address);
     const [
     checkBidLink_,
     userBidLink_,
     epochLink_,
     answerLink_,
-    roundLink_
+    roundLink_,
+    nftBalance_,
+    rewards_
   ] = await Promise.all([
     checkBidPromiseLink,
     userBidPromiseLink,
     epochPromiseLink,
     answerPromiseLink,
-    roundPromiseLink
+    roundPromiseLink,
+    nftBalancePromise,
+    rewardsPromise
   ]);
 
   const previousRoundDataLink_ = await linkusdContract.getRoundData(roundLink_-epochLink_);
@@ -379,21 +431,9 @@ if (isConnected) {
   setUserBidLink(userBidLink_);
   setEpochLink(epochLink_);
   setAnswerLink(answerLink_);
-  setPreviousAnswerLink(previousRoundDataLink_.answer);}catch{};
-      try{
-  const nftBalancePromise  = sekaiContract.balanceOf(address);
-  const rewardsPromise = rewardsContract.checkRewards(address);
-
-  const[
-  nftBalance_,
-  rewards_
-] = await Promise.all([
-  nftBalancePromise,
-  rewardsPromise
-]);
+  setPreviousAnswerLink(previousRoundDataLink_.answer);
   setNftBalance(Number(nftBalance_));
-  setRewardsAvailable(Number(rewards_));
-}catch{};
+  setRewardsAvailable(Number(rewards_));}catch{};
 }
 }
 
@@ -403,7 +443,7 @@ if (isConnected) {
       }
   });
 
-useEffect(() => {
+/*useEffect(() => {
   const loadChart = async () => {
     try {
       // Always try to get bonding curve data (doesn't require wallet connection)
@@ -516,7 +556,7 @@ useEffect(() => {
 
   // Run once on load and again if any of these change
   loadChart();
-}, [spotPrice, Data.petalToken, address]);
+}, [spotPrice, Data.petalToken, address]);*/
 
 
   const checkRef = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -658,46 +698,46 @@ useEffect(() => {
       }
     }
 
-    const buyRouter = async (contract: Address) => {
+    const buyRouter = async (contract: Address,price: Number) => {
   if (networkId === baseId) {
       await writeContract({
         abi: uniswapRouter.abi,
         address: Data.uniswapRouter as Address,
         functionName: 'swapExactTokensForTokensSupportingFeeOnTransferTokens',
-        args: [ethers.parseUnits(String(buyValue)), ethers.parseUnits((buyValue / (Number(weedMethPrice) / 1e18) - (((buyValue / (Number(weedMethPrice) / 1e18)) / 100) * slippage)).toFixed(18),18), [Data.petalFactory, contract], address, String(Number((Date.now()/1000)+10000).toFixed(0))],
+        args: [ethers.parseUnits(String(buyValue)), ethers.parseUnits((buyValue / (Number(price) / 1e18) - (((buyValue / (Number(price) / 1e18)) / 100) * slippage)).toFixed(18),18), [Data.petalFactory, contract], address, String(Number((Date.now()/1000)+10000).toFixed(0))],
         });
       }
     };
 
-     const sellRouter = async (contract: Address) => {
+     const sellRouter = async (contract: Address,price: Number) => {
   if (networkId === baseId) {
       await writeContract({
         abi: uniswapRouter.abi,
         address: Data.uniswapRouter as Address,
         functionName: 'swapExactTokensForTokensSupportingFeeOnTransferTokens',
-        args: [ethers.parseUnits(String(sellValue)), ethers.parseUnits((sellValue * (Number(weedMethPrice) / 1e18) - ((sellValue * (Number(weedMethPrice) / 1e18) / 100) * slippage)).toFixed(18),18), [contract, Data.petalFactory], address, String(Number((Date.now()/1000)+10000).toFixed(0))],
+        args: [ethers.parseUnits(String(sellValue)), ethers.parseUnits((sellValue * (Number(price) / 1e18) - ((sellValue * (Number(price) / 1e18) / 100) * slippage)).toFixed(18),18), [contract, Data.petalFactory], address, String(Number((Date.now()/1000)+10000).toFixed(0))],
         });
       }
     };
 
-    const sellEth = async (contract: Address) => {
+    const sellEth = async (contract: Address,price: Number) => {
       if(networkId === baseId){
         await writeContract({
           abi: uniswapRouter.abi,
           address: Data.uniswapRouter as Address,
           functionName: 'swapExactTokensForETHSupportingFeeOnTransferTokens',
-          args: [ethers.parseUnits(String(sellValue)), ethers.parseUnits((sellValue * (Number(virtuePrice) / 1e18) - ((sellValue * (Number(virtuePrice) / 1e18) / 100) * 3) - ((sellValue * (Number(virtuePrice) / 1e18) / 100) * slippage)).toFixed(18),18), [contract, Data.WETH], address, String(Number((Date.now()/1000)+10000).toFixed(0))],
+          args: [ethers.parseUnits(String(sellValue)), ethers.parseUnits((sellValue * (Number(price) / 1e18) - ((sellValue * (Number(price) / 1e18) / 100) * 3) - ((sellValue * (Number(price) / 1e18) / 100) * slippage)).toFixed(18),18), [contract, Data.WETH], address, String(Number((Date.now()/1000)+10000).toFixed(0))],
         })
       }
     }
 
-      const buyEth = async (contract: Address) => {
+      const buyEth = async (contract: Address,price: Number) => {
       if(networkId === baseId){
         await writeContract({
           abi: uniswapRouter.abi,
           address: Data.uniswapRouter as Address,
           functionName: 'swapExactETHForTokensSupportingFeeOnTransferTokens',
-          args: [ethers.parseUnits((buyValue / (Number(virtuePrice) / 1e18) - (((buyValue / (Number(virtuePrice) / 1e18)) / 100) * 3 + ((buyValue / (Number(virtuePrice) / 1e18)) / 100) * slippage)).toFixed(18),18), [Data.WETH, contract], address, String(Number((Date.now()/1000)+10000).toFixed(0))],
+          args: [ethers.parseUnits((buyValue / (Number(price) / 1e18) - (((buyValue / (Number(price) / 1e18)) / 100) * 3 + ((buyValue / (Number(price) / 1e18)) / 100) * slippage)).toFixed(18),18), [Data.WETH, contract], address, String(Number((Date.now()/1000)+10000).toFixed(0))],
           value: ethers.parseUnits(String(buyValue)),
         })
       }
@@ -845,7 +885,7 @@ useEffect(() => {
   </span>
     <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 ETH" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setBuyValue(Number(e.target.value))} value={buyValue} type="number" />
     </div>
-   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(2)} ETH</p>
+   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(4)} ETH</p>
      <div style={{ position: 'relative' }}>
   <span className="inputAfter" style={{
     position: 'absolute',
@@ -860,7 +900,7 @@ useEffect(() => {
     <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 PETAL" value={String(Number(buyValue / (Number(spotPrice) / 1e18)-((buyValue / (Number(spotPrice) / 1e18)/100)*3)).toFixed(4))} type="number" readOnly />
   </div>
   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(petalBalance), 18)).toFixed(2)} PETAL</p>
-    {buyValue > 0 ? <><p onClick={() => petalLaunched ? buyEth(Data.petalToken as Address) : buyToken()} className="enterButton pointer">Buy</p>
+    {buyValue > 0 ? <><p onClick={() => petalLaunched ? buyEth(Data.petalToken as Address, spotPrice as Number) : buyToken()} className="enterButton pointer">Buy</p>
     </>:<></>}<p style={{textAlign: 'center'}}>1 ETH = {Number(1/Number(Number(spotPrice) / 10 ** 18)).toFixed(4)} PETAL</p>
     <p style={{textAlign: 'center'}}>3% Tax</p>
     {!petalLaunched && <><p style={{textAlign: 'center'}}>ETH To Bond: {Number(ethers.formatUnits(String(ethIn), 18)).toFixed(3)} / 40 ETH</p></>}
@@ -893,9 +933,9 @@ useEffect(() => {
   </span>
     <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 ETH" value={String(Number(sellValue * (Number(spotPrice) / 1e18)-((sellValue * (Number(spotPrice) / 1e18)/100)*3)).toFixed(8))} type="number" readOnly />
     </div>
-    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(2)} ETH</p>
+    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(4)} ETH</p>
     {sellValue > 0 ? <>
-    {sellValue*10**18 > petalAllowance ? <><p onClick={() => petalLaunched ? approveRouter(Data.petalToken as Address) : approveToken()} className="enterButton pointer">Approve</p></>:<><p onClick={() => petalLaunched ? sellRouter(Data.petalToken as Address) : sellToken()} className="enterButton pointer">Sell</p></>}</>:<></>}
+    {sellValue*10**18 > petalAllowance ? <><p onClick={() => petalLaunched ? approveRouter(Data.petalToken as Address) : approveToken()} className="enterButton pointer">Approve</p></>:<><p onClick={() => petalLaunched ? sellEth(Data.petalToken as Address, spotPrice as Number) : sellToken()} className="enterButton pointer">Sell</p></>}</>:<></>}
       <p style={{textAlign: 'center'}}>1 PETAL = {Number(Number(spotPrice) / 10 ** 18).toFixed(10)} ETH</p>
       <p style={{textAlign: 'center'}}>3% Tax</p>
       {!petalLaunched && <><p style={{textAlign: 'center'}}>ETH To Bond: {Number(ethers.formatUnits(String(ethIn), 18)).toFixed(3)} / 40 ETH</p></>}
@@ -927,7 +967,7 @@ useEffect(() => {
   </span>
     <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 ETH" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setBuyValue(Number(e.target.value))} value={buyValue} type="number" />
     </div>
-   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(2)} ETH</p>
+   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(4)} ETH</p>
      <div style={{ position: 'relative' }}>
   <span className="inputAfter" style={{
     position: 'absolute',
@@ -942,7 +982,7 @@ useEffect(() => {
     <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 VIRTUE" value={String(Number(buyValue / (Number(virtuePrice) / 1e18)-((buyValue / (Number(virtuePrice) / 1e18)/100)*3)).toFixed(4))} type="number" readOnly />
   </div>
   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(virtueBalance), 18)).toFixed(2)} VIRTUE</p>
-    {buyValue > 0 ? <><p onClick={() => virtueLaunched ? buyEth(Data.virtueToken as Address) : buyVirtue()} className="enterButton pointer">Buy</p>
+    {buyValue > 0 ? <><p onClick={() => virtueLaunched ? buyEth(Data.virtueToken as Address, virtuePrice as Number) : buyVirtue()} className="enterButton pointer">Buy</p>
     </>:<></>}<p style={{textAlign: 'center'}}>1 ETH = {Number(1/Number(Number(virtuePrice) / 10 ** 18)).toFixed(4)} VIRTUE</p>
     <p style={{textAlign: 'center'}}>3% Tax</p>
     {!virtueLaunched && <><p style={{textAlign: 'center'}}>ETH To Bond: {Number(ethers.formatUnits(String(virtueIn), 18)).toFixed(3)} / 4 ETH</p></>}
@@ -975,18 +1015,18 @@ useEffect(() => {
   </span>
     <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 ETH" value={String(Number(sellValue * (Number(virtuePrice) / 1e18)-((sellValue * (Number(virtuePrice) / 1e18)/100)*3)).toFixed(8))} type="number" readOnly />
     </div>
-    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(2)} ETH</p>
+    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(4)} ETH</p>
     {sellValue > 0 ? <>
-    {sellValue*10**18 > virtueAllowance ? <><p onClick={() => virtueLaunched ? approveRouter(Data.virtueToken as Address) : approveVirtue()} className="enterButton pointer">Approve</p></>:<><p onClick={() => virtueLaunched ? sellEth(Data.virtueToken as Address) : sellVirtue()} className="enterButton pointer">Sell</p></>}</>:<></>}
+    {sellValue*10**18 > virtueAllowance ? <><p onClick={() => virtueLaunched ? approveRouter(Data.virtueToken as Address) : approveVirtue()} className="enterButton pointer">Approve</p></>:<><p onClick={() => virtueLaunched ? sellEth(Data.virtueToken as Address, virtuePrice as Number) : sellVirtue()} className="enterButton pointer">Sell</p></>}</>:<></>}
       <p style={{textAlign: 'center'}}>1 VIRTUE = {Number(Number(virtuePrice) / 10 ** 18).toFixed(10)} ETH</p>
       <p style={{textAlign: 'center'}}>3% Tax</p>
       {!virtueLaunched && <><p style={{textAlign: 'center'}}>ETH To Bond: {Number(ethers.formatUnits(String(virtueIn), 18)).toFixed(3)} / 4 ETH</p></>}
       </>}</>}
         </>}
       {tab === 2 &&<>
-      <div className="swapButtons"><p className={`${swapMeme === 0 && "tealActive"}`} onClick={() => setSwapMeme(0)}>METH</p><p className={`${swapMeme === 1 && "tealActive"}`} onClick={() => setSwapMeme(1)}>CATGIRL</p><p className={`${swapMeme === 2 && "tealActive"}`} onClick={() => setSwapMeme(2)}>FEMBOY</p></div>
-      <div className="swapButtons"><p className={`${swapMeme === 3 && "tealActive"}`} onClick={() => setSwapMeme(3)}>FENT</p><p className={`${swapCoin === 4 && "tealActive"}`} onClick={() => setSwapMeme(4)}>🧀</p><p className={`${swapMeme === 5 && "tealActive"}`} onClick={() => setSwapMeme(5)}>🪲</p></div>
-       {swapMeme === 0 && <><div className="swapButtons"><p className={`${swapState === 0 && "tealActive"}`} onClick={() => setSwapState(0)}>Buy METH</p><p className={`${swapState === 1 && "tealActive"}`} onClick={() => setSwapState(1)}>Sell METH</p>  
+      <div className="swapButtons"><p className={`${swapMeme === 0 && "tealActive"}`} onClick={() => setSwapMeme(0)}>CATGIRL</p><p className={`${swapMeme === 1 && "tealActive"}`} onClick={() => setSwapMeme(1)}>FEMBOY</p></div>
+      <div className="swapButtons"><p className={`${swapMeme === 2 && "tealActive"}`} onClick={() => setSwapMeme(2)}>🧀</p><p className={`${swapMeme === 3 && "tealActive"}`} onClick={() => setSwapMeme(3)}>🪲</p></div>
+       {swapMeme === 0 && <><div className="swapButtons"><p className={`${swapState === 0 && "tealActive"}`} onClick={() => setSwapState(0)}>Buy CATGIRL</p><p className={`${swapState === 1 && "tealActive"}`} onClick={() => setSwapState(1)}>Sell CATGIRL</p>  
   <div style={{ position: 'relative', marginTop: '2px', marginLeft: '-8px' }}>
   <span style={{
     position: 'absolute',
@@ -1023,14 +1063,14 @@ useEffect(() => {
     transform: 'translateY(-50%)',
     color: '#FFF'
   }}>
-    METH
+    CATGIRL
   </span>
-    <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 METH" value={String(Number(buyValue / (Number(weedMethPrice) / 1e18)).toFixed(8))} type="number" readOnly />
+    <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 CATGIRL" value={String(Number(buyValue / (Number(weedCatgirlPrice) / 1e18)).toFixed(4))} type="number" readOnly />
   </div>
-  <p className="rightSide">Balance: {Number(ethers.formatUnits(String(methBalance), 18)).toFixed(2)} METH</p>
+  <p className="rightSide">Balance: {Number(ethers.formatUnits(String(catgirlBalance), 18)).toFixed(2)} CATGIRL</p>
     {buyValue > 0 ? <>
-    {buyValue*10**18 > weedAllowance ? <><p onClick={() => approveRouter(Data.petalFactory as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => buyRouter(Data.METH as Address)} className="enterButton pointer">Buy</p></>}
-    </>:<></>}<p style={{textAlign: 'center'}}>1 WEED = {Number(1/Number(Number(weedMethPrice) / 10 ** 18)).toFixed(4)} METH</p>
+    {buyValue*10**18 > weedAllowance ? <><p onClick={() => approveRouter(Data.petalFactory as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => buyRouter(Data.CATGIRL as Address, weedCatgirlPrice as Number)} className="enterButton pointer">Buy</p></>}
+    </>:<></>}<p style={{textAlign: 'center'}}>1 WEED = {Number(1/Number(Number(weedCatgirlPrice) / 10 ** 18)).toFixed(4)} CATGIRL</p>
     </>:
     <>
       <div style={{ position: 'relative' }}>
@@ -1042,11 +1082,11 @@ useEffect(() => {
     transform: 'translateY(-50%)',
     color: '#FFF'
   }}>
-    METH
+    CATGIRL
   </span>
-    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 METH" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setSellValue(Number(e.target.value))} value={sellValue} type="number" />
+    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 CATGIRL" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setSellValue(Number(e.target.value))} value={sellValue} type="number" />
     </div>
-    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(methBalance), 18)).toFixed(2)} METH</p>
+    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(catgirlBalance), 18)).toFixed(2)} CATGIRL</p>
       <div style={{ position: 'relative' }}>
   <span className="inputAfter" style={{
     position: 'absolute',
@@ -1058,13 +1098,251 @@ useEffect(() => {
   }}>
     WEED
   </span>
-    <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 WEED" value={String(Number(sellValue * (Number(weedMethPrice) / 1e18)).toFixed(8))} type="number" readOnly />
+    <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 WEED" value={String(Number(sellValue * (Number(weedCatgirlPrice) / 1e18)).toFixed(4))} type="number" readOnly />
     </div>
     <p className="rightSide">Balance: {Number(ethers.formatUnits(String(weedBalance), 18)).toFixed(2)} WEED</p>
     {sellValue > 0 ? <>
-    {sellValue*10**18 > methAllowance ? <><p onClick={() => approveRouter(Data.METH as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => sellRouter(Data.METH as Address)} className="enterButton pointer">Sell</p></>}</>:<></>}
-      <p style={{textAlign: 'center'}}>1 METH = {Number(Number(weedMethPrice) / 10 ** 18).toFixed(10)} WEED</p>
-      </>}</>}
+    {sellValue*10**18 > catgirlAllowance ? <><p onClick={() => approveRouter(Data.CATGIRL as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => sellRouter(Data.CATGIRL as Address, weedCatgirlPrice as Number)} className="enterButton pointer">Sell</p></>}</>:<></>}
+      <p style={{textAlign: 'center'}}>1 CATGIRL = {Number(Number(weedCatgirlPrice) / 10 ** 18).toFixed(10)} WEED</p>
+       </>}<div id="dexscreener-embed"><iframe src="https://dexscreener.com/base/0x1C4fC19336758805a4857A55944C02E125796723?embed=1&loadChartSettings=0&trades=0&tabs=0&info=0&chartLeftToolbar=0&chartTimeframesToolbar=0&loadChartSettings=0&chartDefaultOnMobile=1&chartTheme=dark&theme=dark&chartStyle=0&chartType=usd&interval=15"></iframe></div>
+    </>}
+      {swapMeme === 1 && <><div className="swapButtons"><p className={`${swapState === 0 && "tealActive"}`} onClick={() => setSwapState(0)}>Buy FEMBOY</p><p className={`${swapState === 1 && "tealActive"}`} onClick={() => setSwapState(1)}>Sell FEMBOY</p>  
+  <div style={{ position: 'relative', marginTop: '2px', marginLeft: '-8px' }}>
+  <span style={{
+    position: 'absolute',
+    fontSize: '1.5rem',
+    left: '110px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#FFF'
+  }}>
+    %
+  </span><input id="refInput" className="inputText slipBox userText outlineTeal" placeholder="Slippage" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setSlippage(Number(e.target.value))} value={slippage} type="number" />
+    </div></div>
+    {swapState === 0 ? <>
+    <div style={{ position: 'relative' }}>
+  <span className="inputAfter" style={{
+    position: 'absolute',
+    fontSize: '1.5rem',
+    right: '30px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#FFF'
+  }}>
+    WEED
+  </span>
+    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 WEED" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setBuyValue(Number(e.target.value))} value={buyValue} type="number" />
+    </div>
+   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(weedBalance), 18)).toFixed(2)} WEED</p>
+     <div style={{ position: 'relative' }}>
+  <span className="inputAfter" style={{
+    position: 'absolute',
+    right: '30px',
+    fontSize: '1.5rem',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#FFF'
+  }}>
+    FEMBOY
+  </span>
+    <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 FEMBOY" value={String(Number(buyValue / (Number(weedFemboyPrice) / 1e18)).toFixed(4))} type="number" readOnly />
+  </div>
+  <p className="rightSide">Balance: {Number(ethers.formatUnits(String(femboyBalance), 18)).toFixed(2)} FEMBOY</p>
+    {buyValue > 0 ? <>
+    {buyValue*10**18 > weedAllowance ? <><p onClick={() => approveRouter(Data.petalFactory as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => buyRouter(Data.FEMBOY as Address, weedFemboyPrice as Number)} className="enterButton pointer">Buy</p></>}
+    </>:<></>}<p style={{textAlign: 'center'}}>1 WEED = {Number(1/Number(Number(weedFemboyPrice) / 10 ** 18)).toFixed(4)} FEMBOY</p>
+    </>:
+    <>
+      <div style={{ position: 'relative' }}>
+  <span className="inputAfter" style={{
+    position: 'absolute',
+    fontSize: '1.5rem',
+    right: '30px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#FFF'
+  }}>
+    FEMBOY
+  </span>
+    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 FEMBOY" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setSellValue(Number(e.target.value))} value={sellValue} type="number" />
+    </div>
+    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(femboyBalance), 18)).toFixed(2)} FEMBOY</p>
+      <div style={{ position: 'relative' }}>
+  <span className="inputAfter" style={{
+    position: 'absolute',
+    right: '30px',
+    fontSize: '1.5rem',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#FFF'
+  }}>
+    WEED
+  </span>
+    <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 WEED" value={String(Number(sellValue * (Number(weedFemboyPrice) / 1e18)).toFixed(4))} type="number" readOnly />
+    </div>
+    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(weedBalance), 18)).toFixed(2)} WEED</p>
+    {sellValue > 0 ? <>
+    {sellValue*10**18 > femboyAllowance ? <><p onClick={() => approveRouter(Data.FEMBOY as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => sellRouter(Data.FEMBOY as Address, weedFemboyPrice as Number)} className="enterButton pointer">Sell</p></>}</>:<></>}
+      <p style={{textAlign: 'center'}}>1 FEMBOY = {Number(Number(weedFemboyPrice) / 10 ** 18).toFixed(10)} WEED</p>
+      </>}<div id="dexscreener-embed"><iframe src="https://dexscreener.com/base/0xaF5BD15AE9d0095b4bEB7d0e169eA2dB7ca33526?embed=1&loadChartSettings=0&trades=0&tabs=0&info=0&chartLeftToolbar=0&chartTimeframesToolbar=0&chartDefaultOnMobile=1&chartTheme=dark&theme=dark&chartStyle=0&chartType=usd&interval=15"></iframe></div></>}
+     {swapMeme === 2 && <><div className="swapButtons"><p className={`${swapState === 0 && "tealActive"}`} onClick={() => setSwapState(0)}>Buy 🧀</p><p className={`${swapState === 1 && "tealActive"}`} onClick={() => setSwapState(1)}>Sell 🧀</p>  
+  <div style={{ position: 'relative', marginTop: '2px', marginLeft: '-8px' }}>
+  <span style={{
+    position: 'absolute',
+    fontSize: '1.5rem',
+    left: '110px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#FFF'
+  }}>
+    %
+  </span><input id="refInput" className="inputText slipBox userText outlineTeal" placeholder="Slippage" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setSlippage(Number(e.target.value))} value={slippage} type="number" />
+    </div></div>
+    {swapState === 0 ? <>
+    <div style={{ position: 'relative' }}>
+  <span className="inputAfter" style={{
+    position: 'absolute',
+    fontSize: '1.5rem',
+    right: '30px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#FFF'
+  }}>
+    WEED
+  </span>
+    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 WEED" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setBuyValue(Number(e.target.value))} value={buyValue} type="number" />
+    </div>
+   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(weedBalance), 18)).toFixed(2)} WEED</p>
+     <div style={{ position: 'relative' }}>
+  <span className="inputAfter" style={{
+    position: 'absolute',
+    right: '30px',
+    fontSize: '1.5rem',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#FFF'
+  }}>
+    🧀
+  </span>
+    <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 🧀" value={String(Number(buyValue / (Number(weedCheesePrice) / 1e18)).toFixed(4))} type="number" readOnly />
+  </div>
+  <p className="rightSide">Balance: {Number(ethers.formatUnits(String(cheeseBalance), 18)).toFixed(2)} 🧀</p>
+    {buyValue > 0 ? <>
+    {buyValue*10**18 > weedAllowance ? <><p onClick={() => approveRouter(Data.petalFactory as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => buyRouter(Data.CHEESE as Address, weedCheesePrice as Number)} className="enterButton pointer">Buy</p></>}
+    </>:<></>}<p style={{textAlign: 'center'}}>1 WEED = {Number(1/Number(Number(weedCheesePrice) / 10 ** 18)).toFixed(4)} 🧀</p>
+    </>:
+    <>
+      <div style={{ position: 'relative' }}>
+  <span className="inputAfter" style={{
+    position: 'absolute',
+    fontSize: '1.5rem',
+    right: '30px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#FFF'
+  }}>
+    🧀
+  </span>
+    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 🧀" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setSellValue(Number(e.target.value))} value={sellValue} type="number" />
+    </div>
+    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(cheeseBalance), 18)).toFixed(2)} 🧀</p>
+      <div style={{ position: 'relative' }}>
+  <span className="inputAfter" style={{
+    position: 'absolute',
+    right: '30px',
+    fontSize: '1.5rem',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#FFF'
+  }}>
+    WEED
+  </span>
+    <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 WEED" value={String(Number(sellValue * (Number(weedCheesePrice) / 1e18)).toFixed(4))} type="number" readOnly />
+    </div>
+    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(weedBalance), 18)).toFixed(2)} WEED</p>
+    {sellValue > 0 ? <>
+    {sellValue*10**18 > cheeseAllowance ? <><p onClick={() => approveRouter(Data.CHEESE as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => sellRouter(Data.CHEESE as Address, weedCheesePrice as Number)} className="enterButton pointer">Sell</p></>}</>:<></>}
+      <p style={{textAlign: 'center'}}>1 🧀 = {Number(Number(weedCheesePrice) / 10 ** 18).toFixed(10)} WEED</p>
+      </>}<div id="dexscreener-embed"><iframe src="https://dexscreener.com/base/0x45749Df5d9C1f0B1b1B4e40EEEE548e99A20F095?embed=1&loadChartSettings=0&trades=0&tabs=0&info=0&chartLeftToolbar=0&chartTimeframesToolbar=0&chartDefaultOnMobile=1&chartTheme=dark&theme=dark&chartStyle=0&chartType=usd&interval=15"></iframe></div></>}
+      {swapMeme === 3 && <><div className="swapButtons"><p className={`${swapState === 0 && "tealActive"}`} onClick={() => setSwapState(0)}>Buy 🪲</p><p className={`${swapState === 1 && "tealActive"}`} onClick={() => setSwapState(1)}>Sell 🪲</p>  
+  <div style={{ position: 'relative', marginTop: '2px', marginLeft: '-8px' }}>
+  <span style={{
+    position: 'absolute',
+    fontSize: '1.5rem',
+    left: '110px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#FFF'
+  }}>
+    %
+  </span><input id="refInput" className="inputText slipBox userText outlineTeal" placeholder="Slippage" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setSlippage(Number(e.target.value))} value={slippage} type="number" />
+    </div></div>
+    {swapState === 0 ? <>
+    <div style={{ position: 'relative' }}>
+  <span className="inputAfter" style={{
+    position: 'absolute',
+    fontSize: '1.5rem',
+    right: '30px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#FFF'
+  }}>
+    WEED
+  </span>
+    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 WEED" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setBuyValue(Number(e.target.value))} value={buyValue} type="number" />
+    </div>
+   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(weedBalance), 18)).toFixed(2)} WEED</p>
+     <div style={{ position: 'relative' }}>
+  <span className="inputAfter" style={{
+    position: 'absolute',
+    right: '30px',
+    fontSize: '1.5rem',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#FFF'
+  }}>
+    🪲
+  </span>
+    <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 🪲" value={String(Number(buyValue / (Number(weedBeetlePrice) / 1e18)).toFixed(4))} type="number" readOnly />
+  </div>
+  <p className="rightSide">Balance: {Number(ethers.formatUnits(String(beetleBalance), 18)).toFixed(2)} 🪲</p>
+    {buyValue > 0 ? <>
+    {buyValue*10**18 > weedAllowance ? <><p onClick={() => approveRouter(Data.petalFactory as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => buyRouter(Data.BEETLE as Address, weedBeetlePrice as Number)} className="enterButton pointer">Buy</p></>}
+    </>:<></>}<p style={{textAlign: 'center'}}>1 WEED = {Number(1/Number(Number(weedBeetlePrice) / 10 ** 18)).toFixed(4)} 🪲</p>
+    </>:
+    <>
+      <div style={{ position: 'relative' }}>
+  <span className="inputAfter" style={{
+    position: 'absolute',
+    fontSize: '1.5rem',
+    right: '30px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#FFF'
+  }}>
+    🪲
+  </span>
+    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 🪲" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setSellValue(Number(e.target.value))} value={sellValue} type="number" />
+    </div>
+    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(beetleBalance), 18)).toFixed(2)} 🪲</p>
+      <div style={{ position: 'relative' }}>
+  <span className="inputAfter" style={{
+    position: 'absolute',
+    right: '30px',
+    fontSize: '1.5rem',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#FFF'
+  }}>
+    WEED
+  </span>
+    <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 WEED" value={String(Number(sellValue * (Number(weedBeetlePrice) / 1e18)).toFixed(4))} type="number" readOnly />
+    </div>
+    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(weedBalance), 18)).toFixed(2)} WEED</p>
+    {sellValue > 0 ? <>
+    {sellValue*10**18 > beetleAllowance ? <><p onClick={() => approveRouter(Data.BEETLE as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => sellRouter(Data.BEETLE as Address, weedBeetlePrice as Number)} className="enterButton pointer">Sell</p></>}</>:<></>}
+      <p style={{textAlign: 'center'}}>1 🪲 = {Number(Number(weedBeetlePrice) / 10 ** 18).toFixed(10)} WEED</p>
+      </>}<div id="dexscreener-embed"><iframe src="https://dexscreener.com/base/0x1908A223d6cBc9E5a0338776c2EfD03234B33664?embed=1&loadChartSettings=0&trades=0&tabs=0&info=0&chartLeftToolbar=0&chartTimeframesToolbar=0&chartDefaultOnMobile=1&chartTheme=dark&theme=dark&chartStyle=0&chartType=usd&interval=15"></iframe></div></>}
       </>}
       {tab === 3 && <>
     <div className="swapButtons"><p className={`${predState === 0 && "tealActive"}`} onClick={() => setPredState(0)}>ETH/USD</p><p className={`${predState === 1 && "tealActive"}`} onClick={() => setPredState(1)}>BTC/USD</p><p className={`${predState === 2 && "tealActive"}`} onClick={() => setPredState(2)}>LINK/USD</p></div>
@@ -1089,7 +1367,7 @@ useEffect(() => {
   </span>
     <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 ETH" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setBidValue(Number(e.target.value))} value={bidValue} type="number" />
     </div>
-   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(2)} ETH</p>
+   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(6)} ETH</p>
    <div className="swapButtons"><p className={`${bidState && "tealActive"}`} onClick={() => setBidState(true)}>HIGHER</p><p className={`${!bidState && "tealActive"}`} onClick={() => setBidState(false)}>LOWER</p></div>
    <p style={{textAlign: 'center'}}>Next price in {epochEth} epoch(s)</p> 
     <br/>
@@ -1126,7 +1404,7 @@ useEffect(() => {
   </span>
     <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 ETH" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setBidValue(Number(e.target.value))} value={bidValue} type="number" />
     </div>
-   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(2)} ETH</p>
+   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(6)} ETH</p>
    <div className="swapButtons"><p className={`${bidState && "tealActive"}`} onClick={() => setBidState(true)}>HIGHER</p><p className={`${!bidState && "tealActive"}`} onClick={() => setBidState(false)}>LOWER</p></div>
    <p style={{textAlign: 'center'}}>Next price in {epochBtc} epoch(s)</p> 
     <br/>
@@ -1163,7 +1441,7 @@ useEffect(() => {
   </span>
     <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 ETH" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setBidValue(Number(e.target.value))} value={bidValue} type="number" />
     </div>
-   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(2)} ETH</p>
+   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(6)} ETH</p>
    <div className="swapButtons"><p className={`${bidState && "tealActive"}`} onClick={() => setBidState(true)}>HIGHER</p><p className={`${!bidState && "tealActive"}`} onClick={() => setBidState(false)}>LOWER</p></div>
    <p style={{textAlign: 'center'}}>Next price in {epochLink} epoch(s)</p> 
     <br/>

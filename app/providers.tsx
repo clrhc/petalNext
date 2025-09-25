@@ -3,7 +3,6 @@ import type { ReactNode } from 'react';
 import { MiniKitProvider } from '@coinbase/onchainkit/minikit';
 import { createAppKit } from '@reown/appkit/react';
 import { WagmiProvider } from 'wagmi';
-import { sepolia } from '@reown/appkit/networks';
 import { base } from '@reown/appkit/networks';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
@@ -22,7 +21,7 @@ const metadata = {
 };
 
 // 3. Set the networks (as a non-empty tuple)
-const networks = [sepolia] as [typeof sepolia]; 
+const networks = [base] as [typeof base]; 
 
 // 4. Create Wagmi Adapter
 const wagmiAdapter = new WagmiAdapter({
