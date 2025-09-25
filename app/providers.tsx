@@ -1,10 +1,11 @@
 'use client';
 import type { ReactNode } from 'react'; 
 import {useEffect} from 'react';
-import { sdk } from '@farcaster/miniapp-sdk';
+import { MiniKitProvider } from '@coinbase/onchainkit/minikit';
 import { createAppKit } from '@reown/appkit/react';
 import { WagmiProvider } from 'wagmi';
 import { sepolia } from '@reown/appkit/networks';
+import { base } from '@reown/appkit/networks';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 
@@ -43,12 +44,14 @@ createAppKit({
 });
 
 export function Providers({ children }: { children: ReactNode }) {
-    useEffect(() => {
-        sdk.actions.ready();
-    }, []);
   return (
+     <MiniKitProvider
+      apiKey={process.env.NEXT_PUBLIC_CDP_API_KEY_NAME}
+      chain={base}
+    >
       <WagmiProvider config={wagmiAdapter.wagmiConfig}>
         <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
       </WagmiProvider>
+      </MiniKitProvider>
   );
 }
