@@ -1,6 +1,6 @@
 'use client';
 import './globals.css';
-import React,{useState, useEffect, useRef} from 'react';
+import React,{useState, useEffect} from 'react';
 import Data from './data.json';
 import Wallet from './wallet';
 import {ethers} from 'ethers';
