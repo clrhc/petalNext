@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { Providers } from './providers';
+import { Inter } from 'next/font/google';
+import './globals.css';
+
+const inter = Inter({ subsets: ['latin'] });
+
+import { headers } from 'next/headers';
+import ContextProvider from './context';
 
 export async function generateMetadata(): Promise<Metadata> {
     return {
@@ -25,17 +31,20 @@ export async function generateMetadata(): Promise<Metadata> {
     };
     }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode,
-}) {
+export default async function RootLayout({
+  children
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+
+  const headersObj = await headers();
+  const cookies = headersObj.get('cookie');
+
   return (
-    <html lang='en'>
-        <meta name="viewport" content="width=device-width, initial-scale=1, max-scale=1" />
-      <body>
-        <Providers>{children}</Providers>
+    <html lang="en">
+      <body className={inter.className}>
+        <ContextProvider cookies={cookies}>{children}</ContextProvider>
       </body>
     </html>
-  );
+  )
 }
