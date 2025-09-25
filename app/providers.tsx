@@ -44,7 +44,7 @@ createAppKit({
 export function Providers({ children }: { children: ReactNode }) {
   return (
      <MiniKitProvider
-      apiKey={process.env.NEXT_PUBLIC_CDP_API_KEY_NAME}
+      apiKey={'ea0c4849-d9fa-4333-9121-64c72395cfb4'}
       chain={base}
     >
       <WagmiProvider config={wagmiAdapter.wagmiConfig}>
