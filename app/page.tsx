@@ -397,7 +397,13 @@ if (isConnected) {
   }
 
 
-  const ctx = document.getElementById('bondingCurveChart') as HTMLCanvasElement | null;
+  const canvas = document.getElementById('bondingCurveChart') as HTMLCanvasElement | null;
+
+if (!canvas) return; 
+
+const ctx = canvas.getContext('2d');
+
+if (!ctx) return;
   
 
   if (chartRef.current) {
