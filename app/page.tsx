@@ -5,6 +5,7 @@ import Data from './data.json';
 import Wallet from './wallet';
 import {ethers} from 'ethers';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
+import { useMiniKit } from '@coinbase/onchainkit/minikit';
 import { useAppKit } from "@reown/appkit/react";
 import referral from './abis/referral.json';
 import prediction from './abis/prediction.json';
@@ -43,7 +44,7 @@ Chart.register(
 
 export default function Home() {
 
-
+  const { setFrameReady, isFrameReady } = useMiniKit();
   type CurrentBid = {
   roundId: string;
   priceBid: string;
@@ -128,6 +129,12 @@ export default function Home() {
   const uniswapRouterContract = new ethers.Contract(Data.uniswapRouter, uniswapRouter.abi, provider);
   const chartRef = useRef<Chart | null>(null);
   type Address = `0x${string}`;
+
+   useEffect(() => {
+    if (!isFrameReady) {
+      setFrameReady();
+    }
+  }, [setFrameReady, isFrameReady]);
 
   useEffect(() =>{
     async function init(){
