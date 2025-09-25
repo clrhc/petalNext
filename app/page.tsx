@@ -139,7 +139,6 @@ export default function Home() {
   const rewardsContract = new ethers.Contract(Data.petalRewards, rewards.abi, provider);
   const sekaiContract = new ethers.Contract(Data.virtueNFT, nft.abi, provider);
   const uniswapRouterContract = new ethers.Contract(Data.uniswapRouter, uniswapRouter.abi, provider);
-  const chartRef = useRef<Chart | null>(null);
   type Address = `0x${string}`;
 
    useEffect(() => {
@@ -698,7 +697,7 @@ if (isConnected) {
       }
     }
 
-    const buyRouter = async (contract: Address,price: Number) => {
+    const buyRouter = async (contract: Address,price: number) => {
   if (networkId === baseId) {
       await writeContract({
         abi: uniswapRouter.abi,
@@ -709,7 +708,7 @@ if (isConnected) {
       }
     };
 
-     const sellRouter = async (contract: Address,price: Number) => {
+     const sellRouter = async (contract: Address,price: number) => {
   if (networkId === baseId) {
       await writeContract({
         abi: uniswapRouter.abi,
@@ -720,7 +719,7 @@ if (isConnected) {
       }
     };
 
-    const sellEth = async (contract: Address,price: Number) => {
+    const sellEth = async (contract: Address,price: number) => {
       if(networkId === baseId){
         await writeContract({
           abi: uniswapRouter.abi,
@@ -731,7 +730,7 @@ if (isConnected) {
       }
     }
 
-      const buyEth = async (contract: Address,price: Number) => {
+      const buyEth = async (contract: Address,price: number) => {
       if(networkId === baseId){
         await writeContract({
           abi: uniswapRouter.abi,
@@ -900,7 +899,7 @@ useEffect(() => {
     <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 PETAL" value={String(Number(buyValue / (Number(spotPrice) / 1e18)-((buyValue / (Number(spotPrice) / 1e18)/100)*3)).toFixed(4))} type="number" readOnly />
   </div>
   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(petalBalance), 18)).toFixed(2)} PETAL</p>
-    {buyValue > 0 ? <><p onClick={() => petalLaunched ? buyEth(Data.petalToken as Address, spotPrice as Number) : buyToken()} className="enterButton pointer">Buy</p>
+    {buyValue > 0 ? <><p onClick={() => petalLaunched ? buyEth(Data.petalToken as Address, spotPrice as number) : buyToken()} className="enterButton pointer">Buy</p>
     </>:<></>}<p style={{textAlign: 'center'}}>1 ETH = {Number(1/Number(Number(spotPrice) / 10 ** 18)).toFixed(4)} PETAL</p>
     <p style={{textAlign: 'center'}}>3% Tax</p>
     {!petalLaunched && <><p style={{textAlign: 'center'}}>ETH To Bond: {Number(ethers.formatUnits(String(ethIn), 18)).toFixed(3)} / 40 ETH</p></>}
@@ -935,7 +934,7 @@ useEffect(() => {
     </div>
     <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(4)} ETH</p>
     {sellValue > 0 ? <>
-    {sellValue*10**18 > petalAllowance ? <><p onClick={() => petalLaunched ? approveRouter(Data.petalToken as Address) : approveToken()} className="enterButton pointer">Approve</p></>:<><p onClick={() => petalLaunched ? sellEth(Data.petalToken as Address, spotPrice as Number) : sellToken()} className="enterButton pointer">Sell</p></>}</>:<></>}
+    {sellValue*10**18 > petalAllowance ? <><p onClick={() => petalLaunched ? approveRouter(Data.petalToken as Address) : approveToken()} className="enterButton pointer">Approve</p></>:<><p onClick={() => petalLaunched ? sellEth(Data.petalToken as Address, spotPrice as number) : sellToken()} className="enterButton pointer">Sell</p></>}</>:<></>}
       <p style={{textAlign: 'center'}}>1 PETAL = {Number(Number(spotPrice) / 10 ** 18).toFixed(10)} ETH</p>
       <p style={{textAlign: 'center'}}>3% Tax</p>
       {!petalLaunched && <><p style={{textAlign: 'center'}}>ETH To Bond: {Number(ethers.formatUnits(String(ethIn), 18)).toFixed(3)} / 40 ETH</p></>}
@@ -982,7 +981,7 @@ useEffect(() => {
     <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder="0 VIRTUE" value={String(Number(buyValue / (Number(virtuePrice) / 1e18)-((buyValue / (Number(virtuePrice) / 1e18)/100)*3)).toFixed(4))} type="number" readOnly />
   </div>
   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(virtueBalance), 18)).toFixed(2)} VIRTUE</p>
-    {buyValue > 0 ? <><p onClick={() => virtueLaunched ? buyEth(Data.virtueToken as Address, virtuePrice as Number) : buyVirtue()} className="enterButton pointer">Buy</p>
+    {buyValue > 0 ? <><p onClick={() => virtueLaunched ? buyEth(Data.virtueToken as Address, virtuePrice as number) : buyVirtue()} className="enterButton pointer">Buy</p>
     </>:<></>}<p style={{textAlign: 'center'}}>1 ETH = {Number(1/Number(Number(virtuePrice) / 10 ** 18)).toFixed(4)} VIRTUE</p>
     <p style={{textAlign: 'center'}}>3% Tax</p>
     {!virtueLaunched && <><p style={{textAlign: 'center'}}>ETH To Bond: {Number(ethers.formatUnits(String(virtueIn), 18)).toFixed(3)} / 4 ETH</p></>}
@@ -1017,7 +1016,7 @@ useEffect(() => {
     </div>
     <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(4)} ETH</p>
     {sellValue > 0 ? <>
-    {sellValue*10**18 > virtueAllowance ? <><p onClick={() => virtueLaunched ? approveRouter(Data.virtueToken as Address) : approveVirtue()} className="enterButton pointer">Approve</p></>:<><p onClick={() => virtueLaunched ? sellEth(Data.virtueToken as Address, virtuePrice as Number) : sellVirtue()} className="enterButton pointer">Sell</p></>}</>:<></>}
+    {sellValue*10**18 > virtueAllowance ? <><p onClick={() => virtueLaunched ? approveRouter(Data.virtueToken as Address) : approveVirtue()} className="enterButton pointer">Approve</p></>:<><p onClick={() => virtueLaunched ? sellEth(Data.virtueToken as Address, virtuePrice as number) : sellVirtue()} className="enterButton pointer">Sell</p></>}</>:<></>}
       <p style={{textAlign: 'center'}}>1 VIRTUE = {Number(Number(virtuePrice) / 10 ** 18).toFixed(10)} ETH</p>
       <p style={{textAlign: 'center'}}>3% Tax</p>
       {!virtueLaunched && <><p style={{textAlign: 'center'}}>ETH To Bond: {Number(ethers.formatUnits(String(virtueIn), 18)).toFixed(3)} / 4 ETH</p></>}
@@ -1069,7 +1068,7 @@ useEffect(() => {
   </div>
   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(catgirlBalance), 18)).toFixed(2)} CATGIRL</p>
     {buyValue > 0 ? <>
-    {buyValue*10**18 > weedAllowance ? <><p onClick={() => approveRouter(Data.petalFactory as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => buyRouter(Data.CATGIRL as Address, weedCatgirlPrice as Number)} className="enterButton pointer">Buy</p></>}
+    {buyValue*10**18 > weedAllowance ? <><p onClick={() => approveRouter(Data.petalFactory as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => buyRouter(Data.CATGIRL as Address, weedCatgirlPrice as number)} className="enterButton pointer">Buy</p></>}
     </>:<></>}<p style={{textAlign: 'center'}}>1 WEED = {Number(1/Number(Number(weedCatgirlPrice) / 10 ** 18)).toFixed(4)} CATGIRL</p>
     </>:
     <>
@@ -1102,7 +1101,7 @@ useEffect(() => {
     </div>
     <p className="rightSide">Balance: {Number(ethers.formatUnits(String(weedBalance), 18)).toFixed(2)} WEED</p>
     {sellValue > 0 ? <>
-    {sellValue*10**18 > catgirlAllowance ? <><p onClick={() => approveRouter(Data.CATGIRL as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => sellRouter(Data.CATGIRL as Address, weedCatgirlPrice as Number)} className="enterButton pointer">Sell</p></>}</>:<></>}
+    {sellValue*10**18 > catgirlAllowance ? <><p onClick={() => approveRouter(Data.CATGIRL as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => sellRouter(Data.CATGIRL as Address, weedCatgirlPrice as number)} className="enterButton pointer">Sell</p></>}</>:<></>}
       <p style={{textAlign: 'center'}}>1 CATGIRL = {Number(Number(weedCatgirlPrice) / 10 ** 18).toFixed(10)} WEED</p>
        </>}<div id="dexscreener-embed"><iframe src="https://dexscreener.com/base/0x1C4fC19336758805a4857A55944C02E125796723?embed=1&loadChartSettings=0&trades=0&tabs=0&info=0&chartLeftToolbar=0&chartTimeframesToolbar=0&loadChartSettings=0&chartDefaultOnMobile=1&chartTheme=dark&theme=dark&chartStyle=0&chartType=usd&interval=15"></iframe></div>
     </>}
@@ -1149,7 +1148,7 @@ useEffect(() => {
   </div>
   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(femboyBalance), 18)).toFixed(2)} FEMBOY</p>
     {buyValue > 0 ? <>
-    {buyValue*10**18 > weedAllowance ? <><p onClick={() => approveRouter(Data.petalFactory as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => buyRouter(Data.FEMBOY as Address, weedFemboyPrice as Number)} className="enterButton pointer">Buy</p></>}
+    {buyValue*10**18 > weedAllowance ? <><p onClick={() => approveRouter(Data.petalFactory as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => buyRouter(Data.FEMBOY as Address, weedFemboyPrice as number)} className="enterButton pointer">Buy</p></>}
     </>:<></>}<p style={{textAlign: 'center'}}>1 WEED = {Number(1/Number(Number(weedFemboyPrice) / 10 ** 18)).toFixed(4)} FEMBOY</p>
     </>:
     <>
@@ -1182,7 +1181,7 @@ useEffect(() => {
     </div>
     <p className="rightSide">Balance: {Number(ethers.formatUnits(String(weedBalance), 18)).toFixed(2)} WEED</p>
     {sellValue > 0 ? <>
-    {sellValue*10**18 > femboyAllowance ? <><p onClick={() => approveRouter(Data.FEMBOY as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => sellRouter(Data.FEMBOY as Address, weedFemboyPrice as Number)} className="enterButton pointer">Sell</p></>}</>:<></>}
+    {sellValue*10**18 > femboyAllowance ? <><p onClick={() => approveRouter(Data.FEMBOY as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => sellRouter(Data.FEMBOY as Address, weedFemboyPrice as number)} className="enterButton pointer">Sell</p></>}</>:<></>}
       <p style={{textAlign: 'center'}}>1 FEMBOY = {Number(Number(weedFemboyPrice) / 10 ** 18).toFixed(10)} WEED</p>
       </>}<div id="dexscreener-embed"><iframe src="https://dexscreener.com/base/0xaF5BD15AE9d0095b4bEB7d0e169eA2dB7ca33526?embed=1&loadChartSettings=0&trades=0&tabs=0&info=0&chartLeftToolbar=0&chartTimeframesToolbar=0&chartDefaultOnMobile=1&chartTheme=dark&theme=dark&chartStyle=0&chartType=usd&interval=15"></iframe></div></>}
      {swapMeme === 2 && <><div className="swapButtons"><p className={`${swapState === 0 && "tealActive"}`} onClick={() => setSwapState(0)}>Buy 🧀</p><p className={`${swapState === 1 && "tealActive"}`} onClick={() => setSwapState(1)}>Sell 🧀</p>  
@@ -1228,7 +1227,7 @@ useEffect(() => {
   </div>
   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(cheeseBalance), 18)).toFixed(2)} 🧀</p>
     {buyValue > 0 ? <>
-    {buyValue*10**18 > weedAllowance ? <><p onClick={() => approveRouter(Data.petalFactory as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => buyRouter(Data.CHEESE as Address, weedCheesePrice as Number)} className="enterButton pointer">Buy</p></>}
+    {buyValue*10**18 > weedAllowance ? <><p onClick={() => approveRouter(Data.petalFactory as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => buyRouter(Data.CHEESE as Address, weedCheesePrice as number)} className="enterButton pointer">Buy</p></>}
     </>:<></>}<p style={{textAlign: 'center'}}>1 WEED = {Number(1/Number(Number(weedCheesePrice) / 10 ** 18)).toFixed(4)} 🧀</p>
     </>:
     <>
@@ -1261,7 +1260,7 @@ useEffect(() => {
     </div>
     <p className="rightSide">Balance: {Number(ethers.formatUnits(String(weedBalance), 18)).toFixed(2)} WEED</p>
     {sellValue > 0 ? <>
-    {sellValue*10**18 > cheeseAllowance ? <><p onClick={() => approveRouter(Data.CHEESE as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => sellRouter(Data.CHEESE as Address, weedCheesePrice as Number)} className="enterButton pointer">Sell</p></>}</>:<></>}
+    {sellValue*10**18 > cheeseAllowance ? <><p onClick={() => approveRouter(Data.CHEESE as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => sellRouter(Data.CHEESE as Address, weedCheesePrice as number)} className="enterButton pointer">Sell</p></>}</>:<></>}
       <p style={{textAlign: 'center'}}>1 🧀 = {Number(Number(weedCheesePrice) / 10 ** 18).toFixed(10)} WEED</p>
       </>}<div id="dexscreener-embed"><iframe src="https://dexscreener.com/base/0x45749Df5d9C1f0B1b1B4e40EEEE548e99A20F095?embed=1&loadChartSettings=0&trades=0&tabs=0&info=0&chartLeftToolbar=0&chartTimeframesToolbar=0&chartDefaultOnMobile=1&chartTheme=dark&theme=dark&chartStyle=0&chartType=usd&interval=15"></iframe></div></>}
       {swapMeme === 3 && <><div className="swapButtons"><p className={`${swapState === 0 && "tealActive"}`} onClick={() => setSwapState(0)}>Buy 🪲</p><p className={`${swapState === 1 && "tealActive"}`} onClick={() => setSwapState(1)}>Sell 🪲</p>  
@@ -1307,7 +1306,7 @@ useEffect(() => {
   </div>
   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(beetleBalance), 18)).toFixed(2)} 🪲</p>
     {buyValue > 0 ? <>
-    {buyValue*10**18 > weedAllowance ? <><p onClick={() => approveRouter(Data.petalFactory as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => buyRouter(Data.BEETLE as Address, weedBeetlePrice as Number)} className="enterButton pointer">Buy</p></>}
+    {buyValue*10**18 > weedAllowance ? <><p onClick={() => approveRouter(Data.petalFactory as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => buyRouter(Data.BEETLE as Address, weedBeetlePrice as number)} className="enterButton pointer">Buy</p></>}
     </>:<></>}<p style={{textAlign: 'center'}}>1 WEED = {Number(1/Number(Number(weedBeetlePrice) / 10 ** 18)).toFixed(4)} 🪲</p>
     </>:
     <>
@@ -1340,7 +1339,7 @@ useEffect(() => {
     </div>
     <p className="rightSide">Balance: {Number(ethers.formatUnits(String(weedBalance), 18)).toFixed(2)} WEED</p>
     {sellValue > 0 ? <>
-    {sellValue*10**18 > beetleAllowance ? <><p onClick={() => approveRouter(Data.BEETLE as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => sellRouter(Data.BEETLE as Address, weedBeetlePrice as Number)} className="enterButton pointer">Sell</p></>}</>:<></>}
+    {sellValue*10**18 > beetleAllowance ? <><p onClick={() => approveRouter(Data.BEETLE as Address)} className="enterButton pointer">Approve</p></>:<><p onClick={() => sellRouter(Data.BEETLE as Address, weedBeetlePrice as number)} className="enterButton pointer">Sell</p></>}</>:<></>}
       <p style={{textAlign: 'center'}}>1 🪲 = {Number(Number(weedBeetlePrice) / 10 ** 18).toFixed(10)} WEED</p>
       </>}<div id="dexscreener-embed"><iframe src="https://dexscreener.com/base/0x1908A223d6cBc9E5a0338776c2EfD03234B33664?embed=1&loadChartSettings=0&trades=0&tabs=0&info=0&chartLeftToolbar=0&chartTimeframesToolbar=0&chartDefaultOnMobile=1&chartTheme=dark&theme=dark&chartStyle=0&chartType=usd&interval=15"></iframe></div></>}
       </>}
