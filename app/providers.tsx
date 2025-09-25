@@ -11,7 +11,7 @@ import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 const queryClient = new QueryClient();
 
 // 1. Reown Cloud projectId
-const projectId = '0836dedc1a04038f19bcfd52356a9258';
+const projectId = '02c1dfefe151daa8e46ba390d135aa6e';
 
 const metadata = {
   name: 'Petal Finance',
