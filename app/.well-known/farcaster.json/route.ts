@@ -24,7 +24,7 @@ return Response.json({
     "splashBackgroundColor": "#000000",
     "webhookUrl": "https://ex.co/api/webhook",
     "subtitle": "Petal Finance",
-    "description": "V2 DeFi and Meme Markets",
+    "description": "Register Now for Free Rewards",
     "screenshotUrls": [
       "https://ex.co/s1.png",
       "https://ex.co/s2.png",
