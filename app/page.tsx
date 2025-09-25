@@ -770,6 +770,7 @@ useEffect(() => {
     <span className="heading">
     <h2>WELCOME TO PETAL FINANCE</h2>
     <p>V2 DeFi and Meme Market</p>
+    {!isConnected && <><p className="pointer" onClick={() => open()}>CONNECT TO START</p></>}
     <img alt="petalLogo" src={petalLogo.src} /></span>
       {!isMobile && <> <div><canvas id="bondingCurveChart"></canvas></div>
       <div className="coinInfo">
