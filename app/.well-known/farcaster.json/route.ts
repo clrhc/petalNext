@@ -38,6 +38,19 @@ return Response.json({
     "ogDescription": "V2 DeFi and Meme Markets",
     "ogImageUrl": "https://ex.co/og.png",
     "noindex": true
+  },
+  "frame": {
+    "name": "Petal Finance",
+    "version": "1",
+    "iconUrl": "https://petal.wtf/icon.png",
+    "homeUrl": "https://petal.wtf",
+    "imageUrl": "https://petal.wtf/image.png",
+    "splashImageUrl": "https://petal.wtf/splash.png",
+    "splashBackgroundColor": "#000000",
+    "webhookUrl": "https://petal.wtf/api/webhook",
+    "subtitle": "V2 DeFi and Meme Markets",
+    "description": "Register Now for Free Rewards!",
+    "primaryCategory": "finance"
   }
 }); // see the next step for the manifest_json_object
 }

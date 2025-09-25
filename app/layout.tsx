@@ -1,13 +1,6 @@
 import type { Metadata } from "next";
 import { Providers } from './providers';
 
-
-
-
-
-/**
- * Metadata for the page
- */
 export async function generateMetadata(): Promise<Metadata> {
     return {
         other: {
