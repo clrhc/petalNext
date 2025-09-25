@@ -199,7 +199,7 @@ if (isConnected) {
   }
 
   setEthBalance(Number(ethBalance_));
-  setPetalBalance(Number(petalBalance_));
+  setPetalBalance(petalBalance_);
   setPetalLaunched(petalLaunched_);
   }catch{};
 
@@ -232,7 +232,7 @@ if (isConnected) {
   setVirtuePrice(virtueCurve_[6]);
   }
 
-  setVirtueBalance(Number(virtueBalance_));
+  setVirtueBalance(virtueBalance_);
   setVirtueLaunched(virtueLaunched_);
   setVirtueIn(Number(virtueCurve_[2]));
   }catch{};
@@ -257,7 +257,7 @@ if (isConnected) {
     methAllowancePromise
   ]);
 
-  setWeedBalance(Number(weedBalance_));
+  setWeedBalance(weedBalance_);
   setWeedAllowance(weedAllowance_);
   setWeedMethPrice(weedMethPrice_[1]);
   setMethBalance(methBalance_);
@@ -396,17 +396,14 @@ if (isConnected) {
     prices.push(pricePerToken); // ETH price
   }
 
-  const canvas = document.getElementById('bondingCurveChart') as HTMLCanvasElement | null;
-  if (canvas) {
-  const ctx = canvas.getContext('2d');
+
+  const ctx = document.getElementById('bondingCurveChart') as HTMLCanvasElement | null;
   
 
   if (chartRef.current) {
     chartRef.current.destroy();
-
-    if (!ctx) {
-  return;
-  }
+}
+ 
   
 
   chartRef.current = new Chart(ctx, {
@@ -464,8 +461,8 @@ if (isConnected) {
       },
     },
   });
-  }
-  }  
+  
+    
 }}catch{};
 }
 
