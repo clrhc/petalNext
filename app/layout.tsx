@@ -6,15 +6,15 @@ export async function generateMetadata(): Promise<Metadata> {
         other: {
         'fc:miniapp': JSON.stringify({
             version: 'next',
-            imageUrl: 'https://your-app.com/embed-image',
+            imageUrl: 'https://i.imgur.com/6fsw46l.png',
             button: {
                 title: `Petal Finance`,
                 action: {
                     type: 'launch_miniapp',
                     name: 'Petal Finance',
                     url: 'https://petal.wtf',
-                    splashImageUrl: 'https://your-app.com/splash-image',
-                    splashBackgroundColor: '#000000',
+                    splashImageUrl: 'https://i.imgur.com/pYoZQlK.png',
+                    splashBackgroundColor: '#1e534c',
                 },
             },
         }),
