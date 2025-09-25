@@ -369,107 +369,6 @@ if (isConnected) {
   setRewardsAvailable(Number(rewards_));
 }catch{};
 }
-  try{
-  const bondingCurve_ = await factoryContract.bondingCurves(Data.petalToken);
-  const tokenVirtualReserve = Number(bondingCurve_[1]);
-  const ethVirtualReserve = Number(bondingCurve_[4]);
-  setEthIn(Number(bondingCurve_[2]));
-
-  if (bondingCurve_[6] === spotPrice) {
-
-  } else {
-  const dataPoints = 1000;
-  const maxTokens = 10_000_000;
-
-  const tokensBought: number[] = [];
-  const prices: number[] = [];
-
-  for (let i = 1; i <= dataPoints; i++) {
-    const deltaTokens = (i * maxTokens * 10 ** 18) / dataPoints; // in wei
-    const remainingVirtual = tokenVirtualReserve - deltaTokens;
-
-    if (remainingVirtual <= 0) break;
-
-    const pricePerToken = Number(ethVirtualReserve * 10 ** 18 / remainingVirtual) / 1e18;
-
-    tokensBought.push(Math.round(deltaTokens / 1e18));
-    prices.push(pricePerToken); // ETH price
-  }
-
-
-  const canvas = document.getElementById('bondingCurveChart') as HTMLCanvasElement | null;
-
-if (!canvas) return; 
-
-const ctx = canvas.getContext('2d');
-
-if (!ctx) return;
-  
-
-  if (chartRef.current) {
-    chartRef.current.destroy();
-}
- 
-  
-
-  chartRef.current = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: tokensBought,
-      datasets: [
-        {
-          label: 'Spot Price (ETH)',
-          data: prices,
-          borderColor: 'teal',
-          backgroundColor: 'rgba(0, 128, 128, 0.1)',
-          borderWidth: 4,
-          pointRadius: 0,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      scales: {
-        x: {
-          title: {
-            display: true,
-            text: 'PETAL Bought',
-            color: '#ccc',
-          },
-          ticks: { color: '#aaa' },
-          grid: { color: '#333' },
-        },
-        y: {
-          title: {
-            display: true,
-            text: 'PETAL Price (ETH)',
-            color: '#ccc',
-          },
-          ticks: {
-            color: '#aaa',
-            callback: function (value) {
-            return Number(value).toFixed(10);
-          },
-          },
-          grid: { color: '#333' },
-        },
-      },
-      plugins: {
-        legend: { labels: { color: '#eee' } },
-        tooltip: {
-          callbacks: {
-            label: function (context) {
-              const price = context.parsed.y;
-              return `Price: ${price.toFixed(10)} ETH`;
-            },
-          },
-        },
-      },
-    },
-  });
-  
-    
-}}catch{};
 }
 
     const interval = setInterval(() => init(), 1000);
@@ -477,6 +376,116 @@ if (!ctx) return;
       clearInterval(interval);
       }
   });
+
+useEffect(() => {
+  const loadChart = async () => {
+    try {
+      if (!address || !Data.petalToken) return;
+
+      const bondingCurve_ = await factoryContract.bondingCurves(Data.petalToken);
+
+      const tokenVirtualReserve = Number(bondingCurve_[1]);
+      const ethVirtualReserve = Number(bondingCurve_[4]);
+      setEthIn(Number(bondingCurve_[2]));
+
+      if (Number(bondingCurve_[6]) === Number(spotPrice)) {
+        return;
+      }
+
+      const dataPoints = 1000;
+      const maxTokens = 10_000_000;
+
+      const tokensBought: number[] = [];
+      const prices: number[] = [];
+
+      for (let i = 1; i <= dataPoints; i++) {
+        const deltaTokens = (i * maxTokens * 10 ** 18) / dataPoints;
+        const remainingVirtual = tokenVirtualReserve - deltaTokens;
+
+        if (remainingVirtual <= 0) break;
+
+        const pricePerToken =
+          Number((ethVirtualReserve * 10 ** 18) / remainingVirtual) / 1e18;
+
+        tokensBought.push(Math.round(deltaTokens / 1e18));
+        prices.push(pricePerToken);
+      }
+
+      const canvas = document.getElementById(
+        'bondingCurveChart'
+      ) as HTMLCanvasElement | null;
+
+      if (!canvas) return;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      if (chartRef.current) {
+        chartRef.current.destroy();
+      }
+
+      chartRef.current = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: tokensBought,
+          datasets: [
+            {
+              label: 'Spot Price (ETH)',
+              data: prices,
+              borderColor: 'teal',
+              backgroundColor: 'rgba(0, 128, 128, 0.1)',
+              borderWidth: 4,
+              pointRadius: 0,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'PETAL Bought',
+                color: '#ccc',
+              },
+              ticks: { color: '#aaa' },
+              grid: { color: '#333' },
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'PETAL Price (ETH)',
+                color: '#ccc',
+              },
+              ticks: {
+                color: '#aaa',
+                callback: function (value) {
+                  return Number(value).toFixed(10);
+                },
+              },
+              grid: { color: '#333' },
+            },
+          },
+          plugins: {
+            legend: { labels: { color: '#eee' } },
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  const price = context.parsed.y;
+                  return `Price: ${price.toFixed(10)} ETH`;
+                },
+              },
+            },
+          },
+        },
+      });
+    } catch (err) {
+      console.error('Chart rendering failed:', err);
+    }
+  };
+
+  loadChart();
+}, [address, Data.petalToken, spotPrice]);
 
   const checkRef = (e: React.ChangeEvent<HTMLInputElement>) => {
   const input = e.target.value;
