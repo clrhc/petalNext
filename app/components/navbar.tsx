@@ -15,7 +15,7 @@ import xpCoin from '../assets/img/xpCoin.png';
   const { address, isConnected } = useAccount();
   const {open} = useAppKit();
   const [userInfo, setUserInfo] = useState<[number, number, string, string, string]>([0, 0, '', '', '']);
-  const provider = new ethers.JsonRpcProvider('https://base-mainnet.public.blastapi.io');
+  const provider = new ethers.JsonRpcProvider('https://base.drpc.org');
   const referralContract = new ethers.Contract(Data.referralAddress, referral.abi, provider);
   const [hoverWallet, setHoverWallet] = useState(false);
 

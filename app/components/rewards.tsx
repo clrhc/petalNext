@@ -13,7 +13,7 @@ import nft from '../abis/nft.json';
      const [baseId] = useState(8453);
      const networkId = useChainId();
      const { writeContract } = useWriteContract();
-     const provider = new ethers.JsonRpcProvider('https://base-mainnet.public.blastapi.io');
+     const provider = new ethers.JsonRpcProvider('https://base.drpc.org');
      const [rewardsAvailable, setRewardsAvailable] = useState(0);
      const [nftBalance, setNftBalance] = useState(0);
      const rewardsContract = new ethers.Contract(Data.petalRewards, rewards.abi, provider);

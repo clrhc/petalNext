@@ -28,7 +28,7 @@ export default function PredCoins({contractAddress, dataFeedAddress}: { contract
   const [bidState, setBidState] = useState(true);
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
-  const provider = new ethers.JsonRpcProvider('https://base-mainnet.public.blastapi.io');
+  const provider = new ethers.JsonRpcProvider('https://base-public.nodies.app');
   const predictionContract = new ethers.Contract(contractAddress, prediction.abi, provider);
   const dataFeedContract = new ethers.Contract(dataFeedAddress, dataFeed.abi, provider);
   type Address = `0x${string}`;

@@ -1,6 +1,7 @@
 'use client'; 
 import { MiniKitProvider } from '@coinbase/onchainkit/minikit';
 import { wagmiAdapter, projectId } from '../config';
+import {useEffect} from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createAppKit } from '@reown/appkit/react';
 import { base } from '@reown/appkit/networks';
@@ -34,6 +35,7 @@ const metadata = {
 });
 
 function ContextProvider({ children, cookies }: { children: ReactNode; cookies: string | null }) {
+     
   const initialState = cookieToInitialState(wagmiAdapter.wagmiConfig as Config, cookies)
 
   return (

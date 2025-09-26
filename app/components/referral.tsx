@@ -20,7 +20,7 @@ export default function ReferralComponent() {
   const [error, setError] = useState(false);
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
-  const provider = new ethers.JsonRpcProvider('https://base-mainnet.public.blastapi.io');
+  const provider = new ethers.JsonRpcProvider('https://base.drpc.org');
   const referralContract = new ethers.Contract(Data.referralAddress, referral.abi, provider);
   type Address = `0x${string}`;
 
