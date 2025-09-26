@@ -67,6 +67,7 @@ if (isConnected) {
   setWeedBalance(weedBalance_);
   setTokenBalance(tokenBalance_);
   setWeedAllowance(weedAllowance_);
+  setTokenAllowance(tokenAllowance_);
   setTokenPrice(tokenPrice_[1]);
   setTokenName(tokenName_);
   setTokenPair(String(tokenPair_));

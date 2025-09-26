@@ -2,7 +2,6 @@
 import '../globals.css';
 import React,{useState, useEffect} from 'react';
 import Data from '../data.json';
-import Wallet from '../wallet';
 import {ethers} from 'ethers';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import factory from '../abis/factory.json';

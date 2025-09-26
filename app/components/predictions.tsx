@@ -1,6 +1,6 @@
 'use client';
 import '../globals.css';
-import React,{useState, useEffect} from 'react';
+import React,{useState} from 'react';
 import PredCoins from './predCoins';
 import Data from '../data.json';
 

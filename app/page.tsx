@@ -19,7 +19,7 @@ export default function Home() {
 
   const { setFrameReady, isFrameReady } = useMiniKit();
   const {open} = useAppKit();
-  const { address, isConnected } = useAccount();
+  const { isConnected } = useAccount();
   const [isMobile, setIsMobile] = useState(false);
   const [tab, setTab] = useState(0);
 
