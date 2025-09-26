@@ -27,7 +27,7 @@ export default function SwapMemes({tokenAddress}: { tokenAddress: string; }) {
   const [tokenPair, setTokenPair] = useState("");
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
-  const provider = new ethers.JsonRpcProvider('https://base-rpc.publicnode.com');
+  const provider = new ethers.JsonRpcProvider('https://base-mainnet.infura.io/v3/cc877a2fcbd848a89360422e704227d3');
   const tokenContract = new ethers.Contract(tokenAddress, token.abi, provider);
   const factoryContract = new ethers.Contract(Data.petalFactory, factory.abi, provider);
   const uniswapRouterContract = new ethers.Contract(Data.uniswapRouter, uniswapRouter.abi, provider);

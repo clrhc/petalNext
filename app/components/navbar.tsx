@@ -15,7 +15,7 @@ import xpCoin from '../assets/img/xpCoin.png';
   const { address, isConnected } = useAccount();
   const {open} = useAppKit();
   const [userInfo, setUserInfo] = useState<[number, number, string, string, string]>([0, 0, '', '', '']);
-  const provider = new ethers.JsonRpcProvider('https://base-rpc.publicnode.com');
+  const provider = new ethers.JsonRpcProvider('https://base-mainnet.infura.io/v3/cc877a2fcbd848a89360422e704227d3');
   const referralContract = new ethers.Contract(Data.referralAddress, referral.abi, provider);
   const [hoverWallet, setHoverWallet] = useState(false);
 

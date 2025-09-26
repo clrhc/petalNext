@@ -9,7 +9,7 @@ import uniswapRouter from '../abis/uniswapRouter.json';
 export default function CoinInfo(){
 
   const [tokenPrice, setTokenPrice] = useState(0);
-  const provider = new ethers.JsonRpcProvider('https://base-mainnet.public.blastapi.io');
+  const provider = new ethers.JsonRpcProvider('https://base-mainnet.infura.io/v3/cc877a2fcbd848a89360422e704227d3');
   const factoryContract = new ethers.Contract(Data.petalFactory, factory.abi, provider);
   const uniswapRouterContract = new ethers.Contract(Data.uniswapRouter, uniswapRouter.abi, provider);
   const [petalLaunched, setPetalLaunched] = useState(0);

@@ -28,7 +28,7 @@ export default function PredCoins({contractAddress, dataFeedAddress}: { contract
   const [bidState, setBidState] = useState(true);
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
-  const provider = new ethers.JsonRpcProvider('https://base-rpc.publicnode.com');
+  const provider = new ethers.JsonRpcProvider('https://base-mainnet.infura.io/v3/cc877a2fcbd848a89360422e704227d3');
   const predictionContract = new ethers.Contract(contractAddress, prediction.abi, provider);
   const dataFeedContract = new ethers.Contract(dataFeedAddress, dataFeed.abi, provider);
   type Address = `0x${string}`;
