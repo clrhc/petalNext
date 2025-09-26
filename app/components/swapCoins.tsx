@@ -37,7 +37,7 @@ export default function SwapCoins({tokenAddress, factoryAddress}: { tokenAddress
 
 if (isConnected) {
    try{
-  const ethBalancePromise     = provider.getBalance(address);
+  const ethBalancePromise     = provider.getBalance(address!);
   const tokenBalancePromise   = tokenContract.balanceOf(address);
   const tokenLaunchedPromise =  factoryContract.tokenLaunched(tokenAddress);
   const tokenAllowancePromise = tokenContract.allowance(address, factoryAddress);

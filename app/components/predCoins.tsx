@@ -43,7 +43,7 @@ export default function PredCoins({contractAddress, dataFeedAddress}: { contract
   const epochPromise    = predictionContract.epochCheck();
   const answerPromise   = dataFeedContract.latestAnswer();
   const roundPromise = dataFeedContract.latestRound();
-  const ethBalancePromise = provider.getBalance(address);
+  const ethBalancePromise = provider.getBalance(address!);
 
   const [
     checkBid_,
