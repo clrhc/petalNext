@@ -9,7 +9,7 @@ import token from '../abis/token.json';
 import uniswapRouter from '../abis/uniswapRouter.json';
 
 
-export default function SwapCoins({tokenAddress, factoryAddress}) {
+export default function SwapCoins({tokenAddress, factoryAddress}: { tokenAddress: string; factoryAddress: string }) {
 
   const { address, isConnected } = useAccount();
   const [baseId] = useState(8453);

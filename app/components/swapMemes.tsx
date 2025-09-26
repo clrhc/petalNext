@@ -10,7 +10,7 @@ import uniswapRouter from '../abis/uniswapRouter.json';
 import uniswapFactory from '../abis/uniswapFactory.json';
 
 
-export default function SwapMemes({tokenAddress}) {
+export default function SwapMemes({tokenAddress}: { tokenAddress: string; }) {
 
   const { address, isConnected } = useAccount();
   const [baseId] = useState(8453);

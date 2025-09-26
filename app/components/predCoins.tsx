@@ -6,7 +6,7 @@ import {useAccount, useChainId, useWriteContract} from "wagmi";
 import prediction from '../abis/prediction.json';
 import dataFeed from '../abis/dataFeed.json';
 
-export default function PredCoins({contractAddress, dataFeedAddress}){
+export default function PredCoins({contractAddress, dataFeedAddress}: { contractAddress: string; dataFeedAddress: string }){
 
   type CurrentBid = {
   roundId: string;
