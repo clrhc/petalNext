@@ -18,6 +18,7 @@ import nft from '../abis/nft.json';
      const [nftBalance, setNftBalance] = useState(0);
      const rewardsContract = new ethers.Contract(Data.petalRewards, rewards.abi, provider);
      const sekaiContract = new ethers.Contract(Data.virtueNFT, nft.abi, provider);
+     type Address = `0x${string}`;
 
      useEffect(() =>{
     async function init(){
