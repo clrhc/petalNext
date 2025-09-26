@@ -4,12 +4,14 @@ import React,{useState, useEffect} from 'react';
 import {ethers} from 'ethers';
 import Data from '../data.json';
 import factory from '../abis/factory.json';
+import uniswapRouter from '../abis/uniswapRouter.json';
 
 export default function CoinInfo(){
 
   const [tokenPrice, setTokenPrice] = useState(0);
   const provider = new ethers.JsonRpcProvider('https://base-mainnet.public.blastapi.io');
   const factoryContract = new ethers.Contract(Data.petalFactory, factory.abi, provider);
+  const uniswapRouterContract = new ethers.Contract(Data.uniswapRouter, uniswapRouter.abi, provider);
   const [petalLaunched, setPetalLaunched] = useState(0);
   const [ethIn, setEthIn] = useState(0);
 
