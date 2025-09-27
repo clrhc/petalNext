@@ -43,7 +43,7 @@ import nft from '../abis/nft.json';
    const [
     nftBalance_,
     rewards_
-  ] = data;
+  ] = data as [bigint, bigint];
 
   setNftBalance(Number(nftBalance_));
   setRewardsAvailable(Number(rewards_));}catch{};

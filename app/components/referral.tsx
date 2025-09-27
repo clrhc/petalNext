@@ -62,7 +62,7 @@ try{
    let [
     checkUserRef_,
     checkNewRef_
-  ] = data;
+  ] = data as [string, string];
   checkUserRef_ = String(checkUserRef_);
   checkNewRef_  = String(checkNewRef_);
 

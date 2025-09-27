@@ -87,7 +87,14 @@ if (isConnected) {
     tokenRouterAllowance_,
     tokenCurve_,
     tokenName_
-  ] = data;
+  ] = data as [
+  bigint,                                   // tokenBalance_
+  boolean,                                  // tokenLaunched_
+  bigint,                                   // tokenAllowance_
+  bigint,                                   // tokenRouterAllowance_
+  [bigint, bigint, bigint, bigint, bigint, bigint, bigint], // tokenCurve_
+  string                                    // tokenName_
+];
   setTokenLaunched(tokenLaunched_);
   if(tokenLaunched_){
   const tokenEthPrice_ = await uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[tokenAddress,Data.WETH]);

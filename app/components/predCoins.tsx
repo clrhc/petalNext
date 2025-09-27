@@ -83,7 +83,13 @@ export default function PredCoins({contractAddress, dataFeedAddress}){
     epoch_,
     answer_,
     round_
-  ] = data;
+  ] = data as [
+  bigint,                    // checkBid_
+  [bigint, bigint, bigint, boolean, bigint],  // userBid_
+  bigint,                    // epoch_
+  bigint,                    // answer_
+  bigint                     // round_
+];
 
   const ethBalance_ = await provider.getBalance(address!);
 

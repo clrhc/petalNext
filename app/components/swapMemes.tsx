@@ -93,7 +93,15 @@ if (isConnected) {
     tokenPrice_,
     tokenName_,
     tokenPair_
-  ] = data;
+  ] = data as [
+  bigint,            // weedBalance_
+  bigint,            // tokenBalance_
+  bigint,            // tokenAllowance_
+  bigint,            // weedAllowance_
+  bigint[],          // tokenPrice_ (array from getAmountsOut)
+  string,            // tokenName_
+  Address            // tokenPair_
+];
   
   setWeedBalance(weedBalance_);
   setTokenBalance(tokenBalance_);
