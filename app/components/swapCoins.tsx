@@ -19,7 +19,7 @@ export default function SwapCoins({tokenAddress, factoryAddress}: { tokenAddress
   const [tokenLaunched, setTokenLaunched] = useState(false);
   const [ethIn, setEthIn] = useState(0);
   const [ethBalance, setEthBalance] = useState(0);
-  const [tokenBalance, setTokenBalance] = useState(0);
+  const [tokenBalance, setTokenBalance] = useState<bigint>(0n);
   const [tokenAllowance, setTokenAllowance] = useState(0);
   const [slippage, setSlippage] = useState(1);
   const [tokenPrice, setTokenPrice] = useState(0);
@@ -107,7 +107,7 @@ if (isConnected) {
   }
   setTokenName(String(tokenName_));
   setEthBalance(Number(ethBalance_));
-  setTokenBalance(Number(tokenBalance_));
+  setTokenBalance(tokenBalance_);
   }catch{};
 }
 }
@@ -229,7 +229,7 @@ if (isConnected) {
   </span>
     <input className="inputBox inputText newText outlineTeal" id="refInput" placeholder={`0 ${tokenName}`} value={String(Number(buyValue / (Number(tokenPrice) / 1e18)-((buyValue / (Number(tokenPrice) / 1e18)/100)*3)).toFixed(4))} type="number" readOnly />
   </div>
-  <p className="rightSide">Balance: {Number(ethers.formatUnits(String(tokenBalance), 18)).toFixed(2)} {tokenName}</p>
+  <p className="rightSide">Balance: {Number(ethers.formatUnits(tokenBalance, 18)).toFixed(2)} {tokenName}</p>
     {buyValue > 0 ? <><p onClick={() => tokenLaunched ? buyRouter() : buyFactory()} className="enterButton pointer">Buy</p>
     </>:<></>}<p style={{textAlign: 'center'}}>1 ETH = {Number(1/Number(Number(tokenPrice) / 10 ** 18)).toFixed(4)} {tokenName}</p>
     <p style={{textAlign: 'center'}}>3% Tax</p>
@@ -249,7 +249,7 @@ if (isConnected) {
   </span>
     <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder={`0 ${tokenName}`} onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setSellValue(Number(e.target.value))} value={sellValue} type="number" />
     </div>
-    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(tokenBalance), 18)).toFixed(2)} {tokenName}</p>
+    <p className="rightSide">Balance: {Number(ethers.formatUnits(tokenBalance, 18)).toFixed(2)} {tokenName}</p>
       <div style={{ position: 'relative' }}>
   <span className="inputAfter" style={{
     position: 'absolute',
