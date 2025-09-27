@@ -108,9 +108,9 @@ export default function PredCoins({contractAddress, dataFeedAddress}: { contract
   higher: userBid_[3],
   amountBid: userBid_[4].toString(),
 });
-  setEpoch(epoch_);
-  setAnswer(answer_);
-  setPreviousAnswer(previousRoundData_.answer);
+  setEpoch(Number(epoch_));
+  setAnswer(Number(answer_));
+  setPreviousAnswer(Number(previousRoundData_.answer));
 }catch{};
 }
 }
