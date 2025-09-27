@@ -2,7 +2,6 @@
 import '../globals.css';
 import React,{useState, useEffect} from 'react';
 import Data from '../data.json';
-import {ethers} from 'ethers';
 import { readContracts } from '@wagmi/core';
 import { config } from './wagmiConfig';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
