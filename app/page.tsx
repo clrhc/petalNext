@@ -19,7 +19,7 @@ export default function Home() {
 
 useEffect(() => {
   async function fetchData() {
-    await fetch('/api/blast', {
+    const res = await fetch('/api/blast', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -32,8 +32,6 @@ useEffect(() => {
   }
   fetchData();
 }, []);
-
-const data = await res.json();
 
   const { setFrameReady, isFrameReady } = useMiniKit();
   const {open} = useAppKit();
