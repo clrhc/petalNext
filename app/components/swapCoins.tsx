@@ -21,13 +21,14 @@ export default function SwapCoins({tokenAddress, factoryAddress}: { tokenAddress
   const [ethBalance, setEthBalance] = useState(0);
   const [tokenBalance, setTokenBalance] = useState<bigint>(0n);
   const [tokenAllowance, setTokenAllowance] = useState(0);
-  const [slippage, setSlippage] = useState(1);
+ 
   const [tokenPrice, setTokenPrice] = useState(0);
-const [slippageText, setSlippageText] = useState(String(slippage ?? 1));
+   const [slippage, setSlippage] = useState(1);
+   const [buyValue, setBuyValue] = useState(0);
+  const [sellValue, setSellValue] = useState(0);
+const [slippageText, setSlippageText] = useState("1");
 const [buyText, setBuyText]         = useState("0");
 const [sellText, setSellText]       = useState("0");
-const buyValue = buyText === "" || buyText === "." ? 0 : Number(buyText);
-  const [sellValue, setSellValue] = useState(0);
   const [swapState, setSwapState] = useState(0);
   const [tokenName, setTokenName] = useState("");
   const networkId = useChainId();
@@ -273,28 +274,12 @@ useEffect(() => {
     const isDot = e.key === ".";
     const nav = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab"].includes(e.key);
 
-    // keep "0." if first key is dot
-    if (isDot && (slippageText === "0" || slippageText === "")) return;
-
-    // replace leading 0 if first key is 1–9
-    if (isNonZero && slippageText === "0") {
-      e.preventDefault();
-      setSlippageText(e.key);
-      setSlippage(Number(e.key));
-      return;
-    }
-
-    // block extra leading zero
-    if (e.key === "0" && slippageText === "0") { e.preventDefault(); return; }
-
+    if (isDot && (slippageText === "0" || slippageText === "")) return; // allow "0."
+    if (isNonZero && slippageText === "0") { e.preventDefault(); setSlippageText(e.key); setSlippage(Number(e.key)); return; }
+    if (e.key === "0" && slippageText === "0") { e.preventDefault(); return; } // avoid "00.1"
     if (!isDigit && !isDot && !nav) e.preventDefault();
   }}
-  onBlur={() => {
-    if (slippageText === "" || slippageText === ".") {
-      setSlippageText("0");
-      setSlippage(0);
-    }
-  }}
+  onBlur={() => { if (slippageText === "" || slippageText === ".") { setSlippageText("0"); setSlippage(0); } }}
 />
     </div></div>
     {swapState === 0 ? <>
@@ -322,7 +307,7 @@ useEffect(() => {
     const v = e.target.value;
     if (!/^\d*\.?\d*$/.test(v)) return;
     setBuyText(v);
-    setBuyValue(v === "" || v === "." ? 0 : Number(v)); // keep numeric in sync
+    setBuyValue(v === "" || v === "." ? 0 : Number(v));
   }}
   onKeyDown={(e) => {
     const isDigit = /^[0-9]$/.test(e.key);
