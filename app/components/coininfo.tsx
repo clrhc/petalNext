@@ -15,7 +15,7 @@ export default function CoinInfo(){
   const [petalLaunched, setPetalLaunched] = useState(false);
   const [ethIn, setEthIn] = useState(0);
 
-   useEffect(() => {
+  useEffect(() => {
   let unsub: (() => void) | null = null;
 
   async function init() {
@@ -25,54 +25,56 @@ export default function CoinInfo(){
           {
             address: Data.petalFactory as Address,
             abi: factory.abi as Abi,
-            functionName: "tokenLaunched",
+            functionName: 'tokenLaunched',
             args: [Data.petalToken as Address],
           },
           {
             address: Data.petalFactory as Address,
             abi: factory.abi as Abi,
-            functionName: "bondingCurves",
+            functionName: 'bondingCurves',
             args: [Data.petalToken as Address],
           },
           {
             address: Data.uniswapRouter as Address,
             abi: uniswapRouter.abi as Abi,
-            functionName: "getAmountsOut",
-            args: [parseUnits("1", 18), [Data.petalToken, Data.WETH]],
+            functionName: 'getAmountsOut',
+            args: [parseUnits('1', 18), [Data.petalToken as Address, Data.WETH as Address]],
           },
         ],
         allowFailure: true,
       });
 
-      const petalLaunched_ = data[0]?.result as boolean;
-      const petalCurve_ = data[1]?.result as bigint[];
-      const petalEthPrice_ = data[2]?.result as bigint[];
+      const petalLaunched_ = data[0]?.status === 'success' ? (data[0].result as boolean) : false;
+      const petalCurve_    = data[1]?.status === 'success' ? (data[1].result as readonly bigint[]) : undefined;
+      const petalEthPrice_ = data[2]?.status === 'success' ? (data[2].result as readonly bigint[]) : undefined;
 
       setPetalLaunched(petalLaunched_);
 
       if (petalLaunched_) {
         setTokenPrice(Number(petalEthPrice_?.[1] ?? 0n));
       } else {
-        setTokenPrice(Number(petalCurve_?.[6] ?? 0n));
-        setEthIn(Number(petalCurve_?.[2] ?? 0n));
+        setTokenPrice(Number(petalCurve?.[6] ?? 0n));
+        setEthIn(Number(petalCurve?.[2] ?? 0n));
       }
     } catch (err) {
-      console.error("readContracts failed:", err);
+      console.error('readContracts failed:', err);
     }
   }
 
-  // 1️⃣ Run once on mount
-  init();
+  // Run once on mount
+  void init();
 
-  // 2️⃣ Subscribe to new blocks and re-run
+  // Subscribe to new blocks and re-run
   unsub = watchBlockNumber(config, {
-    listen: true,
-    onBlockNumber: () => {
-      void init();
-    },
+    onBlockNumber: () => { void init(); },
+    // optional:
+    // emitOnBegin: false,
+    // emitMissed: true,
+    // poll: false, // set true if you want polling instead of websocket
+    // pollingInterval: 4_000,
   });
 
-  // 3️⃣ Clean up subscription on unmount
+  // Cleanup on unmount
   return () => {
     if (unsub) unsub();
   };
