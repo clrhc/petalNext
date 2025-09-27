@@ -2,11 +2,13 @@
 import '../globals.css';
 import React,{useState, useEffect} from 'react';
 import {ethers} from 'ethers';
+import { readContracts } from '@wagmi/core';
+import { config } from './wagmiConfig';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import prediction from '../abis/prediction.json';
 import dataFeed from '../abis/dataFeed.json';
 
-export default function PredCoins({contractAddress, dataFeedAddress}: { contractAddress: string; dataFeedAddress: string }){
+export default function PredCoins({contractAddress, dataFeedAddress}){
 
   type CurrentBid = {
   roundId: string;
@@ -25,10 +27,10 @@ export default function PredCoins({contractAddress, dataFeedAddress}: { contract
   const [roundAnswer, setRoundAnswer] = useState(0);
   const [previousAnswer, setPreviousAnswer] = useState(0);
   const [bidValue, setBidValue] = useState(0);
-  const [bidState, setBidState] = useState(true);
+  const [bidState, setBidState] = useState(0);
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
-  const provider = new ethers.JsonRpcProvider('https://base-public.nodies.app');
+  const provider = new ethers.JsonRpcProvider('https://base-mainnet.public.blastapi.io');
   const predictionContract = new ethers.Contract(contractAddress, prediction.abi, provider);
   const dataFeedContract = new ethers.Contract(dataFeedAddress, dataFeed.abi, provider);
   type Address = `0x${string}`;
@@ -38,28 +40,52 @@ export default function PredCoins({contractAddress, dataFeedAddress}: { contract
   if (isConnected) {
 
   try{
-  const checkBidPromise  = predictionContract.checkBid(address);
-  const userBidPromise   = predictionContract.userBid(address);
-  const epochPromise    = predictionContract.epochCheck();
-  const answerPromise   = dataFeedContract.latestAnswer();
-  const roundPromise = dataFeedContract.latestRound();
-  const ethBalancePromise = provider.getBalance(address!);
+
+      const data = await readContracts(config, {
+  contracts: [
+    {
+      address: contractAddress,
+      abi: prediction.abi,
+      functionName: 'checkBid',
+      args: [address],
+    },
+    {
+      address: contractAddress,
+      abi: prediction.abi,
+      functionName: 'userBid',
+      args: [address],
+    },
+    {
+      address: contractAddress,
+      abi: prediction.abi,
+      functionName: 'epochCheck',
+      args: [],
+    },
+    {
+      address: dataFeedAddress,
+      abi: dataFeed.abi,
+      functionName: 'latestAnswer',
+      args: [],
+    },
+    {
+      address: dataFeedAddress,
+      abi: dataFeed.abi,
+      functionName: 'latestRound',
+      args: [],
+    },
+  ],
+  allowFailure: false,
+});
 
   const [
     checkBid_,
     userBid_,
     epoch_,
     answer_,
-    round_,
-    ethBalance_
-  ] = await Promise.all([
-    checkBidPromise,
-    userBidPromise,
-    epochPromise,
-    answerPromise,
-    roundPromise,
-    ethBalancePromise
-  ]);
+    round_
+  ] = data;
+
+  const ethBalance_ = await provider.getBalance(address!);
 
   const previousRoundData_ = await dataFeedContract.getRoundData(round_-epoch_);
   if(Number(checkBid_) > 0){
@@ -69,7 +95,13 @@ export default function PredCoins({contractAddress, dataFeedAddress}: { contract
 
   setEthBalance(Number(ethBalance_));
   setCheckBid(Number(checkBid_));
-  setUserBid(userBid_);
+  setUserBid({
+  roundId: userBid_[0].toString(),
+  priceBid: userBid_[1].toString(),
+  priceBidTime: userBid_[2].toString(),
+  higher: userBid_[3],
+  amountBid: userBid_[4].toString(),
+});
   setEpoch(epoch_);
   setAnswer(answer_);
   setPreviousAnswer(previousRoundData_.answer);

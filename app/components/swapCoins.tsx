@@ -3,6 +3,8 @@ import '../globals.css';
 import React,{useState, useEffect} from 'react';
 import Data from '../data.json';
 import {ethers} from 'ethers';
+import { readContracts } from '@wagmi/core';
+import { config } from './wagmiConfig';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import factory from '../abis/factory.json';
 import token from '../abis/token.json';
@@ -27,8 +29,6 @@ export default function SwapCoins({tokenAddress, factoryAddress}: { tokenAddress
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
   const provider = new ethers.JsonRpcProvider('https://base-mainnet.public.blastapi.io');
-  const tokenContract = new ethers.Contract(tokenAddress, token.abi, provider);
-  const factoryContract = new ethers.Contract(factoryAddress, factory.abi, provider);
   const uniswapRouterContract = new ethers.Contract(Data.uniswapRouter, uniswapRouter.abi, provider);
   type Address = `0x${string}`;
 
@@ -37,30 +37,56 @@ export default function SwapCoins({tokenAddress, factoryAddress}: { tokenAddress
 
 if (isConnected) {
    try{
-  const ethBalancePromise     = provider.getBalance(address!);
-  const tokenBalancePromise   = tokenContract.balanceOf(address);
-  const tokenLaunchedPromise =  factoryContract.tokenLaunched(tokenAddress);
-  const tokenAllowancePromise = tokenContract.allowance(address, factoryAddress);
-  const tokenRouterAllowancePromise = tokenContract.allowance(address, Data.uniswapRouter);
-  const tokenCurvePromise = factoryContract.bondingCurves(tokenAddress);
-  const tokenNamePromise = tokenContract.name();
+     const data = await readContracts(config, {
+  contracts: [
+    {
+      address: tokenAddress,
+      abi: token.abi,
+      functionName: 'balanceOf',
+      args: [address],
+    },
+    {
+      address: factoryAddress,
+      abi: factory.abi,
+      functionName: 'tokenLaunched',
+      args: [tokenAddress],
+    },
+    {
+      address: tokenAddress,
+      abi: token.abi,
+      functionName: 'allowance',
+      args: [address,factoryAddress],
+    },
+    {
+      address: tokenAddress,
+      abi: token.abi,
+      functionName: 'allowance',
+      args: [address, Data.uniswapRouter],
+    },
+    {
+      address: factoryAddress,
+      abi: factory.abi,
+      functionName: 'bondingCurves',
+      args: [tokenAddress],
+    },
+    {
+      address: tokenAddress,
+      abi: token.abi,
+      functionName: 'name',
+      args: [],
+    },
+  ],
+  allowFailure: false,
+});
+  const ethBalance_ = await provider.getBalance(address!);
   const [
-    ethBalance_,
     tokenBalance_,
     tokenLaunched_,
     tokenAllowance_,
     tokenRouterAllowance_,
     tokenCurve_,
     tokenName_
-  ] = await Promise.all([
-    ethBalancePromise,
-    tokenBalancePromise,
-    tokenLaunchedPromise,
-    tokenAllowancePromise,
-    tokenRouterAllowancePromise,
-    tokenCurvePromise,
-    tokenNamePromise
-  ]);
+  ] = data;
   setTokenLaunched(tokenLaunched_);
   if(tokenLaunched_){
   const tokenEthPrice_ = await uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[tokenAddress,Data.WETH]);

@@ -1,16 +1,17 @@
 'use client';
 import '../globals.css';
 import React,{useState, useEffect} from 'react';
+import {readContracts} from '@wagmi/core';
 import {ethers} from 'ethers';
 import Data from '../data.json';
 import factory from '../abis/factory.json';
 import uniswapRouter from '../abis/uniswapRouter.json';
+import {config} from './wagmiConfig';
 
 export default function CoinInfo(){
 
   const [tokenPrice, setTokenPrice] = useState(0);
-  const provider = new ethers.JsonRpcProvider('https://base.drpc.org');
-  const factoryContract = new ethers.Contract(Data.petalFactory, factory.abi, provider);
+  const provider = new ethers.JsonRpcProvider('https://base-mainnet.public.blastapi.io');
   const uniswapRouterContract = new ethers.Contract(Data.uniswapRouter, uniswapRouter.abi, provider);
   const [petalLaunched, setPetalLaunched] = useState(0);
   const [ethIn, setEthIn] = useState(0);
@@ -18,15 +19,25 @@ export default function CoinInfo(){
     useEffect(() =>{
     async function init(){
      try{
-  const petalLaunchedPromise =  factoryContract.tokenLaunched(Data.petalToken);
-  const petalCurvePromise = factoryContract.bondingCurves(Data.petalToken);
-  const [
-    petalLaunched_,
-    petalCurve_
-  ] = await Promise.all([
-    petalLaunchedPromise,
-    petalCurvePromise
-  ]);
+  const data = await readContracts(config, {
+  contracts: [
+    {
+      address: Data.petalFactory,
+      abi: factory.abi,
+      functionName: 'tokenLaunched',
+      args: [Data.petalToken],
+    },
+    {
+      address: Data.petalFactory,
+      abi: factory.abi,
+      functionName: 'bondingCurves',
+      args: [Data.petalToken],
+    },
+  ],
+  allowFailure: false,
+});
+
+const [petalLaunched_, petalCurve_] = data;
   setPetalLaunched(petalLaunched_);
   if(petalLaunched_){
   const petalEthPricePromise = await uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[Data.petalToken,Data.WETH]);
@@ -35,7 +46,7 @@ export default function CoinInfo(){
   setTokenPrice(petalCurve_[6]);
   setEthIn(Number(petalCurve_[2]));
   }
-  }catch{};
+  }catch{}
 }
 const interval = setInterval(() => init(), 1000);
       return () => {

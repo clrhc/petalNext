@@ -3,6 +3,8 @@ import '../globals.css';
 import React,{useState, useEffect} from 'react';
 import Data from '../data.json';
 import {ethers} from 'ethers';
+import { readContracts } from '@wagmi/core';
+import { config } from './wagmiConfig';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import referral from '../abis/referral.json';
 import xpCoin from '../assets/img/xpCoin.png';
@@ -20,7 +22,7 @@ export default function ReferralComponent() {
   const [error, setError] = useState(false);
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
-  const provider = new ethers.JsonRpcProvider('https://base.drpc.org');
+  const provider = new ethers.JsonRpcProvider('https://base-mainnet.public.blastapi.io');
   const referralContract = new ethers.Contract(Data.referralAddress, referral.abi, provider);
   type Address = `0x${string}`;
 
@@ -37,24 +39,36 @@ if (isConnected) {
     String(userInfo_[3]),
     String(address),
   ]);}catch{};
-  try{
-  const checkUserRefPromise   = referralContract.refStore(userRef);
-  const checkNewRefPromise    = referralContract.refStore(newRef);
+try{
+
+  const data = await readContracts(config, {
+  contracts: [
+    {
+      address: Data.referralAddress,
+      abi: referral.abi,
+      functionName: 'refStore',
+      args: [String(userRef).toLowerCase()],
+    },
+    {
+      address: Data.referralAddress,
+      abi: referral.abi,
+      functionName: 'refStore',
+      args: [String(newRef).toLowerCase()],
+    },
+  ],
+  allowFailure: false,
+});
    let [
     checkUserRef_,
     checkNewRef_
-  ] = await Promise.all([
-    checkUserRefPromise,
-    checkNewRefPromise
-  ]);
-
+  ] = data;
   checkUserRef_ = String(checkUserRef_);
   checkNewRef_  = String(checkNewRef_);
 
 
 
   setUserCheck(checkUserRef_ !== "0x0000000000000000000000000000000000000000");
-  setNewCheck (checkNewRef_  !== "0x0000000000000000000000000000000000000000");}catch{};
+  setNewCheck (checkNewRef_  !== "0x0000000000000000000000000000000000000000");}catch{}
 
 }}
 

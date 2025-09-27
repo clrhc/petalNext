@@ -3,6 +3,8 @@ import '../globals.css';
 import React,{useState, useEffect} from 'react';
 import Data from '../data.json';
 import {ethers} from 'ethers';
+import { readContracts } from '@wagmi/core';
+import { config } from './wagmiConfig';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import rewards from '../abis/rewards.json';
 import nft from '../abis/nft.json';
@@ -13,26 +15,35 @@ import nft from '../abis/nft.json';
      const [baseId] = useState(8453);
      const networkId = useChainId();
      const { writeContract } = useWriteContract();
-     const provider = new ethers.JsonRpcProvider('https://base.drpc.org');
      const [rewardsAvailable, setRewardsAvailable] = useState(0);
      const [nftBalance, setNftBalance] = useState(0);
-     const rewardsContract = new ethers.Contract(Data.petalRewards, rewards.abi, provider);
-     const sekaiContract = new ethers.Contract(Data.virtueNFT, nft.abi, provider);
      type Address = `0x${string}`;
 
      useEffect(() =>{
     async function init(){
      if(isConnected){
   try{
-  const nftBalancePromise  = sekaiContract.balanceOf(address);
-  const rewardsPromise = rewardsContract.checkRewards(address);
-    const [
+    const data = await readContracts(config, {
+  contracts: [
+    {
+      address: Data.virtueNFT,
+      abi: nft.abi,
+      functionName: 'balanceOf',
+      args: [address],
+    },
+    {
+      address: Data.petalRewards,
+      abi: rewards.abi,
+      functionName: 'checkRewards',
+      args: [address],
+    },
+  ],
+  allowFailure: false,
+});
+   const [
     nftBalance_,
     rewards_
-  ] = await Promise.all([
-    nftBalancePromise,
-    rewardsPromise
-  ]);
+  ] = data;
 
   setNftBalance(Number(nftBalance_));
   setRewardsAvailable(Number(rewards_));}catch{};

@@ -3,6 +3,8 @@ import '../globals.css';
 import React,{useState, useEffect} from 'react';
 import Data from '../data.json';
 import {ethers} from 'ethers';
+import { readContracts } from '@wagmi/core';
+import { config } from './wagmiConfig';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import factory from '../abis/factory.json';
 import token from '../abis/token.json';
@@ -27,11 +29,6 @@ export default function SwapMemes({tokenAddress}: { tokenAddress: string; }) {
   const [tokenPair, setTokenPair] = useState("");
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
-  const provider = new ethers.JsonRpcProvider('https://base.llamarpc.com');
-  const tokenContract = new ethers.Contract(tokenAddress, token.abi, provider);
-  const factoryContract = new ethers.Contract(Data.petalFactory, factory.abi, provider);
-  const uniswapRouterContract = new ethers.Contract(Data.uniswapRouter, uniswapRouter.abi, provider);
-  const uniswapFactoryContract = new ethers.Contract(Data.uniswapFactory, uniswapFactory.abi, provider);
   type Address = `0x${string}`;
 
   useEffect(() =>{
@@ -39,13 +36,54 @@ export default function SwapMemes({tokenAddress}: { tokenAddress: string; }) {
 
 if (isConnected) {
    try{
-  const weedBalancePromise     = factoryContract.balanceOf(address);
-  const tokenBalancePromise   = tokenContract.balanceOf(address);
-  const tokenAllowancePromise = tokenContract.allowance(address, Data.uniswapRouter);
-  const weedAllowancePromise = factoryContract.allowance(address, Data.uniswapRouter);
-  const tokenPricePromise = uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[tokenAddress,Data.petalFactory]);
-  const tokenNamePromise = tokenContract.name();
-  const tokenPairPromise = uniswapFactoryContract.getPair(tokenAddress, Data.petalFactory);
+       const data = await readContracts(config, {
+  contracts: [
+    {
+      address: Data.petalFactory,
+      abi: factory.abi,
+      functionName: 'balanceOf',
+      args: [address],
+    },
+    {
+      address: tokenAddress,
+      abi: token.abi,
+      functionName: 'balanceOf',
+      args: [address],
+    },
+    {
+      address: tokenAddress,
+      abi: token.abi,
+      functionName: 'allowance',
+      args: [address,Data.uniswapRouter],
+    },
+    {
+      address: Data.petalFactory,
+      abi: factory.abi,
+      functionName: 'allowance',
+      args: [address, Data.uniswapRouter],
+    },
+    {
+      address: Data.uniswapRouter,
+      abi: uniswapRouter.abi,
+      functionName: 'getAmountsOut',
+      args: [ethers.parseUnits(String(1)),[tokenAddress,Data.petalFactory]],
+    },
+    {
+      address: tokenAddress,
+      abi: token.abi,
+      functionName: 'name',
+      args: [],
+    },
+    {
+      address: Data.uniswapFactory,
+      abi: uniswapFactory.abi,
+      functionName: 'getPair',
+      args: [tokenAddress,Data.petalFactory],
+    },
+  ],
+  allowFailure: false,
+});
+
   const [
     weedBalance_,
     tokenBalance_,
@@ -54,15 +92,7 @@ if (isConnected) {
     tokenPrice_,
     tokenName_,
     tokenPair_
-  ] = await Promise.all([
-    weedBalancePromise,
-    tokenBalancePromise,
-    tokenAllowancePromise,
-    weedAllowancePromise,
-    tokenPricePromise,
-    tokenNamePromise,
-    tokenPairPromise
-  ]);
+  ] = data;
   
   setWeedBalance(weedBalance_);
   setTokenBalance(tokenBalance_);
