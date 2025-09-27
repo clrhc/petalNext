@@ -99,15 +99,15 @@ if (isConnected) {
   if(tokenLaunched_){
   const tokenEthPrice_ = await uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[tokenAddress,Data.WETH]);
   setTokenPrice(tokenEthPrice_[1]);
-  setTokenAllowance(tokenRouterAllowance_);
+  setTokenAllowance(Number(tokenRouterAllowance_));
   }else{
-  setTokenPrice(tokenCurve_[6]);
-  setEthIn(tokenCurve_[2]);
-  setTokenAllowance(tokenAllowance_);
+  setTokenPrice(Number(tokenCurve_[6]));
+  setEthIn(Number(tokenCurve_[2]));
+  setTokenAllowance(Number(tokenAllowance_));
   }
   setTokenName(String(tokenName_));
   setEthBalance(Number(ethBalance_));
-  setTokenBalance(tokenBalance_);
+  setTokenBalance(Number(tokenBalance_));
   }catch{};
 }
 }
