@@ -5,6 +5,7 @@ import Data from '../data.json';
 import {ethers} from 'ethers';
 import { readContracts } from '@wagmi/core';
 import { config } from './wagmiConfig';
+import {Abi} from 'viem';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import factory from '../abis/factory.json';
 import token from '../abis/token.json';
@@ -41,37 +42,37 @@ if (isConnected) {
   contracts: [
     {
       address: tokenAddress as Address,
-      abi: token.abi,
+      abi: token.abi as Abi,
       functionName: 'balanceOf',
       args: [address],
     },
     {
       address: factoryAddress as Address,
-      abi: factory.abi,
+      abi: factory.abi as Abi,
       functionName: 'tokenLaunched',
       args: [tokenAddress as Address],
     },
     {
       address: tokenAddress as Address,
-      abi: token.abi,
+      abi: token.abi as Abi,
       functionName: 'allowance',
       args: [address,factoryAddress as Address],
     },
     {
       address: tokenAddress as Address,
-      abi: token.abi,
+      abi: token.abi as Abi,
       functionName: 'allowance',
       args: [address, Data.uniswapRouter as Address],
     },
     {
       address: factoryAddress as Address,
-      abi: factory.abi,
+      abi: factory.abi as Abi,
       functionName: 'bondingCurves',
       args: [tokenAddress as Address],
     },
     {
       address: tokenAddress as Address,
-      abi: token.abi,
+      abi: token.abi as Abi,
       functionName: 'name',
       args: [],
     },

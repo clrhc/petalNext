@@ -4,6 +4,7 @@ import React,{useState, useEffect} from 'react';
 import Data from '../data.json';
 import { readContracts } from '@wagmi/core';
 import { config } from './wagmiConfig';
+import {Abi} from 'viem';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import rewards from '../abis/rewards.json';
 import nft from '../abis/nft.json';
@@ -26,13 +27,13 @@ import nft from '../abis/nft.json';
   contracts: [
     {
       address: Data.virtueNFT as Address,
-      abi: nft.abi,
+      abi: nft.abi as Abi,
       functionName: 'balanceOf',
       args: [address],
     },
     {
       address: Data.petalRewards as Address,
-      abi: rewards.abi,
+      abi: rewards.abi as Abi,
       functionName: 'checkRewards',
       args: [address],
     },

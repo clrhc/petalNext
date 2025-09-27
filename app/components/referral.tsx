@@ -5,6 +5,7 @@ import Data from '../data.json';
 import {ethers} from 'ethers';
 import { readContracts } from '@wagmi/core';
 import { config } from './wagmiConfig';
+import {Abi} from 'viem';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import referral from '../abis/referral.json';
 import xpCoin from '../assets/img/xpCoin.png';
@@ -45,13 +46,13 @@ try{
   contracts: [
     {
       address: Data.referralAddress as Address,
-      abi: referral.abi,
+      abi: referral.abi as Abi,
       functionName: 'refStore',
       args: [String(userRef).toLowerCase()],
     },
     {
       address: Data.referralAddress as Address,
-      abi: referral.abi,
+      abi: referral.abi as Abi,
       functionName: 'refStore',
       args: [String(newRef).toLowerCase()],
     },

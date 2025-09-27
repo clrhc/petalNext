@@ -4,6 +4,7 @@ import React,{useState, useEffect} from 'react';
 import {ethers} from 'ethers';
 import { readContracts } from '@wagmi/core';
 import { config } from './wagmiConfig';
+import {Abi} from 'viem';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import prediction from '../abis/prediction.json';
 import dataFeed from '../abis/dataFeed.json';
@@ -44,31 +45,31 @@ export default function PredCoins({contractAddress, dataFeedAddress}){
   contracts: [
     {
       address: contractAddress as Address,
-      abi: prediction.abi,
+      abi: prediction.abi as Abi,
       functionName: 'checkBid',
       args: [address],
     },
     {
       address: contractAddress as Address,
-      abi: prediction.abi,
+      abi: prediction.abi as Abi,
       functionName: 'userBid',
       args: [address],
     },
     {
       address: contractAddress as Address,
-      abi: prediction.abi,
+      abi: prediction.abi as Abi,
       functionName: 'epochCheck',
       args: [],
     },
     {
       address: dataFeedAddress as Address,
-      abi: dataFeed.abi,
+      abi: dataFeed.abi as Abi,
       functionName: 'latestAnswer',
       args: [],
     },
     {
       address: dataFeedAddress as Address,
-      abi: dataFeed.abi,
+      abi: dataFeed.abi as Abi,
       functionName: 'latestRound',
       args: [],
     },

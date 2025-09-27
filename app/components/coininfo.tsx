@@ -3,6 +3,7 @@ import '../globals.css';
 import React,{useState, useEffect} from 'react';
 import {readContracts} from '@wagmi/core';
 import {ethers} from 'ethers';
+import {Abi} from 'viem';
 import Data from '../data.json';
 import factory from '../abis/factory.json';
 import uniswapRouter from '../abis/uniswapRouter.json';
@@ -24,13 +25,13 @@ export default function CoinInfo(){
   contracts: [
     {
       address: Data.petalFactory as Address,
-      abi: factory.abi,
+      abi: factory.abi as Abi,
       functionName: 'tokenLaunched',
       args: [Data.petalToken as Address],
     },
     {
       address: Data.petalFactory as Address,
-      abi: factory.abi,
+      abi: factory.abi as Abi,
       functionName: 'bondingCurves',
       args: [Data.petalToken as Address],
     },

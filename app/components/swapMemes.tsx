@@ -5,6 +5,7 @@ import Data from '../data.json';
 import {ethers} from 'ethers';
 import { readContracts } from '@wagmi/core';
 import { config } from './wagmiConfig';
+import {Abi} from 'viem';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import factory from '../abis/factory.json';
 import token from '../abis/token.json';
@@ -40,43 +41,43 @@ if (isConnected) {
   contracts: [
     {
       address: Data.petalFactory as Address,
-      abi: factory.abi,
+      abi: factory.abi as Abi,
       functionName: 'balanceOf',
       args: [address],
     },
     {
       address: tokenAddress as Address,
-      abi: token.abi,
+      abi: token.abi as Abi,
       functionName: 'balanceOf',
       args: [address],
     },
     {
       address: tokenAddress as Address,
-      abi: token.abi,
+      abi: token.abi as Abi,
       functionName: 'allowance',
       args: [address,Data.uniswapRouter as Address],
     },
     {
       address: Data.petalFactory as Address,
-      abi: factory.abi,
+      abi: factory.abi as Abi,
       functionName: 'allowance',
       args: [address, Data.uniswapRouter as Address],
     },
     {
       address: Data.uniswapRouter as Address,
-      abi: uniswapRouter.abi,
+      abi: uniswapRouter.abi as Abi,
       functionName: 'getAmountsOut',
       args: [ethers.parseUnits(String(1)),[tokenAddress as Address,Data.petalFactory as Address]],
     },
     {
       address: tokenAddress as Address,
-      abi: token.abi,
+      abi: token.abi as Abi,
       functionName: 'name',
       args: [],
     },
     {
       address: Data.uniswapFactory as Address,
-      abi: uniswapFactory.abi,
+      abi: uniswapFactory.abi as Abi,
       functionName: 'getPair',
       args: [tokenAddress as Address,Data.petalFactory as Address],
     },
