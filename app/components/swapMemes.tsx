@@ -131,6 +131,18 @@ if (isConnected) {
       }
     }
 
+
+    const approveWeed = async () => {
+      if(networkId === baseId){
+        await writeContract({
+          abi: token.abi,
+          address: Data.petalFactory as Address,
+          functionName: 'approve',
+          args: [Data.uniswapRouter, ethers.parseUnits(String(1000000000))],
+        });
+      }
+    }
+
         const buyRouter = async () => {
   if (networkId === baseId) {
       await writeContract({
@@ -198,7 +210,7 @@ if (isConnected) {
   </div>
   <p className="rightSide">Balance: {Number(ethers.formatUnits(tokenBalance, 18)).toFixed(2)} {tokenName}</p>
     {buyValue > 0 ? <>
-    {buyValue*10**18 > weedAllowance ? <><p onClick={() => approveRouter()} className="enterButton pointer">Approve</p></>:<><p onClick={() => buyRouter()} className="enterButton pointer">Buy</p></>}
+    {buyValue*10**18 > weedAllowance ? <><p onClick={() => approveWeed()} className="enterButton pointer">Approve</p></>:<><p onClick={() => buyRouter()} className="enterButton pointer">Buy</p></>}
     </>:<></>}<p style={{textAlign: 'center'}}>1 WEED = {Number(1/Number(Number(tokenPrice) / 10 ** 18)).toFixed(4)} {tokenName}</p>
     </>:
     <>
