@@ -29,7 +29,10 @@ export default function SwapCoins({tokenAddress, factoryAddress}: { tokenAddress
   const [tokenName, setTokenName] = useState("");
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
-  const provider = new ethers.JsonRpcProvider('https://base.llamarpc.com');
+  const provider = new ethers.JsonRpcProvider(
+  'https://base.llamarpc.com',
+  { chainId: 8453, name: 'base' }   // <— key bit
+  );
   const uniswapRouterContract = new ethers.Contract(Data.uniswapRouter, uniswapRouter.abi, provider);
   type Address = `0x${string}`;
 

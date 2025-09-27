@@ -31,7 +31,10 @@ export default function PredCoins({contractAddress, dataFeedAddress}: { contract
   const [bidState, setBidState] = useState(true);
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
-  const provider = new ethers.JsonRpcProvider('https://base.llamarpc.com');
+  const provider = new ethers.JsonRpcProvider(
+  'https://base.llamarpc.com',
+  { chainId: 8453, name: 'base' }   // <— key bit
+  );
   const dataFeedContract = new ethers.Contract(dataFeedAddress, dataFeed.abi, provider);
   type Address = `0x${string}`;
 

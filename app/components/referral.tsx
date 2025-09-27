@@ -23,7 +23,10 @@ export default function ReferralComponent() {
   const [error, setError] = useState(false);
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
-  const provider = new ethers.JsonRpcProvider('https://base.llamarpc.com');
+  const provider = new ethers.JsonRpcProvider(
+  'https://base.llamarpc.com',
+  { chainId: 8453, name: 'base' }   // <— key bit
+  );
   const referralContract = new ethers.Contract(Data.referralAddress, referral.abi, provider);
   type Address = `0x${string}`;
 
