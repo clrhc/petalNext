@@ -114,6 +114,7 @@ try{
 	return(
 	<>
     {userInfo[0] < 1 ? <><span>You have yet to register. Begin by using a referral and creating your own referral code. Default referral: PETAL</span>
+    <br/>
     <span>Get rewarded VIRTUE, PETAL and WEED on registration</span>
     <input id="refInput" className={`inputBox inputBox inputText userText ${userRef.length > 0 ? !error && userCheck ? "outlineGreen" : "outlineRed": "outlineTeal"}`} placeholder="User Referral" onChange={(e) => {checkRef(e);setUserRef(e.target.value)}} value={userRef} type="text" />
     {userRef.length > 0 && <>{!error && <>{userCheck ? <><p className="rightSide" style={{color: 'green'}}>Is Valid</p></>:<><p className="rightSide" style={{color: 'red'}}>Referral Does Not Exist</p></>}</>}</>}
