@@ -233,7 +233,7 @@ if (isConnected) {
     {buyValue > 0 ? <><p onClick={() => tokenLaunched ? buyRouter() : buyFactory()} className="enterButton pointer">Buy</p>
     </>:<></>}<p style={{textAlign: 'center'}}>1 ETH = {Number(1/Number(Number(tokenPrice) / 10 ** 18)).toFixed(4)} {tokenName}</p>
     <p style={{textAlign: 'center'}}>3% Tax</p>
-    {!tokenLaunched && <><p style={{textAlign: 'center'}}>ETH To Bond: {Number(ethers.formatUnits(String(ethIn), 18)).toFixed(3)} / 40 ETH</p></>}
+    {!tokenLaunched && <><p style={{textAlign: 'center'}}>ETH To Bond: {Number(ethers.formatUnits(String(ethIn), 18)).toFixed(3)} / {String(tokenName).toLowerCase() === String('virtue').toLowerCase() ? '4 ETH' : '40 ETH'}</p></>}
     </>:
     <>
       <div style={{ position: 'relative' }}>
@@ -268,7 +268,7 @@ if (isConnected) {
     {sellValue*10**18 > tokenAllowance ? <><p onClick={() => tokenLaunched ? approveRouter() : approveFactory()} className="enterButton pointer">Approve</p></>:<><p onClick={() => tokenLaunched ? sellRouter() : sellFactory()} className="enterButton pointer">Sell</p></>}</>:<></>}
       <p style={{textAlign: 'center'}}>1 {tokenName} = {Number(Number(tokenPrice) / 10 ** 18).toFixed(10)} ETH</p>
       <p style={{textAlign: 'center'}}>3% Tax</p>
-      {!tokenLaunched && <><p style={{textAlign: 'center'}}>ETH To Bond: {Number(ethers.formatUnits(String(ethIn), 18)).toFixed(3)} / {String(tokenName).toLowerCase() === String(virtue).toLowerCase() ? '4 ETH' : '40 ETH'}</p></>}
+      {!tokenLaunched && <><p style={{textAlign: 'center'}}>ETH To Bond: {Number(ethers.formatUnits(String(ethIn), 18)).toFixed(3)} / {String(tokenName).toLowerCase() === String('virtue').toLowerCase() ? '4 ETH' : '40 ETH'}</p></>}
       </>}
   </> 
   );
