@@ -17,22 +17,6 @@ import petalLogo from './assets/img/petal.png';
 
 export default function Home() {
 
-useEffect(() => {
-  async function fetchData() {
-    await fetch('/api/blast', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        jsonrpc: "2.0",
-        method: "eth_chainId",
-        params: [],
-        id: 1
-      }),
-    });
-  }
-  fetchData();
-}, []);
-
   const { setFrameReady, isFrameReady } = useMiniKit();
   const {open} = useAppKit();
   const { isConnected } = useAccount();
