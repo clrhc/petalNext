@@ -19,7 +19,7 @@ export default function Home() {
 
 useEffect(() => {
   async function fetchData() {
-    const res = await fetch('/api/blast', {
+    await fetch('/api/blast', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
