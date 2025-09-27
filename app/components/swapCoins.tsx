@@ -37,44 +37,45 @@ export default function SwapCoins({tokenAddress, factoryAddress}: { tokenAddress
 useEffect(() => {
   if (!isConnected || !address) return;
 
-  // ---------- Types (no `any`) ----------
+  // ---------- Result wrapper types ----------
   type Success<T> = { status: 'success'; result: T };
   type Failure    = { status: 'failure'; error: unknown };
   type Rc<T>      = Success<T> | Failure;
 
-  // bondingCurves can decode as a tuple and/or expose named fields
+  // ---------- Bonding curve types ----------
   type BondingCurveTuple = readonly [
-    bigint, // 0
-    bigint, // 1
-    bigint, // 2 (ethIn / virtualEth)
-    bigint, // 3
-    bigint, // 4
-    bigint, // 5
-    bigint, // 6 (spotPrice / currentPrice)
+    bigint,          // 0
+    bigint,          // 1
+    bigint,          // 2 (ethIn / virtualEth)
+    bigint,          // 3
+    bigint,          // 4
+    bigint,          // 5
+    bigint,          // 6 (spotPrice / currentPrice)
     readonly bigint[] // 7
-  ] & {
+  ];
+
+  type BondingCurveStruct = {
     spotPrice?: bigint;
     currentPrice?: bigint;
     ethIn?: bigint;
     virtualEth?: bigint;
   };
 
+  const isBondingCurveTuple = (x: unknown): x is BondingCurveTuple =>
+    Array.isArray(x) &&
+    x.length >= 8 &&                    // must be at least 8 elements
+    typeof x[2] === 'bigint' &&
+    typeof x[6] === 'bigint';
+
   let unwatch: (() => void) | null = null;
   let running = false; // prevent overlapping calls
 
   const readCurve = (curve: unknown) => {
-    const isTuple =
-      Array.isArray(curve) &&
-      curve.length >= 7 &&
-      typeof (curve as Record<number, unknown>)[2] === 'bigint' &&
-      typeof (curve as Record<number, unknown>)[6] === 'bigint';
-
-    if (isTuple) {
-      const t = curve as BondingCurveTuple;
-      return { spot: t[6] ?? 0n, ethIn: t[2] ?? 0n };
+    if (isBondingCurveTuple(curve)) {
+      const t = curve; // already narrowed
+      return { spot: t[6], ethIn: t[2] };
     }
-
-    const o = curve as Partial<BondingCurveTuple> | undefined;
+    const o = curve as BondingCurveStruct | undefined;
     const spot = o?.spotPrice ?? o?.currentPrice ?? 0n;
     const ethIn = o?.ethIn ?? o?.virtualEth ?? 0n;
     return { spot, ethIn };
@@ -140,7 +141,9 @@ useEffect(() => {
       const tokenLaunched_        = get<boolean>(data, 1) ?? false;
       const tokenAllowance_       = get<bigint>(data, 2) ?? 0n;
       const tokenRouterAllowance_ = get<bigint>(data, 3) ?? 0n;
-      const curveRaw              = get<BondingCurveTuple | undefined>(data, 4);
+
+      // NOTE: read as unknown, let readCurve do the narrowing safely.
+      const curveRaw              = get<unknown>(data, 4);
       const tokenName_            = get<string>(data, 5) ?? '';
       const amounts               = get<readonly bigint[]>(data, 6) ?? [];
 
@@ -150,8 +153,7 @@ useEffect(() => {
 
       setTokenLaunched(tokenLaunched_);
       if (tokenLaunched_) {
-        // Router price path: [amountIn, amountOut]
-        setTokenPrice(Number(amounts?.[1] ?? 0n));
+        setTokenPrice(Number(amounts?.[1] ?? 0n)); // [amountIn, amountOut]
         setTokenAllowance(Number(tokenRouterAllowance_));
       } else {
         setTokenPrice(Number(spot));
@@ -172,17 +174,11 @@ useEffect(() => {
   // initial load
   void init();
 
-  // re-run on every new block (@wagmi/core has no `listen` option)
+  // re-run on every new block (no `listen` in @wagmi/core)
   unwatch = watchBlockNumber(config, {
     onBlockNumber: () => { void init(); },
-    // optional:
-    // emitMissed: true,
-    // emitOnBegin: false,
-    // poll: true,
-    // pollingInterval: 4000,
   });
 
-  // cleanup
   return () => {
     if (unwatch) unwatch();
   };

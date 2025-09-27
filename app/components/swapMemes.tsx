@@ -31,8 +31,10 @@ export default function SwapMemes({tokenAddress}: { tokenAddress: string; }) {
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
 
-  useEffect(() => {
+useEffect(() => {
   if (!isConnected || !address) return;
+
+  type AmountsOut2 = readonly [bigint, bigint];
 
   let unwatch: (() => void) | null = null;
   let running = false; // avoid overlapping calls
@@ -85,7 +87,7 @@ export default function SwapMemes({tokenAddress}: { tokenAddress: string; }) {
             args: [tokenAddress as Address, Data.petalFactory as Address],
           },
         ],
-        allowFailure: false, // returns raw decoded values
+        allowFailure: false, // raw decoded values
       });
 
       const [
@@ -97,21 +99,21 @@ export default function SwapMemes({tokenAddress}: { tokenAddress: string; }) {
         tokenName_,
         tokenPair_,
       ] = data as [
-        bigint,            // weedBalance_
-        bigint,            // tokenBalance_
-        bigint,            // tokenAllowance_
-        bigint,            // weedAllowance_
-        readonly bigint[], // tokenPrice_ (array from getAmountsOut)
-        string,            // tokenName_
-        Address            // tokenPair_
+        bigint,           // WEED balance
+        bigint,           // token balance
+        bigint,           // token allowance -> router
+        bigint,           // WEED allowance -> router
+        AmountsOut2,      // price [in,out]
+        string,           // token name
+        Address           // pair address
       ];
 
       setWeedBalance(weedBalance_);
       setTokenBalance(tokenBalance_);
       setWeedAllowance(Number(weedAllowance_));
       setTokenAllowance(Number(tokenAllowance_));
-      setTokenPrice(Number(tokenPrice_[1] ?? 0n));
-      setTokenName(String(tokenName_));
+      setTokenPrice(Number(tokenPrice_[1])); // exact 2-length tuple now
+      setTokenName(tokenName_);
       setTokenPair(String(tokenPair_));
     } catch {
       // optional: console.error(err);
@@ -123,12 +125,10 @@ export default function SwapMemes({tokenAddress}: { tokenAddress: string; }) {
   // initial load
   void init();
 
-  // re-run on every new block (@wagmi/core has no `listen` option)
+  // re-run on every new block (no `listen` in @wagmi/core)
   unwatch = watchBlockNumber(config, {
     onBlockNumber: () => { void init(); },
-    // optional:
-    // emitMissed: true,
-    // emitOnBegin: false,
+    onError: () => {},
     // poll: true,
     // pollingInterval: 4000,
   });
