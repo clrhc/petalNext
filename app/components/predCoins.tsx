@@ -135,7 +135,7 @@ useEffect(() => {
 
       // Optional: wallet balance (only set if provider & success)
       try {
-        // @ts-expect-error: provider may be defined in outer scope in your file
+      
         if (typeof provider?.getBalance === 'function') {
           const ethBalance_ = await provider.getBalance(address!);
           setEthBalance(Number(ethBalance_));
