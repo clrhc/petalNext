@@ -21,8 +21,9 @@ export async function POST(req) {
       },
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'Error fetching from Blast API' }), {
-      status: 500,
-    });
-  }
+  console.error('Error fetching from Blast API:', error);
+  return new Response(JSON.stringify({ error: 'Error fetching from Blast API' }), {
+    status: 500,
+  });
+}
 }
