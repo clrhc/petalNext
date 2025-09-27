@@ -28,6 +28,7 @@ export default function PredCoins({contractAddress, dataFeedAddress}: { contract
   const [roundAnswer, setRoundAnswer] = useState(0);
   const [previousAnswer, setPreviousAnswer] = useState(0);
   const [bidValue, setBidValue] = useState(0);
+  const [bidText, setBidText] = useState("0");
   const [bidState, setBidState] = useState(true);
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
@@ -85,8 +86,8 @@ useEffect(() => {
     running = true;
 
     try {
-      // Primary batch
-      const data = await readContracts(config, {
+      // Primary batch (allowFailure=true so we can selectively apply only successes)
+      const primary = await readContracts(config, {
         contracts: [
           {
             address: contractAddress as Address,
@@ -116,30 +117,35 @@ useEffect(() => {
             functionName: 'latestRound',
           },
         ],
-        allowFailure: false, // returns raw decoded results
+        allowFailure: true,
       });
 
-      const [
-        checkBid_,
-        userBid_,
-        epoch_,
-        answer_,
-        round_,
-      ] = data as [
-        bigint,                                       // checkBid
-        [bigint, bigint, bigint, boolean, bigint],    // userBid
-        bigint,                                       // epoch
-        bigint,                                       // latestAnswer
-        bigint                                        // latestRound
-      ];
+      // Pull out results only if they succeeded
+      const checkBid_ok  = primary[0]?.status === 'success';
+      const userBid_ok   = primary[1]?.status === 'success';
+      const epoch_ok     = primary[2]?.status === 'success';
+      const answer_ok    = primary[3]?.status === 'success';
+      const round_ok     = primary[4]?.status === 'success';
 
-      // Wallet balance (keep as bigint until display)
-      const ethBalance_ = await provider.getBalance(address!);
+      const checkBid_ = checkBid_ok ? (primary[0].result as bigint) : 0n;
+      const userBid_  = userBid_ok  ? (primary[1].result as [bigint, bigint, bigint, boolean, bigint]) : undefined;
+      const epoch_    = epoch_ok    ? (primary[2].result as bigint) : 0n;
+      const answer_   = answer_ok   ? (primary[3].result as bigint) : 0n;
+      const round_    = round_ok    ? (primary[4].result as bigint) : 0n;
+
+      // Optional: wallet balance (only set if provider & success)
+      try {
+        // @ts-expect-error: provider may be defined in outer scope in your file
+        if (typeof provider?.getBalance === 'function') {
+          const ethBalance_ = await provider.getBalance(address!);
+          setEthBalance(Number(ethBalance_));
+        }
+      } catch {}
 
       // Follow-up read depending on whether user has a bid
-      if (checkBid_ > 0n) {
-        const targetRoundId = userBid_[0] + epoch_; // bigint-safe
-        const roundData = await readContracts(config, {
+      if (checkBid_ok && checkBid_ > 0n && userBid_ok && epoch_ok) {
+        const targetRoundId = userBid_![0] + epoch_;
+        const follow = await readContracts(config, {
           contracts: [
             {
               address: dataFeedAddress as Address,
@@ -148,14 +154,17 @@ useEffect(() => {
               args: [targetRoundId],
             },
           ],
-          allowFailure: false,
+          allowFailure: true,
         });
 
-        const [getResultData_] = roundData as [ChainlinkRoundData];
-        setRoundAnswer(Number(extractAnswer(getResultData_)));
-      } else {
+        if (follow[0]?.status === 'success') {
+          const rd = follow[0].result as unknown;
+          const ans = extractAnswer(rd);
+          if (ans > 0n) setRoundAnswer(Number(ans));
+        }
+      } else if (round_ok && epoch_ok) {
         const prevRoundId = round_ - epoch_;
-        const previousData = await readContracts(config, {
+        const prev = await readContracts(config, {
           contracts: [
             {
               address: dataFeedAddress as Address,
@@ -164,27 +173,31 @@ useEffect(() => {
               args: [prevRoundId],
             },
           ],
-          allowFailure: false,
+          allowFailure: true,
         });
 
-        const [previousRoundData_] = previousData as [ChainlinkRoundData];
-        setPreviousAnswer(Number(extractAnswer(previousRoundData_)));
+        if (prev[0]?.status === 'success') {
+          const rd = prev[0].result as unknown;
+          const ans = extractAnswer(rd);
+          if (ans > 0n) setPreviousAnswer(Number(ans));
+        }
       }
 
-      // Push UI state
-      setEthBalance(Number(ethBalance_));
-      setCheckBid(Number(checkBid_));
-      setUserBid({
-        roundId: userBid_[0].toString(),
-        priceBid: userBid_[1].toString(),
-        priceBidTime: userBid_[2].toString(),
-        higher: userBid_[3],
-        amountBid: userBid_[4].toString(),
-      });
-      setEpoch(Number(epoch_));
-      setAnswer(Number(answer_));
+      // Push UI state only from successful reads
+      if (checkBid_ok) setCheckBid(Number(checkBid_));
+      if (userBid_ok && userBid_) {
+        setUserBid({
+          roundId: userBid_[0].toString(),
+          priceBid: userBid_[1].toString(),
+          priceBidTime: userBid_[2].toString(),
+          higher: userBid_[3],
+          amountBid: userBid_[4].toString(),
+        });
+      }
+      if (epoch_ok)  setEpoch(Number(epoch_));
+      if (answer_ok) setAnswer(Number(answer_));
     } catch {
-      // optional: console.error(err);
+      // swallow; we only set state on successes above
     } finally {
       running = false;
     }
@@ -193,14 +206,10 @@ useEffect(() => {
   // initial load
   void init();
 
-  // re-run on every new block (no `listen` option in @wagmi/core)
+  // re-run on every new block
   unwatch = watchBlockNumber(config, {
     onBlockNumber: () => { void init(); },
-    // optionally:
-    // emitMissed: true,
-    // emitOnBegin: false,
-    // poll: true,            // enable polling if no WS
-    // pollingInterval: 4000,
+    onError: () => {},
   });
 
   return () => {
@@ -249,7 +258,55 @@ useEffect(() => {
   }}>
     ETH
   </span>
-    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 ETH" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setBidValue(Number(e.target.value))} value={bidValue} type="number" />
+    <input
+  id="refInput"
+  className="inputBox inputText userText outlineTeal"
+  placeholder="0 ETH"
+  type="text"
+  inputMode="decimal"
+  pattern="^\d*\.?\d*$"
+  onWheel={(e) => (e.target as HTMLInputElement).blur()}
+  value={bidText}
+  onChange={(e) => {
+    const v = e.target.value;
+    if (!/^\d*\.?\d*$/.test(v)) return;            // allow digits + one dot
+    setBidText(v);                                  // keep UI string
+    setBidValue(v === "" || v === "." ? 0 : Number(v)); // keep numeric state
+  }}
+  onKeyDown={(e) => {
+    const isDigit = /^[0-9]$/.test(e.key);
+    const isNonZero = /^[1-9]$/.test(e.key);
+    const isDot = e.key === ".";
+    const nav = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab"].includes(e.key);
+
+    // allow "." to make "0." when starting from "0" or empty
+    if (isDot && (bidText === "0" || bidText === "")) return;
+
+    // replace leading 0 when first key is 1–9
+    if (isNonZero && bidText === "0") {
+      e.preventDefault();
+      setBidText(e.key);
+      setBidValue(Number(e.key));
+      return;
+    }
+
+    // block extra leading zero (avoid "00.1")
+    if (e.key === "0" && bidText === "0") {
+      e.preventDefault();
+      return;
+    }
+
+    // block junk keys
+    if (!isDigit && !isDot && !nav) e.preventDefault();
+  }}
+  onBlur={() => {
+    // normalize empty or trailing dot
+    if (bidText === "" || bidText === ".") {
+      setBidText("0");
+      setBidValue(0);
+    }
+  }}
+/>
     </div>
    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(6)} ETH</p>
    <div className="swapButtons"><p className={`${bidState && "tealActive"}`} onClick={() => setBidState(true)}>HIGHER</p><p className={`${!bidState && "tealActive"}`} onClick={() => setBidState(false)}>LOWER</p></div>

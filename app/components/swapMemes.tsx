@@ -25,6 +25,9 @@ export default function SwapMemes({tokenAddress}: { tokenAddress: string; }) {
   const [tokenPrice, setTokenPrice] = useState(0);
   const [buyValue, setBuyValue] = useState(0);
   const [sellValue, setSellValue] = useState(0);
+  const [slippageText, setSlippageText] = useState("1");
+const [buyText, setBuyText]           = useState("0");
+const [sellText, setSellText]         = useState("0");
   const [swapState, setSwapState] = useState(0);
   const [tokenName, setTokenName] = useState("");
   const [tokenPair, setTokenPair] = useState("");
@@ -37,11 +40,12 @@ useEffect(() => {
   type AmountsOut2 = readonly [bigint, bigint];
 
   let unwatch: (() => void) | null = null;
-  let running = false; // avoid overlapping calls
+  let running = false;
 
   const init = async () => {
     if (running) return;
     running = true;
+
     try {
       const data = await readContracts(config, {
         contracts: [
@@ -73,6 +77,7 @@ useEffect(() => {
             address: Data.uniswapRouter as Address,
             abi: uniswapRouter.abi as Abi,
             functionName: 'getAmountsOut',
+            // price for 1 token -> WEED
             args: [parseUnits('1', 18), [tokenAddress as Address, Data.petalFactory as Address]],
           },
           {
@@ -87,7 +92,8 @@ useEffect(() => {
             args: [tokenAddress as Address, Data.petalFactory as Address],
           },
         ],
-        allowFailure: false, // raw decoded values
+        // keep false: throw if any call fails; nothing gets set on failure
+        allowFailure: false,
       });
 
       const [
@@ -95,45 +101,54 @@ useEffect(() => {
         tokenBalance_,
         tokenAllowance_,
         weedAllowance_,
-        tokenPrice_,
+        tokenPriceTuple_,
         tokenName_,
         tokenPair_,
       ] = data as [
-        bigint,           // WEED balance
-        bigint,           // token balance
-        bigint,           // token allowance -> router
-        bigint,           // WEED allowance -> router
-        AmountsOut2,      // price [in,out]
-        string,           // token name
-        Address           // pair address
+        bigint,         // WEED balance
+        bigint,         // token balance
+        bigint,         // token allowance -> router
+        bigint,         // WEED allowance -> router
+        AmountsOut2,    // [amountIn(1e18), amountOut(wei WEED)]
+        string,         // token name
+        Address         // pair address
       ];
 
+      // ---- Only set when valid ----
+      // balances/allowances are fine to set directly
       setWeedBalance(weedBalance_);
       setTokenBalance(tokenBalance_);
       setWeedAllowance(Number(weedAllowance_));
       setTokenAllowance(Number(tokenAllowance_));
-      setTokenPrice(Number(tokenPrice_[1])); // exact 2-length tuple now
-      setTokenName(tokenName_);
-      setTokenPair(String(tokenPair_));
+
+      // price: only commit if > 0 (raw wei WEED per 1 token)
+      if (tokenPriceTuple_?.[1] && tokenPriceTuple_[1] > 0n) {
+        setTokenPrice(Number(tokenPriceTuple_[1]));
+      }
+
+      // name: only if non-empty
+      if (tokenName_ && tokenName_.length > 0) {
+        setTokenName(tokenName_);
+      }
+
+      // pair: only if not zero address
+      if (tokenPair_ && tokenPair_.toLowerCase() !== '0x0000000000000000000000000000000000000000') {
+        setTokenPair(String(tokenPair_));
+      }
     } catch {
-      // optional: console.error(err);
+      // silent: nothing gets set on failure
     } finally {
       running = false;
     }
   };
 
-  // initial load
   void init();
 
-  // re-run on every new block (no `listen` in @wagmi/core)
   unwatch = watchBlockNumber(config, {
     onBlockNumber: () => { void init(); },
     onError: () => {},
-    // poll: true,
-    // pollingInterval: 4000,
   });
 
-  // cleanup
   return () => {
     if (unwatch) unwatch();
   };
@@ -205,7 +220,47 @@ useEffect(() => {
     color: '#FFF'
   }}>
     %
-  </span><input id="refInput" className="inputText slipBox userText outlineTeal" placeholder="Slippage" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setSlippage(Number(e.target.value))} value={slippage} type="number" />
+  </span><input
+  id="refInput"
+  className="inputText slipBox userText outlineTeal"
+  placeholder="Slippage"
+  type="text"
+  inputMode="decimal"
+  pattern="^\d*\.?\d*$"
+  onWheel={(e) => (e.target as HTMLInputElement).blur()}
+  value={slippageText}
+  onChange={(e) => {
+    const v = e.target.value;
+    if (!/^\d*\.?\d*$/.test(v)) return;         // allow digits + one dot
+    setSlippageText(v);
+    setSlippage(v === "" || v === "." ? 0 : Number(v)); // keep numeric in sync
+  }}
+  onKeyDown={(e) => {
+    const isDigit = /^[0-9]$/.test(e.key);
+    const isNonZero = /^[1-9]$/.test(e.key);
+    const isDot = e.key === ".";
+    const nav = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab"].includes(e.key);
+
+    // keep "0." if first key is dot
+    if (isDot && (slippageText === "0" || slippageText === "")) return;
+
+    // replace leading 0 if first key is 1–9
+    if (isNonZero && slippageText === "0") {
+      e.preventDefault();
+      setSlippageText(e.key);
+      setSlippage(Number(e.key));
+      return;
+    }
+
+    // block extra leading zero (avoid "00.1")
+    if (e.key === "0" && slippageText === "0") { e.preventDefault(); return; }
+
+    if (!isDigit && !isDot && !nav) e.preventDefault();
+  }}
+  onBlur={() => {
+    if (slippageText === "" || slippageText === ".") { setSlippageText("0"); setSlippage(0); }
+  }}
+/>
     </div></div>
     {swapState === 0 ? <>
     <div style={{ position: 'relative' }}>
@@ -219,7 +274,36 @@ useEffect(() => {
   }}>
     WEED
   </span>
-    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 WEED" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setBuyValue(Number(e.target.value))} value={buyValue} type="number" />
+    <input
+  id="refInput"
+  className="inputBox inputText userText outlineTeal"
+  placeholder="0 WEED"
+  type="text"
+  inputMode="decimal"
+  pattern="^\d*\.?\d*$"
+  onWheel={(e) => (e.target as HTMLInputElement).blur()}
+  value={buyText}
+  onChange={(e) => {
+    const v = e.target.value;
+    if (!/^\d*\.?\d*$/.test(v)) return;
+    setBuyText(v);
+    setBuyValue(v === "" || v === "." ? 0 : Number(v));
+  }}
+  onKeyDown={(e) => {
+    const isDigit = /^[0-9]$/.test(e.key);
+    const isNonZero = /^[1-9]$/.test(e.key);
+    const isDot = e.key === ".";
+    const nav = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab"].includes(e.key);
+
+    if (isDot && (buyText === "0" || buyText === "")) return;
+    if (isNonZero && buyText === "0") { e.preventDefault(); setBuyText(e.key); setBuyValue(Number(e.key)); return; }
+    if (e.key === "0" && buyText === "0") { e.preventDefault(); return; }
+    if (!isDigit && !isDot && !nav) e.preventDefault();
+  }}
+  onBlur={() => {
+    if (buyText === "" || buyText === ".") { setBuyText("0"); setBuyValue(0); }
+  }}
+/>
     </div>
    <p className="rightSide">Balance: {Number(ethers.formatUnits(weedBalance, 18)).toFixed(2)} WEED</p>
      <div style={{ position: 'relative' }}>
@@ -252,7 +336,36 @@ useEffect(() => {
   }}>
     {tokenName}
   </span>
-    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder={`0 ${tokenName}`} onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setSellValue(Number(e.target.value))} value={sellValue} type="number" />
+<input
+  id="refInput"
+  className="inputBox inputText userText outlineTeal"
+  placeholder={`0 ${tokenName}`}
+  type="text"
+  inputMode="decimal"
+  pattern="^\d*\.?\d*$"
+  onWheel={(e) => (e.target as HTMLInputElement).blur()}
+  value={sellText}
+  onChange={(e) => {
+    const v = e.target.value;
+    if (!/^\d*\.?\d*$/.test(v)) return;
+    setSellText(v);
+    setSellValue(v === "" || v === "." ? 0 : Number(v));
+  }}
+  onKeyDown={(e) => {
+    const isDigit = /^[0-9]$/.test(e.key);
+    const isNonZero = /^[1-9]$/.test(e.key);
+    const isDot = e.key === ".";
+    const nav = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab"].includes(e.key);
+
+    if (isDot && (sellText === "0" || sellText === "")) return;
+    if (isNonZero && sellText === "0") { e.preventDefault(); setSellText(e.key); setSellValue(Number(e.key)); return; }
+    if (e.key === "0" && sellText === "0") { e.preventDefault(); return; }
+    if (!isDigit && !isDot && !nav) e.preventDefault();
+  }}
+  onBlur={() => {
+    if (sellText === "" || sellText === ".") { setSellText("0"); setSellValue(0); }
+  }}
+/>
     </div>
     <p className="rightSide">Balance: {Number(ethers.formatUnits(tokenBalance, 18)).toFixed(2)} {tokenName}</p>
       <div style={{ position: 'relative' }}>

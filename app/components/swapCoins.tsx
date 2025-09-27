@@ -23,7 +23,10 @@ export default function SwapCoins({tokenAddress, factoryAddress}: { tokenAddress
   const [tokenAllowance, setTokenAllowance] = useState(0);
   const [slippage, setSlippage] = useState(1);
   const [tokenPrice, setTokenPrice] = useState(0);
-  const [buyValue, setBuyValue] = useState(0);
+const [slippageText, setSlippageText] = useState(String(slippage ?? 1));
+const [buyText, setBuyText]         = useState("0");
+const [sellText, setSellText]       = useState("0");
+const buyValue = buyText === "" || buyText === "." ? 0 : Number(buyText);
   const [sellValue, setSellValue] = useState(0);
   const [swapState, setSwapState] = useState(0);
   const [tokenName, setTokenName] = useState("");
@@ -37,146 +40,122 @@ export default function SwapCoins({tokenAddress, factoryAddress}: { tokenAddress
 useEffect(() => {
   if (!isConnected || !address) return;
 
-  // ---------- Result wrapper types ----------
-  type Success<T> = { status: 'success'; result: T };
-  type Failure    = { status: 'failure'; error: unknown };
-  type Rc<T>      = Success<T> | Failure;
-
-  // ---------- Bonding curve types ----------
-  type BondingCurveTuple = readonly [
-    bigint,          // 0
-    bigint,          // 1
-    bigint,          // 2 (ethIn / virtualEth)
-    bigint,          // 3
-    bigint,          // 4
-    bigint,          // 5
-    bigint,          // 6 (spotPrice / currentPrice)
-    readonly bigint[] // 7
-  ];
-
-  type BondingCurveStruct = {
-    spotPrice?: bigint;
-    currentPrice?: bigint;
-    ethIn?: bigint;
-    virtualEth?: bigint;
-  };
-
-  const isBondingCurveTuple = (x: unknown): x is BondingCurveTuple =>
-    Array.isArray(x) &&
-    x.length >= 8 &&                    // must be at least 8 elements
-    typeof x[2] === 'bigint' &&
-    typeof x[6] === 'bigint';
-
   let unwatch: (() => void) | null = null;
-  let running = false; // prevent overlapping calls
-
-  const readCurve = (curve: unknown) => {
-    if (isBondingCurveTuple(curve)) {
-      const t = curve; // already narrowed
-      return { spot: t[6], ethIn: t[2] };
-    }
-    const o = curve as BondingCurveStruct | undefined;
-    const spot = o?.spotPrice ?? o?.currentPrice ?? 0n;
-    const ethIn = o?.ethIn ?? o?.virtualEth ?? 0n;
-    return { spot, ethIn };
-  };
-
-  const get = <T,>(arr: ReadonlyArray<Rc<unknown>>, i: number): T | undefined =>
-    arr?.[i] && (arr[i] as Rc<unknown>).status === 'success'
-      ? (arr[i] as Success<unknown>).result as T
-      : undefined;
+  let running = false;
 
   const init = async () => {
     if (running) return;
     running = true;
+
     try {
       const data = await readContracts(config, {
         contracts: [
           {
             address: tokenAddress as Address,
             abi: token.abi as Abi,
-            functionName: 'balanceOf',
+            functionName: "balanceOf",
             args: [address as Address],
           },
           {
             address: factoryAddress as Address,
             abi: factory.abi as Abi,
-            functionName: 'tokenLaunched',
+            functionName: "tokenLaunched",
             args: [tokenAddress as Address],
           },
           {
             address: tokenAddress as Address,
             abi: token.abi as Abi,
-            functionName: 'allowance',
+            functionName: "allowance",
             args: [address as Address, factoryAddress as Address],
           },
           {
             address: tokenAddress as Address,
             abi: token.abi as Abi,
-            functionName: 'allowance',
+            functionName: "allowance",
             args: [address as Address, Data.uniswapRouter as Address],
           },
           {
             address: factoryAddress as Address,
             abi: factory.abi as Abi,
-            functionName: 'bondingCurves',
+            functionName: "bondingCurves",
             args: [tokenAddress as Address],
           },
           {
             address: tokenAddress as Address,
             abi: token.abi as Abi,
-            functionName: 'name',
+            functionName: "name",
           },
           {
             address: Data.uniswapRouter as Address,
             abi: uniswapRouter.abi as Abi,
-            functionName: 'getAmountsOut',
-            args: [parseUnits('1', 18), [tokenAddress as Address, Data.WETH as Address]],
+            functionName: "getAmountsOut",
+            args: [parseUnits("1", 18), [tokenAddress as Address, Data.WETH as Address]],
           },
         ],
         allowFailure: true,
       });
 
-      const tokenBalance_         = get<bigint>(data, 0) ?? 0n;
-      const tokenLaunched_        = get<boolean>(data, 1) ?? false;
-      const tokenAllowance_       = get<bigint>(data, 2) ?? 0n;
-      const tokenRouterAllowance_ = get<bigint>(data, 3) ?? 0n;
+      // ✅ Only use results if status === 'success'
+      const tokenBalance_ =
+        data[0]?.status === "success" ? (data[0].result as bigint) : 0n;
+      const tokenLaunched_ =
+        data[1]?.status === "success" ? (data[1].result as boolean) : false;
+      const tokenAllowance_ =
+        data[2]?.status === "success" ? (data[2].result as bigint) : 0n;
+      const tokenRouterAllowance_ =
+        data[3]?.status === "success" ? (data[3].result as bigint) : 0n;
+      const curveRaw =
+        data[4]?.status === "success" ? data[4].result : undefined;
+      const tokenName_ =
+        data[5]?.status === "success" ? (data[5].result as string) : "";
+      const amounts =
+        data[6]?.status === "success"
+          ? (data[6].result as readonly bigint[])
+          : [];
 
-      // NOTE: read as unknown, let readCurve do the narrowing safely.
-      const curveRaw              = get<unknown>(data, 4);
-      const tokenName_            = get<string>(data, 5) ?? '';
-      const amounts               = get<readonly bigint[]>(data, 6) ?? [];
-
-      const { spot, ethIn } = readCurve(curveRaw);
+      // ✅ Safely extract curve values only if curve call succeeded
+      let spot = 0n;
+      let ethIn = 0n;
+      if (curveRaw && Array.isArray(curveRaw) && curveRaw.length >= 7) {
+        spot = curveRaw[6] as bigint;
+        ethIn = curveRaw[2] as bigint;
+      }
 
       const ethBalance_ = await provider.getBalance(address!);
 
       setTokenLaunched(tokenLaunched_);
+
       if (tokenLaunched_) {
-        setTokenPrice(Number(amounts?.[1] ?? 0n)); // [amountIn, amountOut]
+        // ✅ Only set tokenPrice if router result succeeded and > 0
+        if (amounts?.[1] && amounts[1] > 0n) {
+          setTokenPrice(Number(amounts[1]));
+        }
         setTokenAllowance(Number(tokenRouterAllowance_));
       } else {
-        setTokenPrice(Number(spot));
-        setEthIn(Number(ethIn));
+        // ✅ Only set tokenPrice if spot result succeeded and > 0
+        if (spot > 0n) {
+          setTokenPrice(Number(spot));
+        }
+        if (ethIn > 0n) setEthIn(Number(ethIn));
         setTokenAllowance(Number(tokenAllowance_));
       }
 
-      setTokenName(String(tokenName_));
+      setTokenName(tokenName_);
       setEthBalance(Number(ethBalance_));
       setTokenBalance(tokenBalance_);
-    } catch {
-      // optional: console.error(err);
+    } catch (err) {
+      console.error("readContracts failed:", err);
     } finally {
       running = false;
     }
   };
 
-  // initial load
   void init();
 
-  // re-run on every new block (no `listen` in @wagmi/core)
   unwatch = watchBlockNumber(config, {
-    onBlockNumber: () => { void init(); },
+    onBlockNumber: () => {
+      void init();
+    },
   });
 
   return () => {
@@ -273,7 +252,50 @@ useEffect(() => {
     color: '#FFF'
   }}>
     %
-  </span><input id="refInput" className="inputText slipBox userText outlineTeal" placeholder="Slippage" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setSlippage(Number(e.target.value))} value={slippage} type="number" />
+  </span><input
+  id="refInput"
+  className="inputText slipBox userText outlineTeal"
+  placeholder="Slippage"
+  type="text"
+  inputMode="decimal"
+  pattern="^\d*\.?\d*$"
+  onWheel={(e) => (e.target as HTMLInputElement).blur()}
+  value={slippageText}
+  onChange={(e) => {
+    const v = e.target.value;
+    if (!/^\d*\.?\d*$/.test(v)) return;
+    setSlippageText(v);
+    setSlippage(v === "" || v === "." ? 0 : Number(v));
+  }}
+  onKeyDown={(e) => {
+    const isDigit = /^[0-9]$/.test(e.key);
+    const isNonZero = /^[1-9]$/.test(e.key);
+    const isDot = e.key === ".";
+    const nav = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab"].includes(e.key);
+
+    // keep "0." if first key is dot
+    if (isDot && (slippageText === "0" || slippageText === "")) return;
+
+    // replace leading 0 if first key is 1–9
+    if (isNonZero && slippageText === "0") {
+      e.preventDefault();
+      setSlippageText(e.key);
+      setSlippage(Number(e.key));
+      return;
+    }
+
+    // block extra leading zero
+    if (e.key === "0" && slippageText === "0") { e.preventDefault(); return; }
+
+    if (!isDigit && !isDot && !nav) e.preventDefault();
+  }}
+  onBlur={() => {
+    if (slippageText === "" || slippageText === ".") {
+      setSlippageText("0");
+      setSlippage(0);
+    }
+  }}
+/>
     </div></div>
     {swapState === 0 ? <>
     <div style={{ position: 'relative' }}>
@@ -287,7 +309,34 @@ useEffect(() => {
   }}>
     ETH
   </span>
-    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder="0 ETH" onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setBuyValue(Number(e.target.value))} value={buyValue} type="number" />
+<input
+  id="refInput"
+  className="inputBox inputText userText outlineTeal"
+  placeholder="0 ETH"
+  type="text"
+  inputMode="decimal"
+  pattern="^\d*\.?\d*$"
+  value={buyText}
+  onWheel={(e) => (e.target as HTMLInputElement).blur()}
+  onChange={(e) => {
+    const v = e.target.value;
+    if (!/^\d*\.?\d*$/.test(v)) return;
+    setBuyText(v);
+    setBuyValue(v === "" || v === "." ? 0 : Number(v)); // keep numeric in sync
+  }}
+  onKeyDown={(e) => {
+    const isDigit = /^[0-9]$/.test(e.key);
+    const isNonZero = /^[1-9]$/.test(e.key);
+    const isDot = e.key === ".";
+    const nav = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab"].includes(e.key);
+
+    if (isDot && (buyText === "0" || buyText === "")) return;
+    if (isNonZero && buyText === "0") { e.preventDefault(); setBuyText(e.key); setBuyValue(Number(e.key)); return; }
+    if (e.key === "0" && buyText === "0") { e.preventDefault(); return; }
+    if (!isDigit && !isDot && !nav) e.preventDefault();
+  }}
+  onBlur={() => { if (buyText === "" || buyText === ".") { setBuyText("0"); setBuyValue(0); } }}
+/>
     </div>
    <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(4)} ETH</p>
      <div style={{ position: 'relative' }}>
@@ -321,7 +370,34 @@ useEffect(() => {
   }}>
     {tokenName}
   </span>
-    <input id="refInput" className="inputBox inputText userText outlineTeal" placeholder={`0 ${tokenName}`} onWheel={(e) => (e.target as HTMLInputElement).blur()} onChange={(e) => setSellValue(Number(e.target.value))} value={sellValue} type="number" />
+<input
+  id="refInput"
+  className="inputBox inputText userText outlineTeal"
+  placeholder={`0 ${tokenName}`}
+  type="text"
+  inputMode="decimal"
+  pattern="^\d*\.?\d*$"
+  onWheel={(e) => (e.target as HTMLInputElement).blur()}
+  value={sellText}
+  onChange={(e) => {
+    const v = e.target.value;
+    if (!/^\d*\.?\d*$/.test(v)) return;
+    setSellText(v);
+    setSellValue(v === "" || v === "." ? 0 : Number(v));
+  }}
+  onKeyDown={(e) => {
+    const isDigit = /^[0-9]$/.test(e.key);
+    const isNonZero = /^[1-9]$/.test(e.key);
+    const isDot = e.key === ".";
+    const nav = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab"].includes(e.key);
+
+    if (isDot && (sellText === "0" || sellText === "")) return;
+    if (isNonZero && sellText === "0") { e.preventDefault(); setSellText(e.key); setSellValue(Number(e.key)); return; }
+    if (e.key === "0" && sellText === "0") { e.preventDefault(); return; }
+    if (!isDigit && !isDot && !nav) e.preventDefault();
+  }}
+  onBlur={() => { if (sellText === "" || sellText === ".") { setSellText("0"); setSellValue(0); } }}
+/>
     </div>
     <p className="rightSide">Balance: {Number(ethers.formatUnits(tokenBalance, 18)).toFixed(2)} {tokenName}</p>
       <div style={{ position: 'relative' }}>
