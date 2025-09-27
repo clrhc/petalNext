@@ -43,31 +43,31 @@ export default function PredCoins({contractAddress, dataFeedAddress}){
       const data = await readContracts(config, {
   contracts: [
     {
-      address: contractAddress,
+      address: contractAddress as Address,
       abi: prediction.abi,
       functionName: 'checkBid',
       args: [address],
     },
     {
-      address: contractAddress,
+      address: contractAddress as Address,
       abi: prediction.abi,
       functionName: 'userBid',
       args: [address],
     },
     {
-      address: contractAddress,
+      address: contractAddress as Address,
       abi: prediction.abi,
       functionName: 'epochCheck',
       args: [],
     },
     {
-      address: dataFeedAddress,
+      address: dataFeedAddress as Address,
       abi: dataFeed.abi,
       functionName: 'latestAnswer',
       args: [],
     },
     {
-      address: dataFeedAddress,
+      address: dataFeedAddress as Address,
       abi: dataFeed.abi,
       functionName: 'latestRound',
       args: [],

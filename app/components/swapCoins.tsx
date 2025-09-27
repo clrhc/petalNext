@@ -40,37 +40,37 @@ if (isConnected) {
      const data = await readContracts(config, {
   contracts: [
     {
-      address: tokenAddress,
+      address: tokenAddress as Address,
       abi: token.abi,
       functionName: 'balanceOf',
       args: [address],
     },
     {
-      address: factoryAddress,
+      address: factoryAddress as Address,
       abi: factory.abi,
       functionName: 'tokenLaunched',
-      args: [tokenAddress],
+      args: [tokenAddress as Address],
     },
     {
-      address: tokenAddress,
+      address: tokenAddress as Address,
       abi: token.abi,
       functionName: 'allowance',
-      args: [address,factoryAddress],
+      args: [address,factoryAddress as Address],
     },
     {
-      address: tokenAddress,
+      address: tokenAddress as Address,
       abi: token.abi,
       functionName: 'allowance',
-      args: [address, Data.uniswapRouter],
+      args: [address, Data.uniswapRouter as Address],
     },
     {
-      address: factoryAddress,
+      address: factoryAddress as Address,
       abi: factory.abi,
       functionName: 'bondingCurves',
-      args: [tokenAddress],
+      args: [tokenAddress as Address],
     },
     {
-      address: tokenAddress,
+      address: tokenAddress as Address,
       abi: token.abi,
       functionName: 'name',
       args: [],

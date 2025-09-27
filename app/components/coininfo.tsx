@@ -15,6 +15,7 @@ export default function CoinInfo(){
   const uniswapRouterContract = new ethers.Contract(Data.uniswapRouter, uniswapRouter.abi, provider);
   const [petalLaunched, setPetalLaunched] = useState(0);
   const [ethIn, setEthIn] = useState(0);
+  type Address = `0x${string}`;
 
     useEffect(() =>{
     async function init(){
@@ -22,16 +23,16 @@ export default function CoinInfo(){
   const data = await readContracts(config, {
   contracts: [
     {
-      address: Data.petalFactory,
+      address: Data.petalFactory as Address,
       abi: factory.abi,
       functionName: 'tokenLaunched',
-      args: [Data.petalToken],
+      args: [Data.petalToken as Address],
     },
     {
-      address: Data.petalFactory,
+      address: Data.petalFactory as Address,
       abi: factory.abi,
       functionName: 'bondingCurves',
-      args: [Data.petalToken],
+      args: [Data.petalToken as Address],
     },
   ],
   allowFailure: false,

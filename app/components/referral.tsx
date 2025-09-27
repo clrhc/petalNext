@@ -44,13 +44,13 @@ try{
   const data = await readContracts(config, {
   contracts: [
     {
-      address: Data.referralAddress,
+      address: Data.referralAddress as Address,
       abi: referral.abi,
       functionName: 'refStore',
       args: [String(userRef).toLowerCase()],
     },
     {
-      address: Data.referralAddress,
+      address: Data.referralAddress as Address,
       abi: referral.abi,
       functionName: 'refStore',
       args: [String(newRef).toLowerCase()],

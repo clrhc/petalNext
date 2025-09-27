@@ -25,13 +25,13 @@ import nft from '../abis/nft.json';
     const data = await readContracts(config, {
   contracts: [
     {
-      address: Data.virtueNFT,
+      address: Data.virtueNFT as Address,
       abi: nft.abi,
       functionName: 'balanceOf',
       args: [address],
     },
     {
-      address: Data.petalRewards,
+      address: Data.petalRewards as Address,
       abi: rewards.abi,
       functionName: 'checkRewards',
       args: [address],
