@@ -17,8 +17,8 @@ export default function SwapMemes({tokenAddress}: { tokenAddress: string; }) {
 
   const { address, isConnected } = useAccount();
   const [baseId] = useState(8453);
-  const [weedBalance, setWeedBalance] = useState(0);
-  const [tokenBalance, setTokenBalance] = useState(0);
+  const [weedBalance, setWeedBalance] = useState<bigint>(0n);
+  const [tokenBalance, setTokenBalance] = useState<bigint>(0n);
   const [tokenAllowance, setTokenAllowance] = useState(0);
   const [weedAllowance, setWeedAllowance] = useState(0);
   const [slippage, setSlippage] = useState(1);
@@ -103,8 +103,8 @@ if (isConnected) {
   Address            // tokenPair_
 ];
   
-  setWeedBalance(Number(weedBalance_));
-  setTokenBalance(Number(tokenBalance_));
+  setWeedBalance(weedBalance_);
+  setTokenBalance(tokenBalance_);
   setWeedAllowance(Number(weedAllowance_));
   setTokenAllowance(Number(tokenAllowance_));
   setTokenPrice(Number(tokenPrice_[1]));
