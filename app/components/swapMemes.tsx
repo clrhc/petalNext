@@ -103,12 +103,12 @@ if (isConnected) {
   Address            // tokenPair_
 ];
   
-  setWeedBalance(weedBalance_);
-  setTokenBalance(tokenBalance_);
-  setWeedAllowance(weedAllowance_);
-  setTokenAllowance(tokenAllowance_);
-  setTokenPrice(tokenPrice_[1]);
-  setTokenName(tokenName_);
+  setWeedBalance(Number(weedBalance_));
+  setTokenBalance(Number(tokenBalance_));
+  setWeedAllowance(Number(weedAllowance_));
+  setTokenAllowance(Number(tokenAllowance_));
+  setTokenPrice(Number(tokenPrice_[1]));
+  setTokenName(String(tokenName_));
   setTokenPair(String(tokenPair_));
   }catch{};
 }
