@@ -34,23 +34,56 @@ export default function SwapCoins({tokenAddress, factoryAddress}: { tokenAddress
   { chainId: 8453, name: 'base' }   // <— key bit
   );
 
-  useEffect(() => {
+useEffect(() => {
   if (!isConnected || !address) return;
+
+  // ---------- Types (no `any`) ----------
+  type Success<T> = { status: 'success'; result: T };
+  type Failure    = { status: 'failure'; error: unknown };
+  type Rc<T>      = Success<T> | Failure;
+
+  // bondingCurves can decode as a tuple and/or expose named fields
+  type BondingCurveTuple = readonly [
+    bigint, // 0
+    bigint, // 1
+    bigint, // 2 (ethIn / virtualEth)
+    bigint, // 3
+    bigint, // 4
+    bigint, // 5
+    bigint, // 6 (spotPrice / currentPrice)
+    readonly bigint[] // 7
+  ] & {
+    spotPrice?: bigint;
+    currentPrice?: bigint;
+    ethIn?: bigint;
+    virtualEth?: bigint;
+  };
 
   let unwatch: (() => void) | null = null;
   let running = false; // prevent overlapping calls
 
-  const readCurve = (curve: any) => {
-    // bondingCurves may decode as tuple or named struct
-    const spot =
-      (Array.isArray(curve) ? curve[6] : (curve?.spotPrice ?? curve?.currentPrice)) ?? 0n;
-    const ethIn =
-      (Array.isArray(curve) ? curve[2] : (curve?.ethIn ?? curve?.virtualEth)) ?? 0n;
+  const readCurve = (curve: unknown) => {
+    const isTuple =
+      Array.isArray(curve) &&
+      curve.length >= 7 &&
+      typeof (curve as Record<number, unknown>)[2] === 'bigint' &&
+      typeof (curve as Record<number, unknown>)[6] === 'bigint';
+
+    if (isTuple) {
+      const t = curve as BondingCurveTuple;
+      return { spot: t[6] ?? 0n, ethIn: t[2] ?? 0n };
+    }
+
+    const o = curve as Partial<BondingCurveTuple> | undefined;
+    const spot = o?.spotPrice ?? o?.currentPrice ?? 0n;
+    const ethIn = o?.ethIn ?? o?.virtualEth ?? 0n;
     return { spot, ethIn };
   };
 
-  const get = <T,>(arr: any[], i: number): T | undefined =>
-    arr?.[i]?.status === 'success' ? (arr[i].result as T) : undefined;
+  const get = <T,>(arr: ReadonlyArray<Rc<unknown>>, i: number): T | undefined =>
+    arr?.[i] && (arr[i] as Rc<unknown>).status === 'success'
+      ? (arr[i] as Success<unknown>).result as T
+      : undefined;
 
   const init = async () => {
     if (running) return;
@@ -107,7 +140,7 @@ export default function SwapCoins({tokenAddress, factoryAddress}: { tokenAddress
       const tokenLaunched_        = get<boolean>(data, 1) ?? false;
       const tokenAllowance_       = get<bigint>(data, 2) ?? 0n;
       const tokenRouterAllowance_ = get<bigint>(data, 3) ?? 0n;
-      const curveRaw              = get<any>(data, 4);
+      const curveRaw              = get<BondingCurveTuple | undefined>(data, 4);
       const tokenName_            = get<string>(data, 5) ?? '';
       const amounts               = get<readonly bigint[]>(data, 6) ?? [];
 

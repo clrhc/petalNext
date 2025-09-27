@@ -2,7 +2,6 @@
 import '../globals.css';
 import React,{useState, useEffect} from 'react';
 import {readContracts, watchBlockNumber} from '@wagmi/core';
-import {ethers} from 'ethers';
 import {Abi, Address} from 'viem';
 import {useAccount} from "wagmi";
 import {config} from './wagmiConfig';
@@ -52,8 +51,7 @@ import xpCoin from '../assets/img/xpCoin.png';
         String(userInfo_[3]),
         String(address),
       ]);
-    } catch (err) {
-      // optional: console.error('userInfo read failed', err);
+    } catch {
     } finally {
       running = false;
     }

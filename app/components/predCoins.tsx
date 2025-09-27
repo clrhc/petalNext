@@ -36,20 +36,47 @@ export default function PredCoins({contractAddress, dataFeedAddress}: { contract
   { chainId: 8453, name: 'base' }   // <— key bit
   );
 
- useEffect(() => {
+useEffect(() => {
   if (!isConnected || !address) return;
+
+  // ---- Types & Guards (no `any`) ----
+  type ChainlinkRoundData = readonly [
+    bigint, // roundId
+    bigint, // answer
+    bigint, // startedAt
+    bigint, // updatedAt
+    bigint  // answeredInRound
+  ] & {
+    roundId: bigint;
+    answer: bigint;
+    startedAt: bigint;
+    updatedAt: bigint;
+    answeredInRound: bigint;
+  };
+
+  const isChainlinkRoundData = (x: unknown): x is ChainlinkRoundData => {
+    if (x === null || (typeof x !== 'object' && !Array.isArray(x))) return false;
+    const o = x as Record<string | number, unknown>;
+    return (
+      typeof o['answer'] === 'bigint' ||
+      (Array.isArray(x) &&
+        typeof o[0] === 'bigint' &&
+        typeof o[1] === 'bigint' &&
+        typeof o[2] === 'bigint' &&
+        typeof o[3] === 'bigint' &&
+        typeof o[4] === 'bigint')
+    );
+  };
+
+  const extractAnswer = (o: unknown): bigint => {
+    if (isChainlinkRoundData(o)) {
+      return typeof (o as { answer?: bigint }).answer === 'bigint' ? (o as { answer: bigint }).answer : o[1];
+    }
+    return 0n;
+  };
 
   let unwatch: (() => void) | null = null;
   let running = false; // prevent overlapping reads
-
-  const extractAnswer = (o: any): bigint => {
-    // Chainlink getRoundData returns: [roundId, answer, startedAt, updatedAt, answeredInRound]
-    // viem also exposes named props on the object in many setups
-    if (o == null) return 0n;
-    if (typeof o.answer === 'bigint') return o.answer;
-    if (Array.isArray(o) && typeof o[1] === 'bigint') return o[1] as bigint;
-    return 0n;
-  };
 
   const init = async () => {
     if (running) return;
@@ -122,7 +149,7 @@ export default function PredCoins({contractAddress, dataFeedAddress}: { contract
           allowFailure: false,
         });
 
-        const [getResultData_] = roundData as [any];
+        const [getResultData_] = roundData as [ChainlinkRoundData];
         setRoundAnswer(Number(extractAnswer(getResultData_)));
       } else {
         const prevRoundId = round_ - epoch_;
@@ -138,7 +165,7 @@ export default function PredCoins({contractAddress, dataFeedAddress}: { contract
           allowFailure: false,
         });
 
-        const [previousRoundData_] = previousData as [any];
+        const [previousRoundData_] = previousData as [ChainlinkRoundData];
         setPreviousAnswer(Number(extractAnswer(previousRoundData_)));
       }
 
