@@ -53,8 +53,8 @@ export default function CoinInfo(){
       if (petalLaunched_) {
         setTokenPrice(Number(petalEthPrice_?.[1] ?? 0n));
       } else {
-        setTokenPrice(Number(petalCurve?.[6] ?? 0n));
-        setEthIn(Number(petalCurve?.[2] ?? 0n));
+        setTokenPrice(Number(petalCurve_?.[6] ?? 0n));
+        setEthIn(Number(petalCurve_?.[2] ?? 0n));
       }
     } catch (err) {
       console.error('readContracts failed:', err);
