@@ -45,7 +45,7 @@ const [petalLaunched_, petalCurve_] = data as [boolean, bigint[]];
   const petalEthPricePromise = await uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[Data.petalToken,Data.WETH]);
   setTokenPrice(petalEthPricePromise[1]);
   }else{
-  setTokenPrice(petalCurve_[6]);
+  setTokenPrice(Number(petalCurve_[6]));
   setEthIn(Number(petalCurve_[2]));
   }
   }catch{}
