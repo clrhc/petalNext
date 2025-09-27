@@ -95,7 +95,7 @@ export default function PredCoins({contractAddress, dataFeedAddress}: { contract
 
   const previousRoundData_ = await dataFeedContract.getRoundData(round_-epoch_);
   if(Number(checkBid_) > 0){
-    const getResultData_ = await dataFeedContract.getRoundData(userBid_.roundId+epoch_);
+    const getResultData_ = await dataFeedContract.getRoundData(Number(userBid_.roundId+epoch_));
     setRoundAnswer(getResultData_.answer);
   }
 
