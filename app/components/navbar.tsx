@@ -41,7 +41,6 @@ import xpCoin from '../assets/img/xpCoin.png';
         allowFailure: false, // returns raw decoded values
       });
 
-      // data[0] is the tuple result from userInfo
       const userInfo_ = data[0] as [bigint, bigint, string, string];
 
       setUserInfo([
@@ -52,24 +51,27 @@ import xpCoin from '../assets/img/xpCoin.png';
         String(address),
       ]);
     } catch {
+      // optional: console.error(err);
     } finally {
       running = false;
     }
   };
 
-  // 1) initial load
+  // initial load
   void init();
 
-  // 2) refresh on every new block
+  // refresh on every new block
   unwatch = watchBlockNumber(config, {
-    listen: true,
     onBlockNumber: () => {
       void init();
     },
     onError: () => {},
+    // If you want polling instead of WS, uncomment:
+    // poll: true,
+    // pollingInterval: 4000,
   });
 
-  // 3) cleanup
+  // cleanup
   return () => {
     if (unwatch) unwatch();
   };
