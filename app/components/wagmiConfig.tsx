@@ -1,11 +1,20 @@
-import { http, createConfig } from 'wagmi';
-import { base } from 'wagmi/chains';
+import { createConfig, http } from 'wagmi'
+import { base } from 'wagmi/chains'
 
-// Create the Wagmi config
+// Wagmi config with HTTP batching
 export const config = createConfig({
   chains: [base],
   transports: {
-    [base.id]: http('https://base-mainnet.public.blastapi.io'), // public RPC or your Alchemy/Infura key
+    [base.id]: http('https://base-mainnet.public.blastapi.io', {
+      // Batch any RPC calls fired within this window into a single request
+      batch: { wait: 25, maxSize: 20 },
+
+      // Nice-to-haves:
+      fetchOptions: { keepalive: true }, // keep TCP warm for bursts
+      retryCount: 2,                      // fewer blind retries
+      timeout: 20_000,                    // avoid long hangs
+    }),
   },
-  ssr: true, // ✅ if you're using SSR in Next.js
+  // Optional: if you render on the server
+  ssr: true,
 });

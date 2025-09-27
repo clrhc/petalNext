@@ -12,7 +12,7 @@ import {config} from './wagmiConfig';
 export default function CoinInfo(){
 
   const [tokenPrice, setTokenPrice] = useState(0);
-  const provider = new ethers.JsonRpcProvider('https://base-mainnet.public.blastapi.io');
+  const provider = new ethers.JsonRpcProvider('https://base.llamarpc.com');
   const uniswapRouterContract = new ethers.Contract(Data.uniswapRouter, uniswapRouter.abi, provider);
   const [petalLaunched, setPetalLaunched] = useState(false);
   const [ethIn, setEthIn] = useState(0);
