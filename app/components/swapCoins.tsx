@@ -172,10 +172,14 @@ useEffect(() => {
   // initial load
   void init();
 
-  // re-run on every new block
+  // re-run on every new block (@wagmi/core has no `listen` option)
   unwatch = watchBlockNumber(config, {
-    listen: true,
     onBlockNumber: () => { void init(); },
+    // optional:
+    // emitMissed: true,
+    // emitOnBegin: false,
+    // poll: true,
+    // pollingInterval: 4000,
   });
 
   // cleanup

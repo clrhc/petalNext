@@ -18,7 +18,7 @@ import nft from '../abis/nft.json';
      const [rewardsAvailable, setRewardsAvailable] = useState(0);
      const [nftBalance, setNftBalance] = useState(0);
 
-    useEffect(() => {
+useEffect(() => {
   if (!isConnected || !address) return;
 
   let unwatch: (() => void) | null = null;
@@ -60,10 +60,14 @@ import nft from '../abis/nft.json';
   // initial load
   void init();
 
-  // re-run on every new block
+  // re-run on every new block (@wagmi/core watchBlockNumber has no `listen` option)
   unwatch = watchBlockNumber(config, {
-    listen: true,
     onBlockNumber: () => { void init(); },
+    // optional:
+    // emitMissed: true,
+    // emitOnBegin: false,
+    // poll: true,
+    // pollingInterval: 4000,
   });
 
   // cleanup

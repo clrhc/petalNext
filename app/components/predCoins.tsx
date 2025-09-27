@@ -70,7 +70,9 @@ useEffect(() => {
 
   const extractAnswer = (o: unknown): bigint => {
     if (isChainlinkRoundData(o)) {
-      return typeof (o as { answer?: bigint }).answer === 'bigint' ? (o as { answer: bigint }).answer : o[1];
+      return typeof (o as { answer?: bigint }).answer === 'bigint'
+        ? (o as { answer: bigint }).answer
+        : o[1];
     }
     return 0n;
   };
@@ -136,7 +138,7 @@ useEffect(() => {
 
       // Follow-up read depending on whether user has a bid
       if (checkBid_ > 0n) {
-        const targetRoundId = userBid_[0] + epoch_; // keep as bigint
+        const targetRoundId = userBid_[0] + epoch_; // bigint-safe
         const roundData = await readContracts(config, {
           contracts: [
             {
@@ -191,10 +193,14 @@ useEffect(() => {
   // initial load
   void init();
 
-  // re-run on every new block
+  // re-run on every new block (no `listen` option in @wagmi/core)
   unwatch = watchBlockNumber(config, {
-    listen: true,
     onBlockNumber: () => { void init(); },
+    // optionally:
+    // emitMissed: true,
+    // emitOnBegin: false,
+    // poll: true,            // enable polling if no WS
+    // pollingInterval: 4000,
   });
 
   return () => {

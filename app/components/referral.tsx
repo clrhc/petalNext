@@ -30,8 +30,8 @@ export default function ReferralComponent() {
   let running = false; // avoid overlapping calls
 
   const ZERO = '0x0000000000000000000000000000000000000000' as const;
-  const userRefKey = String(userRef || '').toLowerCase();
-  const newRefKey  = String(newRef  || '').toLowerCase();
+  const userRefKey = String(userRef ?? '').toLowerCase();
+  const newRefKey  = String(newRef  ?? '').toLowerCase();
 
   const init = async () => {
     if (running) return;
@@ -88,10 +88,14 @@ export default function ReferralComponent() {
   // initial load
   void init();
 
-  // refetch on every new block
+  // refetch on every new block (no `listen` in @wagmi/core)
   unwatch = watchBlockNumber(config, {
-    listen: true,
     onBlockNumber: () => { void init(); },
+    // optional:
+    // emitMissed: true,
+    // emitOnBegin: false,
+    // poll: true,
+    // pollingInterval: 4000,
   });
 
   // cleanup
