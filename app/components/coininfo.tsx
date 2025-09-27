@@ -40,7 +40,7 @@ export default function CoinInfo(){
 });
 
 const [petalLaunched_, petalCurve_] = data;
-  setPetalLaunched(petalLaunched_);
+  setPetalLaunched(petalLaunched_ as boolean);
   if(petalLaunched_){
   const petalEthPricePromise = await uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[Data.petalToken,Data.WETH]);
   setTokenPrice(petalEthPricePromise[1]);
