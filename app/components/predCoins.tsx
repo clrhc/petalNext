@@ -2,9 +2,9 @@
 import '../globals.css';
 import React,{useState, useEffect} from 'react';
 import {ethers} from 'ethers';
-import { readContracts } from '@wagmi/core';
+import { readContracts, watchBlockNumber } from '@wagmi/core';
 import { config } from './wagmiConfig';
-import {Abi} from 'viem';
+import {Abi, Address} from 'viem';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import prediction from '../abis/prediction.json';
 import dataFeed from '../abis/dataFeed.json';
@@ -35,94 +35,145 @@ export default function PredCoins({contractAddress, dataFeedAddress}: { contract
   'https://base-mainnet.public.blastapi.io',
   { chainId: 8453, name: 'base' }   // <— key bit
   );
-  const dataFeedContract = new ethers.Contract(dataFeedAddress, dataFeed.abi, provider);
-  type Address = `0x${string}`;
 
-  useEffect(() =>{
-  async function init(){
-  if (isConnected) {
+ useEffect(() => {
+  if (!isConnected || !address) return;
 
-  try{
+  let unwatch: (() => void) | null = null;
+  let running = false; // prevent overlapping reads
 
+  const extractAnswer = (o: any): bigint => {
+    // Chainlink getRoundData returns: [roundId, answer, startedAt, updatedAt, answeredInRound]
+    // viem also exposes named props on the object in many setups
+    if (o == null) return 0n;
+    if (typeof o.answer === 'bigint') return o.answer;
+    if (Array.isArray(o) && typeof o[1] === 'bigint') return o[1] as bigint;
+    return 0n;
+  };
+
+  const init = async () => {
+    if (running) return;
+    running = true;
+
+    try {
+      // Primary batch
       const data = await readContracts(config, {
-  contracts: [
-    {
-      address: contractAddress as Address,
-      abi: prediction.abi as Abi,
-      functionName: 'checkBid',
-      args: [address],
-    },
-    {
-      address: contractAddress as Address,
-      abi: prediction.abi as Abi,
-      functionName: 'userBid',
-      args: [address],
-    },
-    {
-      address: contractAddress as Address,
-      abi: prediction.abi as Abi,
-      functionName: 'epochCheck',
-      args: [],
-    },
-    {
-      address: dataFeedAddress as Address,
-      abi: dataFeed.abi as Abi,
-      functionName: 'latestAnswer',
-      args: [],
-    },
-    {
-      address: dataFeedAddress as Address,
-      abi: dataFeed.abi as Abi,
-      functionName: 'latestRound',
-      args: [],
-    },
-  ],
-  allowFailure: false,
-});
+        contracts: [
+          {
+            address: contractAddress as Address,
+            abi: prediction.abi as Abi,
+            functionName: 'checkBid',
+            args: [address as Address],
+          },
+          {
+            address: contractAddress as Address,
+            abi: prediction.abi as Abi,
+            functionName: 'userBid',
+            args: [address as Address],
+          },
+          {
+            address: contractAddress as Address,
+            abi: prediction.abi as Abi,
+            functionName: 'epochCheck',
+          },
+          {
+            address: dataFeedAddress as Address,
+            abi: dataFeed.abi as Abi,
+            functionName: 'latestAnswer',
+          },
+          {
+            address: dataFeedAddress as Address,
+            abi: dataFeed.abi as Abi,
+            functionName: 'latestRound',
+          },
+        ],
+        allowFailure: false, // returns raw decoded results
+      });
 
-  const [
-    checkBid_,
-    userBid_,
-    epoch_,
-    answer_,
-    round_
-  ] = data as [
-  bigint,                    // checkBid_
-  [bigint, bigint, bigint, boolean, bigint],  // userBid_
-  bigint,                    // epoch_
-  bigint,                    // answer_
-  bigint                     // round_
-];
+      const [
+        checkBid_,
+        userBid_,
+        epoch_,
+        answer_,
+        round_,
+      ] = data as [
+        bigint,                                       // checkBid
+        [bigint, bigint, bigint, boolean, bigint],    // userBid
+        bigint,                                       // epoch
+        bigint,                                       // latestAnswer
+        bigint                                        // latestRound
+      ];
 
-  const ethBalance_ = await provider.getBalance(address!);
+      // Wallet balance (keep as bigint until display)
+      const ethBalance_ = await provider.getBalance(address!);
 
-  const previousRoundData_ = await dataFeedContract.getRoundData(round_-epoch_);
-  if(Number(checkBid_) > 0){
-    const getResultData_ = await dataFeedContract.getRoundData(Number(userBid_[0])+Number(epoch_));
-    setRoundAnswer(getResultData_.answer);
-  }
+      // Follow-up read depending on whether user has a bid
+      if (checkBid_ > 0n) {
+        const targetRoundId = userBid_[0] + epoch_; // keep as bigint
+        const roundData = await readContracts(config, {
+          contracts: [
+            {
+              address: dataFeedAddress as Address,
+              abi: dataFeed.abi as Abi,
+              functionName: 'getRoundData',
+              args: [targetRoundId],
+            },
+          ],
+          allowFailure: false,
+        });
 
-  setEthBalance(Number(ethBalance_));
-  setCheckBid(Number(checkBid_));
-  setUserBid({
-  roundId: userBid_[0].toString(),
-  priceBid: userBid_[1].toString(),
-  priceBidTime: userBid_[2].toString(),
-  higher: userBid_[3],
-  amountBid: userBid_[4].toString(),
-});
-  setEpoch(Number(epoch_));
-  setAnswer(Number(answer_));
-  setPreviousAnswer(Number(previousRoundData_.answer));
-}catch{};
-}
-}
+        const [getResultData_] = roundData as [any];
+        setRoundAnswer(Number(extractAnswer(getResultData_)));
+      } else {
+        const prevRoundId = round_ - epoch_;
+        const previousData = await readContracts(config, {
+          contracts: [
+            {
+              address: dataFeedAddress as Address,
+              abi: dataFeed.abi as Abi,
+              functionName: 'getRoundData',
+              args: [prevRoundId],
+            },
+          ],
+          allowFailure: false,
+        });
 
-    const interval = setInterval(() => init(), 1000);
-      return () => {
-      clearInterval(interval);
+        const [previousRoundData_] = previousData as [any];
+        setPreviousAnswer(Number(extractAnswer(previousRoundData_)));
       }
+
+      // Push UI state
+      setEthBalance(Number(ethBalance_));
+      setCheckBid(Number(checkBid_));
+      setUserBid({
+        roundId: userBid_[0].toString(),
+        priceBid: userBid_[1].toString(),
+        priceBidTime: userBid_[2].toString(),
+        higher: userBid_[3],
+        amountBid: userBid_[4].toString(),
+      });
+      setEpoch(Number(epoch_));
+      setAnswer(Number(answer_));
+    } catch {
+      // optional: console.error(err);
+    } finally {
+      running = false;
+    }
+  };
+
+  // initial load
+  void init();
+
+  // re-run on every new block
+  unwatch = watchBlockNumber(config, {
+    listen: true,
+    onBlockNumber: () => { void init(); },
   });
+
+  return () => {
+    if (unwatch) unwatch();
+  };
+}, [isConnected, address, config, contractAddress, dataFeedAddress]);
 
    const bidPrediction = async () => {
     if(networkId === baseId){

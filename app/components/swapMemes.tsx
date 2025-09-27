@@ -3,9 +3,9 @@ import '../globals.css';
 import React,{useState, useEffect} from 'react';
 import Data from '../data.json';
 import {ethers} from 'ethers';
-import { readContracts } from '@wagmi/core';
+import { readContracts, watchBlockNumber } from '@wagmi/core';
 import { config } from './wagmiConfig';
-import {Abi} from 'viem';
+import {Abi, Address, parseUnits} from 'viem';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import factory from '../abis/factory.json';
 import token from '../abis/token.json';
@@ -30,95 +30,118 @@ export default function SwapMemes({tokenAddress}: { tokenAddress: string; }) {
   const [tokenPair, setTokenPair] = useState("");
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
-  type Address = `0x${string}`;
 
-  useEffect(() =>{
-    async function init(){
+  useEffect(() => {
+  if (!isConnected || !address) return;
 
-if (isConnected) {
-   try{
-       const data = await readContracts(config, {
-  contracts: [
-    {
-      address: Data.petalFactory as Address,
-      abi: factory.abi as Abi,
-      functionName: 'balanceOf',
-      args: [address],
-    },
-    {
-      address: tokenAddress as Address,
-      abi: token.abi as Abi,
-      functionName: 'balanceOf',
-      args: [address],
-    },
-    {
-      address: tokenAddress as Address,
-      abi: token.abi as Abi,
-      functionName: 'allowance',
-      args: [address,Data.uniswapRouter as Address],
-    },
-    {
-      address: Data.petalFactory as Address,
-      abi: factory.abi as Abi,
-      functionName: 'allowance',
-      args: [address, Data.uniswapRouter as Address],
-    },
-    {
-      address: Data.uniswapRouter as Address,
-      abi: uniswapRouter.abi as Abi,
-      functionName: 'getAmountsOut',
-      args: [ethers.parseUnits(String(1)),[tokenAddress as Address,Data.petalFactory as Address]],
-    },
-    {
-      address: tokenAddress as Address,
-      abi: token.abi as Abi,
-      functionName: 'name',
-      args: [],
-    },
-    {
-      address: Data.uniswapFactory as Address,
-      abi: uniswapFactory.abi as Abi,
-      functionName: 'getPair',
-      args: [tokenAddress as Address,Data.petalFactory as Address],
-    },
-  ],
-  allowFailure: false,
-});
+  let unwatch: (() => void) | null = null;
+  let running = false; // avoid overlapping calls
 
-  const [
-    weedBalance_,
-    tokenBalance_,
-    tokenAllowance_,
-    weedAllowance_,
-    tokenPrice_,
-    tokenName_,
-    tokenPair_
-  ] = data as [
-  bigint,            // weedBalance_
-  bigint,            // tokenBalance_
-  bigint,            // tokenAllowance_
-  bigint,            // weedAllowance_
-  bigint[],          // tokenPrice_ (array from getAmountsOut)
-  string,            // tokenName_
-  Address            // tokenPair_
-];
-  
-  setWeedBalance(weedBalance_);
-  setTokenBalance(tokenBalance_);
-  setWeedAllowance(Number(weedAllowance_));
-  setTokenAllowance(Number(tokenAllowance_));
-  setTokenPrice(Number(tokenPrice_[1]));
-  setTokenName(String(tokenName_));
-  setTokenPair(String(tokenPair_));
-  }catch{};
-}
-}
+  const init = async () => {
+    if (running) return;
+    running = true;
+    try {
+      const data = await readContracts(config, {
+        contracts: [
+          {
+            address: Data.petalFactory as Address,
+            abi: factory.abi as Abi,
+            functionName: 'balanceOf',
+            args: [address as Address],
+          },
+          {
+            address: tokenAddress as Address,
+            abi: token.abi as Abi,
+            functionName: 'balanceOf',
+            args: [address as Address],
+          },
+          {
+            address: tokenAddress as Address,
+            abi: token.abi as Abi,
+            functionName: 'allowance',
+            args: [address as Address, Data.uniswapRouter as Address],
+          },
+          {
+            address: Data.petalFactory as Address,
+            abi: factory.abi as Abi,
+            functionName: 'allowance',
+            args: [address as Address, Data.uniswapRouter as Address],
+          },
+          {
+            address: Data.uniswapRouter as Address,
+            abi: uniswapRouter.abi as Abi,
+            functionName: 'getAmountsOut',
+            args: [parseUnits('1', 18), [tokenAddress as Address, Data.petalFactory as Address]],
+          },
+          {
+            address: tokenAddress as Address,
+            abi: token.abi as Abi,
+            functionName: 'name',
+          },
+          {
+            address: Data.uniswapFactory as Address,
+            abi: uniswapFactory.abi as Abi,
+            functionName: 'getPair',
+            args: [tokenAddress as Address, Data.petalFactory as Address],
+          },
+        ],
+        allowFailure: false, // returns raw decoded values
+      });
 
-    const interval = setInterval(() => init(), 1000);
-      return () => {
-      clearInterval(interval);
-      }
+      const [
+        weedBalance_,
+        tokenBalance_,
+        tokenAllowance_,
+        weedAllowance_,
+        tokenPrice_,
+        tokenName_,
+        tokenPair_,
+      ] = data as [
+        bigint,            // weedBalance_
+        bigint,            // tokenBalance_
+        bigint,            // tokenAllowance_
+        bigint,            // weedAllowance_
+        readonly bigint[], // tokenPrice_ (array from getAmountsOut)
+        string,            // tokenName_
+        Address            // tokenPair_
+      ];
+
+      setWeedBalance(weedBalance_);
+      setTokenBalance(tokenBalance_);
+      setWeedAllowance(Number(weedAllowance_));
+      setTokenAllowance(Number(tokenAllowance_));
+      setTokenPrice(Number(tokenPrice_[1] ?? 0n));
+      setTokenName(String(tokenName_));
+      setTokenPair(String(tokenPair_));
+    } catch {
+      // optional: console.error(err);
+    } finally {
+      running = false;
+    }
+  };
+
+  // initial load
+  void init();
+
+  // re-run on every new block
+  unwatch = watchBlockNumber(config, {
+    listen: true,
+    onBlockNumber: () => { void init(); },
   });
+
+  // cleanup
+  return () => {
+    if (unwatch) unwatch();
+  };
+}, [
+  isConnected,
+  address,
+  config,
+  tokenAddress,
+  Data.petalFactory,
+  Data.uniswapRouter,
+  Data.uniswapFactory,
+]);
 
     const approveRouter = async () => {
       if(networkId === baseId){
@@ -245,7 +268,7 @@ if (isConnected) {
     {sellValue > 0 ? <>
     {sellValue*10**18 > tokenAllowance ? <><p onClick={() => approveRouter()} className="enterButton pointer">Approve</p></>:<><p onClick={() => sellRouter()} className="enterButton pointer">Sell</p></>}</>:<></>}
       <p style={{textAlign: 'center'}}>1 {tokenName} = {Number(Number(tokenPrice) / 10 ** 18).toFixed(10)} WEED</p>
-       </>}<div id="dexscreener-embed"><iframe src={`https://dexscreener.com/base/${tokenPair}?embed=1&loadChartSettings=0&trades=0&tabs=0&info=0&chartLeftToolbar=0&chartTimeframesToolbar=0&chartDefaultOnMobile=1&chartTheme=dark&theme=dark&chartStyle=1&chartType=usd&interval=15`}></iframe></div>
+       </>}{tokenPair && <><div id="dexscreener-embed"><iframe src={`https://dexscreener.com/base/${tokenPair}?embed=1&loadChartSettings=0&trades=0&tabs=0&info=0&chartLeftToolbar=0&chartTimeframesToolbar=0&chartDefaultOnMobile=1&chartTheme=dark&theme=dark&chartStyle=1&chartType=usd&interval=15`}></iframe></div></>}
         </> 
   );
   }

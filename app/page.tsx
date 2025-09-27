@@ -72,11 +72,11 @@ export default function Home() {
       <p className={`${tab === 3 && "tealActive botBor"}`}  onClick={() => setTab(3)}>Prediction</p>
       <p className={`${tab === 4 && "tealActive botBor"}`}  onClick={() => setTab(4)}>Rewards</p></div>
     <div className="refDiv">
-    <span style={{ display: tab === 0 ? 'block' : 'none' }}><Referral /></span>
-    <span style={{ display: tab === 1 ? 'block' : 'none' }}><Swaps /></span>
-    <span style={{ display: tab === 2 ? 'block' : 'none' }}><Memes /></span>
-    <span style={{ display: tab === 3 ? 'block' : 'none' }}><Predictions /></span>
-    <span style={{ display: tab === 4 ? 'block' : 'none' }}><Rewards /></span>
+    {tab === 0 && <><Referral /></>}
+    {tab === 1 && <><Swaps /></>}
+    {tab === 2 && <><Memes /></>}
+    {tab === 3 && <><Predictions /></>}
+    {tab === 4 && <><Rewards /></>}
     </div>
     </>:
     <></>}

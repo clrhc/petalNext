@@ -2,9 +2,9 @@
 import '../globals.css';
 import React,{useState, useEffect} from 'react';
 import Data from '../data.json';
-import { readContracts } from '@wagmi/core';
+import { readContracts, watchBlockNumber } from '@wagmi/core';
 import { config } from './wagmiConfig';
-import {Abi} from 'viem';
+import {Abi, Address} from 'viem';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import rewards from '../abis/rewards.json';
 import nft from '../abis/nft.json';
@@ -17,44 +17,60 @@ import nft from '../abis/nft.json';
      const { writeContract } = useWriteContract();
      const [rewardsAvailable, setRewardsAvailable] = useState(0);
      const [nftBalance, setNftBalance] = useState(0);
-     type Address = `0x${string}`;
 
-     useEffect(() =>{
-    async function init(){
-     if(isConnected){
-  try{
-    const data = await readContracts(config, {
-  contracts: [
-    {
-      address: Data.virtueNFT as Address,
-      abi: nft.abi as Abi,
-      functionName: 'balanceOf',
-      args: [address],
-    },
-    {
-      address: Data.petalRewards as Address,
-      abi: rewards.abi as Abi,
-      functionName: 'checkRewards',
-      args: [address],
-    },
-  ],
-  allowFailure: false,
-});
-   const [
-    nftBalance_,
-    rewards_
-  ] = data as [bigint, bigint];
+    useEffect(() => {
+  if (!isConnected || !address) return;
 
-  setNftBalance(Number(nftBalance_));
-  setRewardsAvailable(Number(rewards_));}catch{};
-}
-}
+  let unwatch: (() => void) | null = null;
+  let running = false; // prevent overlapping calls
 
-    const interval = setInterval(() => init(), 1000);
-      return () => {
-      clearInterval(interval);
-      }
+  const init = async () => {
+    if (running) return;
+    running = true;
+    try {
+      const data = await readContracts(config, {
+        contracts: [
+          {
+            address: Data.virtueNFT as Address,
+            abi: nft.abi as Abi,
+            functionName: 'balanceOf',
+            args: [address as Address],
+          },
+          {
+            address: Data.petalRewards as Address,
+            abi: rewards.abi as Abi,
+            functionName: 'checkRewards',
+            args: [address as Address],
+          },
+        ],
+        allowFailure: false,
+      });
+
+      const [nftBalance_, rewards_] = data as [bigint, bigint];
+
+      setNftBalance(Number(nftBalance_));
+      setRewardsAvailable(Number(rewards_));
+    } catch {
+      // optional: console.error(err);
+    } finally {
+      running = false;
+    }
+  };
+
+  // initial load
+  void init();
+
+  // re-run on every new block
+  unwatch = watchBlockNumber(config, {
+    listen: true,
+    onBlockNumber: () => { void init(); },
   });
+
+  // cleanup
+  return () => {
+    if (unwatch) unwatch();
+  };
+}, [isConnected, address, config, Data.virtueNFT, Data.petalRewards]);
 
 
    const claimRewards = async () => {

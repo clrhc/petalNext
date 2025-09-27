@@ -3,9 +3,9 @@ import '../globals.css';
 import React,{useState, useEffect} from 'react';
 import Data from '../data.json';
 import {ethers} from 'ethers';
-import { readContracts } from '@wagmi/core';
+import { readContracts, watchBlockNumber } from '@wagmi/core';
 import { config } from './wagmiConfig';
-import {Abi} from 'viem';
+import {Abi, Address} from 'viem';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import referral from '../abis/referral.json';
 import xpCoin from '../assets/img/xpCoin.png';
@@ -23,64 +23,90 @@ export default function ReferralComponent() {
   const [error, setError] = useState(false);
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
-  const provider = new ethers.JsonRpcProvider(
-  'https://base-mainnet.public.blastapi.io',
-  { chainId: 8453, name: 'base' }   // <— key bit
-  );
-  const referralContract = new ethers.Contract(Data.referralAddress, referral.abi, provider);
-  type Address = `0x${string}`;
 
-  useEffect(() =>{
-    async function init(){
+  useEffect(() => {
+  if (!isConnected || !address) return;
 
-if (isConnected) {
-    try{
-  const userInfo_       = await referralContract.userInfo(address);
-    setUserInfo([
-    Number(userInfo_[0]),
-    Number(userInfo_[1]),
-    String(userInfo_[2]),
-    String(userInfo_[3]),
-    String(address),
-  ]);}catch{};
-try{
+  let unwatch: (() => void) | null = null;
+  let running = false; // avoid overlapping calls
 
-  const data = await readContracts(config, {
-  contracts: [
-    {
-      address: Data.referralAddress as Address,
-      abi: referral.abi as Abi,
-      functionName: 'refStore',
-      args: [String(userRef).toLowerCase()],
-    },
-    {
-      address: Data.referralAddress as Address,
-      abi: referral.abi as Abi,
-      functionName: 'refStore',
-      args: [String(newRef).toLowerCase()],
-    },
-  ],
-  allowFailure: false,
-});
-   let [
-    checkUserRef_,
-    checkNewRef_
-  ] = data as [string, string];
-  checkUserRef_ = String(checkUserRef_);
-  checkNewRef_  = String(checkNewRef_);
+  const ZERO = '0x0000000000000000000000000000000000000000' as const;
+  const userRefKey = String(userRef || '').toLowerCase();
+  const newRefKey  = String(newRef  || '').toLowerCase();
 
+  const init = async () => {
+    if (running) return;
+    running = true;
 
+    try {
+      const data = await readContracts(config, {
+        contracts: [
+          {
+            address: Data.referralAddress as Address,
+            abi: referral.abi as Abi,
+            functionName: 'userInfo',
+            args: [address as Address],
+          },
+          {
+            address: Data.referralAddress as Address,
+            abi: referral.abi as Abi,
+            functionName: 'refStore',
+            args: [userRefKey],
+          },
+          {
+            address: Data.referralAddress as Address,
+            abi: referral.abi as Abi,
+            functionName: 'refStore',
+            args: [newRefKey],
+          },
+        ],
+        allowFailure: false, // returns raw decoded values
+      });
 
-  setUserCheck(checkUserRef_ !== "0x0000000000000000000000000000000000000000");
-  setNewCheck (checkNewRef_  !== "0x0000000000000000000000000000000000000000");}catch{}
+      const [userInfoRaw, checkUserRefAddr, checkNewRefAddr] = data as [
+        [bigint, bigint, string, string],
+        string,
+        string
+      ];
 
-}}
+      setUserInfo([
+        Number(userInfoRaw[0]),
+        Number(userInfoRaw[1]),
+        String(userInfoRaw[2]),
+        String(userInfoRaw[3]),
+        String(address),
+      ]);
 
-    const interval = setInterval(() => init(), 1000);
-      return () => {
-      clearInterval(interval);
-      }
+      setUserCheck(checkUserRefAddr.toLowerCase() !== ZERO);
+      setNewCheck(checkNewRefAddr.toLowerCase() !== ZERO);
+    } catch {
+      // optional: console.error(err);
+    } finally {
+      running = false;
+    }
+  };
+
+  // initial load
+  void init();
+
+  // refetch on every new block
+  unwatch = watchBlockNumber(config, {
+    listen: true,
+    onBlockNumber: () => { void init(); },
   });
+
+  // cleanup
+  return () => {
+    if (unwatch) unwatch();
+  };
+}, [
+  isConnected,
+  address,
+  config,
+  Data.referralAddress,
+  userRef,   // re-run when user types a different ref
+  newRef,    // re-run when newRef changes
+]);
 
 
   const checkRef = (e: React.ChangeEvent<HTMLInputElement>) => {

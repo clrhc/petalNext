@@ -1,8 +1,11 @@
 'use client';
 import '../globals.css';
 import React,{useState, useEffect} from 'react';
+import {readContracts, watchBlockNumber} from '@wagmi/core';
 import {ethers} from 'ethers';
+import {Abi, Address} from 'viem';
 import {useAccount} from "wagmi";
+import {config} from './wagmiConfig';
 import { useAppKit } from "@reown/appkit/react";
 import referral from '../abis/referral.json';
 import Wallet from '../wallet';
@@ -15,34 +18,64 @@ import xpCoin from '../assets/img/xpCoin.png';
   const { address, isConnected } = useAccount();
   const {open} = useAppKit();
   const [userInfo, setUserInfo] = useState<[number, number, string, string, string]>([0, 0, '', '', '']);
-  const provider = new ethers.JsonRpcProvider(
-  'https://base-mainnet.public.blastapi.io',
-  { chainId: 8453, name: 'base' }   // <— key bit
-  );
-  const referralContract = new ethers.Contract(Data.referralAddress, referral.abi, provider);
   const [hoverWallet, setHoverWallet] = useState(false);
 
-    useEffect(() =>{
-    async function init(){
+    useEffect(() => {
+  if (!isConnected || !address) return;
 
-if (isConnected) {
-    try{
-  const userInfo_       = await referralContract.userInfo(address);
-    setUserInfo([
-    Number(userInfo_[0]),
-    Number(userInfo_[1]),
-    String(userInfo_[2]),
-    String(userInfo_[3]),
-    String(address),
-  ]);}catch{};
+  let unwatch: (() => void) | null = null;
+  let running = false; // prevent overlapping calls
 
-}
-}
-const interval = setInterval(() => init(), 1000);
-      return () => {
-      clearInterval(interval);
-      }
+  const init = async () => {
+    if (running) return;
+    running = true;
+    try {
+      const data = await readContracts(config, {
+        contracts: [
+          {
+            address: Data.referralAddress as Address,
+            abi: referral.abi as Abi,
+            functionName: 'userInfo',
+            args: [address as Address],
+          },
+        ],
+        allowFailure: false, // returns raw decoded values
+      });
+
+      // data[0] is the tuple result from userInfo
+      const userInfo_ = data[0] as [bigint, bigint, string, string];
+
+      setUserInfo([
+        Number(userInfo_[0]),
+        Number(userInfo_[1]),
+        String(userInfo_[2]),
+        String(userInfo_[3]),
+        String(address),
+      ]);
+    } catch (err) {
+      // optional: console.error('userInfo read failed', err);
+    } finally {
+      running = false;
+    }
+  };
+
+  // 1) initial load
+  void init();
+
+  // 2) refresh on every new block
+  unwatch = watchBlockNumber(config, {
+    listen: true,
+    onBlockNumber: () => {
+      void init();
+    },
+    onError: () => {},
   });
+
+  // 3) cleanup
+  return () => {
+    if (unwatch) unwatch();
+  };
+}, [isConnected, address, config, Data.referralAddress]);
 
 useEffect(() => {
   const displayStat = document.getElementById('displayStat');

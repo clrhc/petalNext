@@ -1,9 +1,9 @@
 'use client';
 import '../globals.css';
 import React,{useState, useEffect} from 'react';
-import {readContracts} from '@wagmi/core';
+import {readContracts, watchBlockNumber} from '@wagmi/core';
 import {ethers} from 'ethers';
-import {Abi} from 'viem';
+import {Abi, Address, parseUnits} from 'viem';
 import Data from '../data.json';
 import factory from '../abis/factory.json';
 import uniswapRouter from '../abis/uniswapRouter.json';
@@ -12,52 +12,71 @@ import {config} from './wagmiConfig';
 export default function CoinInfo(){
 
   const [tokenPrice, setTokenPrice] = useState(0);
-  const provider = new ethers.JsonRpcProvider(
-  'https://base-mainnet.public.blastapi.io',
-  { chainId: 8453, name: 'base' }   // <— key bit
-  );
-  const uniswapRouterContract = new ethers.Contract(Data.uniswapRouter, uniswapRouter.abi, provider);
   const [petalLaunched, setPetalLaunched] = useState(false);
   const [ethIn, setEthIn] = useState(0);
-  type Address = `0x${string}`;
 
-    useEffect(() =>{
-    async function init(){
-     try{
-  const data = await readContracts(config, {
-  contracts: [
-    {
-      address: Data.petalFactory as Address,
-      abi: factory.abi as Abi,
-      functionName: 'tokenLaunched',
-      args: [Data.petalToken as Address],
-    },
-    {
-      address: Data.petalFactory as Address,
-      abi: factory.abi as Abi,
-      functionName: 'bondingCurves',
-      args: [Data.petalToken as Address],
-    },
-  ],
-  allowFailure: false,
-});
+   useEffect(() => {
+  let unsub: (() => void) | null = null;
 
-const [petalLaunched_, petalCurve_] = data as [boolean, bigint[]];
-  setPetalLaunched(petalLaunched_);
-  if(petalLaunched_){
-  const petalEthPricePromise = await uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[Data.petalToken,Data.WETH]);
-  setTokenPrice(petalEthPricePromise[1]);
-  }else{
-  setTokenPrice(Number(petalCurve_[6]));
-  setEthIn(Number(petalCurve_[2]));
-  }
-  }catch{}
-}
-const interval = setInterval(() => init(), 1000);
-      return () => {
-      clearInterval(interval);
+  async function init() {
+    try {
+      const data = await readContracts(config, {
+        contracts: [
+          {
+            address: Data.petalFactory as Address,
+            abi: factory.abi as Abi,
+            functionName: "tokenLaunched",
+            args: [Data.petalToken as Address],
+          },
+          {
+            address: Data.petalFactory as Address,
+            abi: factory.abi as Abi,
+            functionName: "bondingCurves",
+            args: [Data.petalToken as Address],
+          },
+          {
+            address: Data.uniswapRouter as Address,
+            abi: uniswapRouter.abi as Abi,
+            functionName: "getAmountsOut",
+            args: [parseUnits("1", 18), [Data.petalToken, Data.WETH]],
+          },
+        ],
+        allowFailure: true,
+      });
+
+      const petalLaunched_ = data[0]?.result as boolean;
+      const petalCurve_ = data[1]?.result as bigint[];
+      const petalEthPrice_ = data[2]?.result as bigint[];
+
+      setPetalLaunched(petalLaunched_);
+
+      if (petalLaunched_) {
+        setTokenPrice(Number(petalEthPrice_?.[1] ?? 0n));
+      } else {
+        setTokenPrice(Number(petalCurve_?.[6] ?? 0n));
+        setEthIn(Number(petalCurve_?.[2] ?? 0n));
       }
-});
+    } catch (err) {
+      console.error("readContracts failed:", err);
+    }
+  }
+
+  // 1️⃣ Run once on mount
+  init();
+
+  // 2️⃣ Subscribe to new blocks and re-run
+  unsub = watchBlockNumber(config, {
+    listen: true,
+    onBlockNumber: () => {
+      void init();
+    },
+  });
+
+  // 3️⃣ Clean up subscription on unmount
+  return () => {
+    if (unsub) unsub();
+  };
+}, [config, Data.petalFactory, Data.petalToken, Data.uniswapRouter]);
 
 return(
  <div className="coinInfo">

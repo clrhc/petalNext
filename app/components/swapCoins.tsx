@@ -3,9 +3,9 @@ import '../globals.css';
 import React,{useState, useEffect} from 'react';
 import Data from '../data.json';
 import {ethers} from 'ethers';
-import { readContracts } from '@wagmi/core';
+import { readContracts, watchBlockNumber } from '@wagmi/core';
 import { config } from './wagmiConfig';
-import {Abi} from 'viem';
+import {Abi, Address, parseUnits} from 'viem';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import factory from '../abis/factory.json';
 import token from '../abis/token.json';
@@ -33,93 +33,131 @@ export default function SwapCoins({tokenAddress, factoryAddress}: { tokenAddress
   'https://base-mainnet.public.blastapi.io',
   { chainId: 8453, name: 'base' }   // <— key bit
   );
-  const uniswapRouterContract = new ethers.Contract(Data.uniswapRouter, uniswapRouter.abi, provider);
-  type Address = `0x${string}`;
 
-  useEffect(() =>{
-    async function init(){
+  useEffect(() => {
+  if (!isConnected || !address) return;
 
-if (isConnected) {
-   try{
-     const data = await readContracts(config, {
-  contracts: [
-    {
-      address: tokenAddress as Address,
-      abi: token.abi as Abi,
-      functionName: 'balanceOf',
-      args: [address],
-    },
-    {
-      address: factoryAddress as Address,
-      abi: factory.abi as Abi,
-      functionName: 'tokenLaunched',
-      args: [tokenAddress as Address],
-    },
-    {
-      address: tokenAddress as Address,
-      abi: token.abi as Abi,
-      functionName: 'allowance',
-      args: [address,factoryAddress as Address],
-    },
-    {
-      address: tokenAddress as Address,
-      abi: token.abi as Abi,
-      functionName: 'allowance',
-      args: [address, Data.uniswapRouter as Address],
-    },
-    {
-      address: factoryAddress as Address,
-      abi: factory.abi as Abi,
-      functionName: 'bondingCurves',
-      args: [tokenAddress as Address],
-    },
-    {
-      address: tokenAddress as Address,
-      abi: token.abi as Abi,
-      functionName: 'name',
-      args: [],
-    },
-  ],
-  allowFailure: false,
-});
-  const ethBalance_ = await provider.getBalance(address!);
-  const [
-    tokenBalance_,
-    tokenLaunched_,
-    tokenAllowance_,
-    tokenRouterAllowance_,
-    tokenCurve_,
-    tokenName_
-  ] = data as [
-  bigint,                                   // tokenBalance_
-  boolean,                                  // tokenLaunched_
-  bigint,                                   // tokenAllowance_
-  bigint,                                   // tokenRouterAllowance_
-  [bigint, bigint, bigint, bigint, bigint, bigint, bigint], // tokenCurve_
-  string                                    // tokenName_
-];
-  setTokenLaunched(tokenLaunched_);
-  if(tokenLaunched_){
-  const tokenEthPrice_ = await uniswapRouterContract.getAmountsOut(ethers.parseUnits(String(1)),[tokenAddress,Data.WETH]);
-  setTokenPrice(tokenEthPrice_[1]);
-  setTokenAllowance(Number(tokenRouterAllowance_));
-  }else{
-  setTokenPrice(Number(tokenCurve_[6]));
-  setEthIn(Number(tokenCurve_[2]));
-  setTokenAllowance(Number(tokenAllowance_));
-  }
-  setTokenName(String(tokenName_));
-  setEthBalance(Number(ethBalance_));
-  setTokenBalance(tokenBalance_);
-  }catch{};
-}
-}
+  let unwatch: (() => void) | null = null;
+  let running = false; // prevent overlapping calls
 
-    const interval = setInterval(() => init(), 1000);
-      return () => {
-      clearInterval(interval);
+  const readCurve = (curve: any) => {
+    // bondingCurves may decode as tuple or named struct
+    const spot =
+      (Array.isArray(curve) ? curve[6] : (curve?.spotPrice ?? curve?.currentPrice)) ?? 0n;
+    const ethIn =
+      (Array.isArray(curve) ? curve[2] : (curve?.ethIn ?? curve?.virtualEth)) ?? 0n;
+    return { spot, ethIn };
+  };
+
+  const get = <T,>(arr: any[], i: number): T | undefined =>
+    arr?.[i]?.status === 'success' ? (arr[i].result as T) : undefined;
+
+  const init = async () => {
+    if (running) return;
+    running = true;
+    try {
+      const data = await readContracts(config, {
+        contracts: [
+          {
+            address: tokenAddress as Address,
+            abi: token.abi as Abi,
+            functionName: 'balanceOf',
+            args: [address as Address],
+          },
+          {
+            address: factoryAddress as Address,
+            abi: factory.abi as Abi,
+            functionName: 'tokenLaunched',
+            args: [tokenAddress as Address],
+          },
+          {
+            address: tokenAddress as Address,
+            abi: token.abi as Abi,
+            functionName: 'allowance',
+            args: [address as Address, factoryAddress as Address],
+          },
+          {
+            address: tokenAddress as Address,
+            abi: token.abi as Abi,
+            functionName: 'allowance',
+            args: [address as Address, Data.uniswapRouter as Address],
+          },
+          {
+            address: factoryAddress as Address,
+            abi: factory.abi as Abi,
+            functionName: 'bondingCurves',
+            args: [tokenAddress as Address],
+          },
+          {
+            address: tokenAddress as Address,
+            abi: token.abi as Abi,
+            functionName: 'name',
+          },
+          {
+            address: Data.uniswapRouter as Address,
+            abi: uniswapRouter.abi as Abi,
+            functionName: 'getAmountsOut',
+            args: [parseUnits('1', 18), [tokenAddress as Address, Data.WETH as Address]],
+          },
+        ],
+        allowFailure: true,
+      });
+
+      const tokenBalance_         = get<bigint>(data, 0) ?? 0n;
+      const tokenLaunched_        = get<boolean>(data, 1) ?? false;
+      const tokenAllowance_       = get<bigint>(data, 2) ?? 0n;
+      const tokenRouterAllowance_ = get<bigint>(data, 3) ?? 0n;
+      const curveRaw              = get<any>(data, 4);
+      const tokenName_            = get<string>(data, 5) ?? '';
+      const amounts               = get<readonly bigint[]>(data, 6) ?? [];
+
+      const { spot, ethIn } = readCurve(curveRaw);
+
+      const ethBalance_ = await provider.getBalance(address!);
+
+      setTokenLaunched(tokenLaunched_);
+      if (tokenLaunched_) {
+        // Router price path: [amountIn, amountOut]
+        setTokenPrice(Number(amounts?.[1] ?? 0n));
+        setTokenAllowance(Number(tokenRouterAllowance_));
+      } else {
+        setTokenPrice(Number(spot));
+        setEthIn(Number(ethIn));
+        setTokenAllowance(Number(tokenAllowance_));
       }
+
+      setTokenName(String(tokenName_));
+      setEthBalance(Number(ethBalance_));
+      setTokenBalance(tokenBalance_);
+    } catch {
+      // optional: console.error(err);
+    } finally {
+      running = false;
+    }
+  };
+
+  // initial load
+  void init();
+
+  // re-run on every new block
+  unwatch = watchBlockNumber(config, {
+    listen: true,
+    onBlockNumber: () => { void init(); },
   });
+
+  // cleanup
+  return () => {
+    if (unwatch) unwatch();
+  };
+}, [
+  isConnected,
+  address,
+  config,
+  tokenAddress,
+  factoryAddress,
+  Data.uniswapRouter,
+  Data.WETH,
+]);
 
    const approveFactory = async () => {
     if(networkId === baseId){
