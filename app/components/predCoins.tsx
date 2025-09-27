@@ -32,7 +32,7 @@ export default function PredCoins({contractAddress, dataFeedAddress}: { contract
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
   const provider = new ethers.JsonRpcProvider(
-  'https://base.llamarpc.com',
+  'https://base-mainnet.public.blastapi.io',
   { chainId: 8453, name: 'base' }   // <— key bit
   );
   const dataFeedContract = new ethers.Contract(dataFeedAddress, dataFeed.abi, provider);

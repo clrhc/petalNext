@@ -24,7 +24,7 @@ export default function ReferralComponent() {
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
   const provider = new ethers.JsonRpcProvider(
-  'https://base.llamarpc.com',
+  'https://base-mainnet.public.blastapi.io',
   { chainId: 8453, name: 'base' }   // <— key bit
   );
   const referralContract = new ethers.Contract(Data.referralAddress, referral.abi, provider);

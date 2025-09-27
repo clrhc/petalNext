@@ -16,7 +16,7 @@ import xpCoin from '../assets/img/xpCoin.png';
   const {open} = useAppKit();
   const [userInfo, setUserInfo] = useState<[number, number, string, string, string]>([0, 0, '', '', '']);
   const provider = new ethers.JsonRpcProvider(
-  'https://base.llamarpc.com',
+  'https://base-mainnet.public.blastapi.io',
   { chainId: 8453, name: 'base' }   // <— key bit
   );
   const referralContract = new ethers.Contract(Data.referralAddress, referral.abi, provider);
