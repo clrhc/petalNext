@@ -1,5 +1,6 @@
 'use client'; 
 import { MiniKitProvider } from '@coinbase/onchainkit/minikit';
+import { OnchainKitProvider } from '@coinbase/onchainkit';
 import { wagmiAdapter, projectId } from '../config';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createAppKit } from '@reown/appkit/react';
