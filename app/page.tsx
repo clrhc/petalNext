@@ -5,6 +5,7 @@ import {useAccount} from "wagmi";
 import { useMiniKit } from '@coinbase/onchainkit/minikit';
 import { useAppKit } from "@reown/appkit/react";
 import Referral from './components/referral';
+import Data from './data.json';
 import Swaps from './components/swaps';
 import Memes from './components/memes';
 import Predictions from './components/predictions';
@@ -12,6 +13,11 @@ import Rewards from './components/rewards';
 import NavBar from './components/navbar';
 import CoinInfo from './components/coininfo';
 import petalLogo from './assets/img/petal.png';
+import opensea from './assets/img/opensea.png';
+import x from './assets/img/x.webp';
+import etherscan from './assets/img/etherscan.png';
+import magiceden from './assets/img/magiceden.png';
+import discord from './assets/img/discord.webp';
 
 
 
@@ -85,6 +91,7 @@ export default function Home() {
   </div>
       </header>
       <footer>
+          <span className="community"><p className="socials"><a href="https://discord.gg/TeQkftUA64" target="_blank" rel="noopener noreferrer"><img alt="opensea" width="25" src={discord.src} /></a><a href="https://opensea.io/collection/virtuesekai" target="_blank" rel="noopener noreferrer"><img alt="opensea" width="25" src={opensea.src} /></a><a href="https://x.com/virtuedefi" target="_blank" rel="noopener noreferrer"><img alt="x" width="25" src={x.src} /></a><a href={'https://basescan.org/address/'+String(Data.petalFactory)+'#code'} target="_blank" rel="noopener noreferrer"><img alt="basescan" width="25" src={etherscan.src} /></a><a href="https://magiceden.io/collections/base/0xf7805f4f52f4d9c290280dd398ac2b8b9dde6df5" target="_blank" rel="noopener noreferrer"><img alt="magiceden" width="25" src={magiceden.src} /></a></p></span>
       </footer>
 	</>	
 	);
