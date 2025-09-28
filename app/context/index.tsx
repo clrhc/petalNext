@@ -17,7 +17,7 @@ if (!projectId) {
 const metadata = {
   name: 'Petal Finance',
   description: 'Petal Finance',
-  url: 'https://petal.wtf',
+  url: 'https://www.petal.wtf',
   icons: ['https://avatars.githubusercontent.com/u/179229932'],
 };
 
