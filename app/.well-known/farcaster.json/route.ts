@@ -34,7 +34,8 @@ return Response.json({
     "ogTitle": "Petal Finance",
     "ogDescription": "Register Now for Free Rewards!",
     "ogImageUrl": "https://i.imgur.com/6fsw46l.png",
-    "noindex": true
+    "noindex": true,
+    "screenshotUrls": ["https://i.imgur.com/cOl0Utj.png","https://i.imgur.com/pYoZQlK.png", "https://i.imgur.com/6fsw46l.png"],
   },
   "frame": {
     "name": "Petal Finance",
