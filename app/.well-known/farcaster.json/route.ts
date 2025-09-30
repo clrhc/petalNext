@@ -33,7 +33,6 @@ return Response.json({
     "ogDescription": "Register Now for Free Rewards!",
     "ogImageUrl": "https://i.imgur.com/6fsw46l.png",
     "screenshotUrls": ["https://i.imgur.com/7DgS91f.png"],
-    "noindex": false,
   },
 });
 }
