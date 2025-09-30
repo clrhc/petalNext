@@ -18,6 +18,7 @@ import x from './assets/img/x.webp';
 import etherscan from './assets/img/etherscan.png';
 import magiceden from './assets/img/magiceden.png';
 import discord from './assets/img/discord.webp';
+import { sdk } from '@farcaster/miniapp-sdk';
 
 
 
@@ -34,6 +35,10 @@ export default function Home() {
       setFrameReady();
     }
   }, [setFrameReady, isFrameReady]);
+
+   useEffect(() => {
+        sdk.actions.ready();
+    }, []);
 
 
    useEffect(() => {

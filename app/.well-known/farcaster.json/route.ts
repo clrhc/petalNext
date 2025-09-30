@@ -19,6 +19,28 @@ return Response.json({
     "payload": "eyJkb21haW4iOiJwZXRhbC53dGYifQ",
     "signature": "MHhkZTE5MGIzZDM1OWRlNjA2NDc0MWEwMTkxNDA0NTNjYmRkZjNmNDRkMDQxODdjOTBjNTExNDY1NzdmMTY1MGJhMDQ2ZTY0NjZiY2QyNWY2MWEzY2RhNWNlZTE1ZDNmOGFiZGI1YjIwNjlmNDhhY2YyYjNmNWM0OWNkMjgwYWIwNTFj"
   },
+   "baseBuilder": {
+    "allowedAddresses": ["0x0870df064d160f40c8f6c966dca25db9326b23f4"],
+  },
+   "miniapp": {
+    "version": "1",
+    "name": "Petal Finance",
+    "homeUrl": "https://petal.wtf",
+    "iconUrl": "https://i.imgur.com/cOl0Utj.png",
+    "splashImageUrl": "https://i.imgur.com/pYoZQlK.png",
+    "splashBackgroundColor": "#1e534c",
+    "webhookUrl": "https://petal.wtf/api/webhook",
+    "subtitle": "V2 DeFi and Meme Markets",
+    "description": "Register Now for Free Rewards!",
+    "primaryCategory": "finance",
+    "tags": ["miniapp", "baseapp", "DeFi"],
+    "heroImageUrl": "https://i.imgur.com/cOl0Utj.png",
+    "tagline": "Register Now for Free Rewards!",
+    "ogTitle": "Petal Finance",
+    "ogDescription": "Register Now for Free Rewards!",
+    "ogImageUrl": "https://i.imgur.com/6fsw46l.png",
+    "noindex": true
+  },
   "frame": withValidProperties({
     "name": "Petal Finance",
     "version": "1",
