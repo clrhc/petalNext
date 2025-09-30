@@ -2,7 +2,6 @@
 import './globals.css';
 import React,{useState, useEffect} from 'react';
 import {useAccount} from "wagmi";
-import { useMiniKit } from '@coinbase/onchainkit/minikit';
 import { useAppKit } from "@reown/appkit/react";
 import Referral from './components/referral';
 import Data from './data.json';
@@ -24,17 +23,10 @@ import { sdk } from '@farcaster/miniapp-sdk';
 
 export default function Home() {
 
-  const { setFrameReady, isFrameReady } = useMiniKit();
   const {open} = useAppKit();
   const { isConnected } = useAccount();
   const [isMobile, setIsMobile] = useState(false);
   const [tab, setTab] = useState(0);
-
-   useEffect(() => {
-    if (!isFrameReady) {
-      setFrameReady();
-    }
-  }, [setFrameReady, isFrameReady]);
 
    useEffect(() => {
         sdk.actions.ready();
