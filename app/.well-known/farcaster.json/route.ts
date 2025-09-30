@@ -13,7 +13,7 @@ return Response.json({
     "signature": "MkOBH0JNqtwLM6h/CQlq2GpFp5LgnDIEGacEaEKm9s0DTIMkaoutuO6HHYNlcyp0pkFHmxt7xjp0KtbuVQkAHhs="
   },
    "baseBuilder": {
-    "allowedAddresses": [""],
+    "allowedAddresses": ["0x0870dF064d160f40c8F6c966dCa25db9326b23F4","0xB1fadDeca6cBCCD536355a4eFe0E2d5517a1F04F","0x68b97D898949A6781d779E4cE54ECF42A2a3cB5d"],
   },
     "miniapp": {
     "version": "1",
@@ -32,8 +32,8 @@ return Response.json({
     "ogTitle": "Petal Finance",
     "ogDescription": "Register Now for Free Rewards!",
     "ogImageUrl": "https://i.imgur.com/6fsw46l.png",
-    "noindex": false,
     "screenshotUrls": ["https://i.imgur.com/7DgS91f.png"],
+    "noindex": false,
   },
 });
 }
