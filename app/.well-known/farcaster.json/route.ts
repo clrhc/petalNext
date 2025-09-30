@@ -15,7 +15,7 @@ export async function GET() {
 const URL = 'https://petal.wtf' as string;
 return Response.json({
    "baseBuilder": {
-    "allowedAddresses": ["0x0870df064d160f40c8f6c966dca25db9326b23f4"],
+    "allowedAddresses": ["0x0870df064d160f40c8f6c966dca25db9326b23f4", "0xB1fadDeca6cBCCD536355a4eFe0E2d5517a1F04F", "0x68b97D898949A6781d779E4cE54ECF42A2a3cB5d"],
   },
    "miniapp": {
     "version": "1",
