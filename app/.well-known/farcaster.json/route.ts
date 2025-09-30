@@ -32,8 +32,8 @@ return Response.json({
     "splashImageUrl": "https://i.imgur.com/pYoZQlK.png",
     "splashBackgroundColor": "#1e534c",
     "webhookUrl": "https://petal.wtf/api/webhook",
-    "subtitle": "V2 DeFi and Meme Markets",
-    "description": "Register Now for Free Rewards!",
+    "subtitle": "Register Now for Free Rewards!",
+    "description": "V2 DeFi and Meme Markets",
     "primaryCategory": "finance",
     "tags": ["miniapp", "baseapp", "DeFi"],
     "heroImageUrl": "https://i.imgur.com/cOl0Utj.png",
@@ -52,8 +52,8 @@ return Response.json({
     "splashImageUrl": "https://i.imgur.com/pYoZQlK.png",
     "splashBackgroundColor": "#1e534c",
     "webhookUrl": "https://petal.wtf/api/webhook",
-    "subtitle": "V2 DeFi and Meme Markets",
-    "description": "Register Now for Free Rewards!",
+    "subtitle": "Register Now for Free Rewards!",
+    "description": "V2 DeFi and Meme Markets",
     "primaryCategory": "finance"
   }),
 });
