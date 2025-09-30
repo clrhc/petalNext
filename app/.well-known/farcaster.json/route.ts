@@ -8,12 +8,12 @@ export async function GET() {
 const URL = 'https://petal.wtf' as string;
 return Response.json({
      "accountAssociation": {
-    "header": "eyJmaWQiOjI5MzE5NCwidHlwZSI6ImF1dGgiLCJrZXkiOiIweDY4Yjk3RDg5ODk0OUE2NzgxZDc3OUU0Y0U1NEVDRjQyQTJhM2NCNWQifQ",
-    "payload": "eyJkb21haW4iOiJwZXRhbC53dGYifQ",
-    "signature": "MkOBH0JNqtwLM6h/CQlq2GpFp5LgnDIEGacEaEKm9s0DTIMkaoutuO6HHYNlcyp0pkFHmxt7xjp0KtbuVQkAHhs="
+    "header": "",
+    "payload": "",
+    "signature": ""
   },
    "baseBuilder": {
-    "allowedAddresses": ["0x0870dF064d160f40c8F6c966dCa25db9326b23F4","0xB1fadDeca6cBCCD536355a4eFe0E2d5517a1F04F","0x68b97D898949A6781d779E4cE54ECF42A2a3cB5d"],
+    "allowedAddresses": ["0x0870dF064d160f40c8F6c966dCa25db9326b23F4"],
   },
     "miniapp": {
     "version": "1",
