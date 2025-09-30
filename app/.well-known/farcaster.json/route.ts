@@ -7,6 +7,14 @@ return Object.fromEntries(
 export async function GET() {
 const URL = 'https://petal.wtf' as string;
 return Response.json({
+     "accountAssociation": {
+    "header": "eyJmaWQiOjI5MzE5NCwidHlwZSI6ImF1dGgiLCJrZXkiOiIweDY4Yjk3RDg5ODk0OUE2NzgxZDc3OUU0Y0U1NEVDRjQyQTJhM2NCNWQifQ",
+    "payload": "eyJkb21haW4iOiJwZXRhbC53dGYifQ",
+    "signature": "MkOBH0JNqtwLM6h/CQlq2GpFp5LgnDIEGacEaEKm9s0DTIMkaoutuO6HHYNlcyp0pkFHmxt7xjp0KtbuVQkAHhs="
+  },
+   "baseBuilder": {
+    "allowedAddresses": [""],
+  },
     "miniapp": {
     "version": "1",
     "name": "Petal Finance",
@@ -26,14 +34,6 @@ return Response.json({
     "ogImageUrl": "https://i.imgur.com/6fsw46l.png",
     "noindex": false,
     "screenshotUrls": ["https://i.imgur.com/7DgS91f.png"],
-  },
-  "accountAssociation": {
-    "header": "",
-    "payload": "",
-    "signature": ""
-  },
-   "baseBuilder": {
-    "allowedAddresses": [""],
   },
 });
 }
