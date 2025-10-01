@@ -239,91 +239,140 @@ useEffect(() => {
     }
   }
 
-  return(
-    <>
-    {Number(previousAnswer) > 0 ? <>
-    {Number(userBid.roundId) === 0 ? <>
-    <span style={{display: 'flex', justifyContent: 'space-between', width: '50%', margin: '0 auto'}}>
-    <div className="ethPrice"><span><p>PREVIOUS</p><p>PRICE</p></span><span><h2>{Number(ethers.formatUnits(String(previousAnswer),8)).toFixed(2)}</h2></span></div>
-    <div className="ethPrice"><span><p>CURRENT</p><p>PRICE</p></span><span><h2>{Number(ethers.formatUnits(String(answer),8)).toFixed(2)}</h2></span></div>
+return (
+  <>
+   <span
+  style={{
+    display: Number(userBid?.roundId) === 0 ? 'inline-block' : 'none'
+  }}
+> <span style={{ display: 'flex', justifyContent: 'space-between', width: '50%', margin: '0 auto' }}>
+      <div className="ethPrice">
+        <span><p>PREVIOUS</p><p>PRICE</p></span>
+        <span><h2>{Number(ethers.formatUnits(String(previousAnswer), 8)).toFixed(2)}</h2></span>
+      </div>
+      <div className="ethPrice">
+        <span><p>CURRENT</p><p>PRICE</p></span>
+        <span><h2>{Number(ethers.formatUnits(String(answer), 8)).toFixed(2)}</h2></span>
+      </div>
     </span>
+
     <div style={{ position: 'relative' }}>
-  <span className="inputAfter" style={{
-    position: 'absolute',
-    fontSize: '1.5rem',
-    right: '30px',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    color: '#FFF'
-  }}>
-    ETH
-  </span>
-    <input
-  id="refInput"
-  className="inputBox inputText userText outlineTeal"
-  placeholder="0 ETH"
-  type="text"
-  inputMode="decimal"
-  pattern="^\d*\.?\d*$"
-  onWheel={(e) => (e.target as HTMLInputElement).blur()}
-  value={bidText}
-  onChange={(e) => {
-    const v = e.target.value;
-    if (!/^\d*\.?\d*$/.test(v)) return;            // allow digits + one dot
-    setBidText(v);                                  // keep UI string
-    setBidValue(v === "" || v === "." ? 0 : Number(v)); // keep numeric state
-  }}
-  onKeyDown={(e) => {
-    const isDigit = /^[0-9]$/.test(e.key);
-    const isNonZero = /^[1-9]$/.test(e.key);
-    const isDot = e.key === ".";
-    const nav = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab"].includes(e.key);
+      <span
+        className="inputAfter"
+        style={{ position: 'absolute', fontSize: '1.5rem', right: '30px', top: '50%', transform: 'translateY(-50%)', color: '#FFF' }}
+      >
+        ETH
+      </span>
 
-    // allow "." to make "0." when starting from "0" or empty
-    if (isDot && (bidText === "0" || bidText === "")) return;
+      <input
+        id="refInput"
+        className="inputBox inputText userText outlineTeal"
+        placeholder="0 ETH"
+        type="text"
+        inputMode="decimal"
+        pattern="^\\d*\\.?\\d*$"               // <-- escaped
+        onWheel={(e) => (e.target as HTMLInputElement).blur()}
+        value={bidText}
+        onChange={(e) => {
+          const v = e.target.value;
+          if (!/^\d*\.?\d*$/.test(v)) return;
+          setBidText(v);
+          setBidValue(v === '' || v === '.' ? 0 : Number(v));
+        }}
+        onKeyDown={(e) => {
+          const isDigit = /^[0-9]$/.test(e.key);
+          const isNonZero = /^[1-9]$/.test(e.key);
+          const isDot = e.key === '.';
+          const nav = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key);
 
-    // replace leading 0 when first key is 1–9
-    if (isNonZero && bidText === "0") {
-      e.preventDefault();
-      setBidText(e.key);
-      setBidValue(Number(e.key));
-      return;
-    }
-
-    // block extra leading zero (avoid "00.1")
-    if (e.key === "0" && bidText === "0") {
-      e.preventDefault();
-      return;
-    }
-
-    // block junk keys
-    if (!isDigit && !isDot && !nav) e.preventDefault();
-  }}
-  onBlur={() => {
-    // normalize empty or trailing dot
-    if (bidText === "" || bidText === ".") {
-      setBidText("0");
-      setBidValue(0);
-    }
-  }}
-/>
+          if (isDot && (bidText === '0' || bidText === '')) return;
+          if (isNonZero && bidText === '0') {
+            e.preventDefault();
+            setBidText(e.key);
+            setBidValue(Number(e.key));
+            return;
+          }
+          if (e.key === '0' && bidText === '0') {
+            e.preventDefault();
+            return;
+          }
+          if (!isDigit && !isDot && !nav) e.preventDefault();
+        }}
+        onBlur={() => {
+          if (bidText === '' || bidText === '.') {
+            setBidText('0');
+            setBidValue(0);
+          }
+        }}
+      />
     </div>
-   <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(6)} ETH</p>
-   <div className="swapButtons"><p className={`${bidState && "tealActive"}`} onClick={() => setBidState(true)}>HIGHER</p><p className={`${!bidState && "tealActive"}`} onClick={() => setBidState(false)}>LOWER</p></div>
-   <p style={{textAlign: 'center'}}>Next price in {epoch} epoch(s)</p> 
-    <br/>
-    {bidValue > 0 ? <><p onClick={() => bidPrediction()} className="enterButton pointer">Bid</p>
-    </>:<></>}<p style={{textAlign: 'center'}}>1 ETH = {Number(1/Number(Number(2000000000000) / 10 ** 18)*1).toFixed(2)} PETAL</p><p style={{textAlign: 'center'}}>1 ETH = {Number(1/Number(Number(2000000000000) / 10 ** 18)*3).toFixed(2)} WEED</p><p style={{textAlign: 'center'}}>3% Tax</p><p style={{textAlign: 'center'}}>Win = Receive PETAL + WEED + ETH Back(-3% Tax)</p><p style={{textAlign: 'center'}}>Loss = Receive WEED + LOSE ETH</p></>:<>
-    <span style={{display: 'grid', alignItems: 'center', margin: '0 auto', width: '50%'}}>
-    <div className="ethPrice"><span><p>BID {userBid.higher ? <>HIGHER</>:<>LOWER</>}</p></span></div>
-    <div className="bidPrice"><span><p>BID PRICE</p></span><span><h2>{Number(ethers.formatUnits(String(userBid.priceBid),8)).toFixed(2)}</h2></span></div>
-    <div className="bidPrice"><span><p>RESULT</p></span><span><h2>{checkBid === 0 ? <>PENDING</>:<>{Number(ethers.formatUnits(String(roundAnswer),8)).toFixed(2)}</>}</h2></span></div>
-    </span>
-    <span className="winnings"><p style={{textAlign: 'center'}}>WINNINGS</p><p style={{textAlign: 'center'}}>{Number(Number(ethers.formatUnits(userBid.amountBid,18))/Number(Number(2000000000000) / 10 ** 18)*3).toFixed(2)} WEED</p>{checkBid === 1 && <><p style={{textAlign: 'center'}}>{Number(Number(ethers.formatUnits(userBid.amountBid,18))/Number(Number(2000000000000) / 10 ** 18)*1).toFixed(2)} PETAL</p><p style={{textAlign: 'center'}}>{Number(ethers.formatUnits(userBid.amountBid, 18)).toFixed(4)} ETH</p></>}</span>
-    {checkBid > 0 ? <><p onClick={() => resolveBid()} className="enterButton pointer">Resolve Bid</p>
-    </>:<></>}
-    </>}
-    </>:<></>}
-    </>
-    )
+
+    <p className="rightSide">
+      Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(6)} ETH
+    </p>
+
+    <div className="swapButtons">
+      <p className={`${bidState && 'tealActive'}`} onClick={() => setBidState(true)}>HIGHER</p>
+      <p className={`${!bidState && 'tealActive'}`} onClick={() => setBidState(false)}>LOWER</p>
+    </div>
+
+    <p style={{ textAlign: 'center' }}>Next price in {epoch} epoch(s)</p>
+    <br />
+
+    {bidValue > 0 && (
+      <p onClick={() => bidPrediction()} className="enterButton pointer">Bid</p>
+    )}
+
+    <p style={{ textAlign: 'center' }}>
+      1 ETH = {Number(1 / Number(Number(2000000000000) / 10 ** 18) * 1).toFixed(2)} PETAL
+    </p>
+    <p style={{ textAlign: 'center' }}>
+      1 ETH = {Number(1 / Number(Number(2000000000000) / 10 ** 18) * 3).toFixed(2)} WEED
+    </p>
+    <p style={{ textAlign: 'center' }}>3% Tax</p>
+    <p style={{ textAlign: 'center' }}>Win = Receive PETAL + WEED + ETH Back(-3% Tax)</p>
+    <p style={{ textAlign: 'center' }}>Loss = Receive WEED + LOSE ETH</p></span>
+
+    {Number(userBid.roundId) > 0 && (
+      <>
+        <span style={{ display: 'grid', alignItems: 'center', margin: '0 auto', width: '50%' }}>
+          <div className="ethPrice">
+            <span><p>BID {userBid.higher ? 'HIGHER' : 'LOWER'}</p></span>
+          </div>
+          <div className="bidPrice">
+            <span><p>BID PRICE</p></span>
+            <span><h2>{Number(ethers.formatUnits(String(userBid.priceBid), 8)).toFixed(2)}</h2></span>
+          </div>
+          <div className="bidPrice">
+            <span><p>RESULT</p></span>
+            <span>
+              <h2>{checkBid === 0 ? 'PENDING' : Number(ethers.formatUnits(String(roundAnswer), 8)).toFixed(2)}</h2>
+            </span>
+          </div>
+        </span>
+
+        <span className="winnings">
+          <p style={{ textAlign: 'center' }}>WINNINGS</p>
+          <p style={{ textAlign: 'center' }}>
+            {Number(Number(ethers.formatUnits(userBid.amountBid, 18)) / Number(Number(2000000000000) / 10 ** 18) * 3).toFixed(2)} WEED
+          </p>
+          {checkBid === 1 && (
+            <>
+              <p style={{ textAlign: 'center' }}>
+                {Number(Number(ethers.formatUnits(userBid.amountBid, 18)) / Number(Number(2000000000000) / 10 ** 18) * 1).toFixed(2)} PETAL
+              </p>
+              <p style={{ textAlign: 'center' }}>
+                {Number(ethers.formatUnits(userBid.amountBid, 18)).toFixed(4)} ETH
+              </p>
+            </>
+          )}
+        </span>
+
+        {checkBid > 0 && (                                
+          <p onClick={() => resolveBid()} className="enterButton pointer">Resolve Bid</p>
+        )}
+      </>
+    )}
+  </>
+);
 }
