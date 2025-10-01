@@ -1,5 +1,6 @@
 'use client';
 import '../globals.css';
+import Image from 'next/image';
 import React,{useState, useEffect} from 'react';
 import Data from '../data.json';
 import { readContracts, watchBlockNumber } from '@wagmi/core';
@@ -157,7 +158,7 @@ export default function ReferralComponent() {
     {userInfo[0] < 10 && " 00"}
     {userInfo[0] >= 10 && <>{userInfo[0] < 100 ? <>{String(" 0")}</>:<></>}</>}
     {userInfo[0]}</h3>
-    <span className="xpText"><h3>XP: {userInfo[1]}</h3><img alt="xpCoin" src={xpCoin.src} /></span>
+    <span className="xpText"><h3>XP: {userInfo[1]}</h3><Image alt="xpCoin" width="32" src={xpCoin} /></span>
     <h3>Ref: {userInfo[2]}</h3>
     <h3>Address: {address}</h3>
     <h3>Collect XP for future rewards!</h3></div></>}

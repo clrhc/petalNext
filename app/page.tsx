@@ -1,5 +1,6 @@
 'use client';
 import './globals.css';
+import Image from 'next/image';
 import React,{useState, useEffect} from 'react';
 import {useAccount} from "wagmi";
 import { useAppKit } from "@reown/appkit/react";
@@ -61,7 +62,7 @@ export default function Home() {
     <h2>WELCOME TO PETAL FINANCE</h2>
     <p>V2 DeFi and Meme Market</p>
     {!isConnected && <><p className="pointer" onClick={() => open()}>CONNECT TO START</p></>}
-    <img alt="petalLogo" src={petalLogo.src} /></span>
+    <Image alt="petalLogo" width={`${isMobile ? "50" : "100"}`} src={petalLogo} /></span>
       {!isMobile && <>
       <CoinInfo /></>}
     {isConnected ? <>
@@ -85,7 +86,7 @@ export default function Home() {
   </div>
       </header>
       <footer>
-          <span className="community"><p className="socials"><a href="https://discord.gg/TeQkftUA64" target="_blank" rel="noopener noreferrer"><img alt="opensea" width="25" src={discord.src} /></a><a href="https://opensea.io/collection/virtuesekai" target="_blank" rel="noopener noreferrer"><img alt="opensea" width="25" src={opensea.src} /></a><a href="https://x.com/virtuedefi" target="_blank" rel="noopener noreferrer"><img alt="x" width="25" src={x.src} /></a><a href={'https://basescan.org/address/'+String(Data.petalFactory)+'#code'} target="_blank" rel="noopener noreferrer"><img alt="basescan" width="25" src={etherscan.src} /></a><a href="https://magiceden.io/collections/base/0xf7805f4f52f4d9c290280dd398ac2b8b9dde6df5" target="_blank" rel="noopener noreferrer"><img alt="magiceden" width="25" src={magiceden.src} /></a></p></span>
+          <span className="community"><p className="socials"><a href="https://discord.gg/TeQkftUA64" target="_blank" rel="noopener noreferrer"><Image alt="opensea" width="25" src={discord} /></a><a href="https://opensea.io/collection/virtuesekai" target="_blank" rel="noopener noreferrer"><Image alt="opensea" width="25" src={opensea} /></a><a href="https://x.com/virtuedefi" target="_blank" rel="noopener noreferrer"><Image alt="x" width="25" src={x} /></a><a href={'https://basescan.org/address/'+String(Data.petalFactory)+'#code'} target="_blank" rel="noopener noreferrer"><Image alt="basescan" width="25" src={etherscan} /></a><a href="https://magiceden.io/collections/base/0xf7805f4f52f4d9c290280dd398ac2b8b9dde6df5" target="_blank" rel="noopener noreferrer"><Image alt="magiceden" width="25" src={magiceden} /></a></p></span>
       </footer>
 	</>	
 	);

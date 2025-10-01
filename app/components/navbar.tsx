@@ -1,5 +1,6 @@
 'use client';
 import '../globals.css';
+import Image from 'next/image';
 import React,{useState, useEffect} from 'react';
 import {readContracts, watchBlockNumber} from '@wagmi/core';
 import {Abi, Address} from 'viem';
@@ -117,7 +118,7 @@ useEffect(() => {
   </>:<>
   <div id="loading-bar"></div>
   </>}</>:<></>}
-  <div className="nav"><span className="logoSpan"><img alt="petalLogo" className="logo" src={petalLogo.src} /><h2 className="logoText">PETAL</h2></span>{userInfo.length === 5 && address === userInfo[3] ? <><span className="xpNav"><p>{userInfo[1]}</p><img alt="xpCoin" src={xpCoin.src} /></span></>:<></>}<span className="walletButtons pointer" id="walletSpan" onClick={() => open()} onMouseOver={() => setHoverWallet(true)} onMouseOut={() => setHoverWallet(false)}><Wallet /></span>
+  <div className="nav"><span className="logoSpan"><Image alt="petalLogo" className="logo" width="45" src={petalLogo} /><h2 className="logoText">PETAL</h2></span>{userInfo.length === 5 && address === userInfo[3] ? <><span className="xpNav"><p>{userInfo[1]}</p><Image alt="xpCoin" width="30" src={xpCoin} /></span></>:<></>}<span className="walletButtons pointer" id="walletSpan" onClick={() => open()} onMouseOver={() => setHoverWallet(true)} onMouseOut={() => setHoverWallet(false)}><Wallet /></span>
     {userInfo.length === 5 && address === userInfo[3] ? <><span className="userStats" id="displayStat" onMouseOver={() => setHoverWallet(true)} onMouseOut={() => setHoverWallet(false)}><p>ID:
     {userInfo[0] < 10 && " 00"}
     {userInfo[0] >= 10 && <>{userInfo[0] < 100 ? <>{String(" 0")}</>:<></>}</>}
