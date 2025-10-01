@@ -22,7 +22,7 @@ import { useMiniKit } from "@coinbase/onchainkit/minikit";
 export default function Home() {
 
   const {open} = useAppKit();
-  const { isFrameReady, setFrameReady, context } = useMiniKit();
+  const { isFrameReady, setFrameReady } = useMiniKit();
   const { isConnected } = useAccount();
   const [isMobile, setIsMobile] = useState(false);
   const [tab, setTab] = useState(0);
