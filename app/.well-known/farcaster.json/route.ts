@@ -7,32 +7,39 @@ return Object.fromEntries(
 export async function GET() {
 const URL = 'https://petal.wtf' as string;
 return Response.json({
-     "accountAssociation": {
+  "accountAssociation": {
     "header": "eyJmaWQiOjI5MzE5NCwidHlwZSI6ImF1dGgiLCJrZXkiOiIweDY4Yjk3RDg5ODk0OUE2NzgxZDc3OUU0Y0U1NEVDRjQyQTJhM2NCNWQifQ",
-    "payload": "eyJkb21haW4iOiJwZXRhbC53dGYifQ",
-    "signature": "MkOBH0JNqtwLM6h/CQlq2GpFp5LgnDIEGacEaEKm9s0DTIMkaoutuO6HHYNlcyp0pkFHmxt7xjp0KtbuVQkAHhs="
+    "payload": "eyJkb21haW4iOiIifQ",
+    "signature": "DoUssDrbzR1HEYW4Y8EIlBF7jeKyZEcaDowwlr9pKF8qxMul5t1jE6F6AkWt+H420xYKOucS3qSBYfs+RqNBSRw="
   },
    "baseBuilder": {
     "allowedAddresses": ["0x0870dF064d160f40c8F6c966dCa25db9326b23F4"],
   },
-    "miniapp": {
-    "version": "1",
+  "miniapp": {
     "name": "Petal Finance",
-    "homeUrl": "https://petal.wtf",
+    "version": "1",
     "iconUrl": "https://i.imgur.com/cOl0Utj.png",
+    "homeUrl": "https://petal.wtf",
+    "imageUrl": "https://i.imgur.com/6fsw46l.png",
+    "buttonTitle": "Register Now for Free Rewards!",
     "splashImageUrl": "https://i.imgur.com/pYoZQlK.png",
     "splashBackgroundColor": "#1e534c",
-    "webhookUrl": "https://petal.wtf/api/webhook",
     "subtitle": "Register Now for Free Rewards!",
     "description": "V2 DeFi and Meme Markets",
+    "screenshotUrls": [
+      "https://i.imgur.com/7DgS91f.png"
+    ],
     "primaryCategory": "finance",
-    "tags": ["miniapp", "baseapp", "DeFi"],
+    "tags": [
+      "miniapp",
+      "baseapp",
+      "defi"
+    ],
     "heroImageUrl": "https://i.imgur.com/cOl0Utj.png",
     "tagline": "Register Now for Free Rewards!",
     "ogTitle": "Petal Finance",
     "ogDescription": "Register Now for Free Rewards!",
-    "ogImageUrl": "https://i.imgur.com/6fsw46l.png",
-    "screenshotUrls": ["https://i.imgur.com/7DgS91f.png"],
+    "ogImageUrl": "https://i.imgur.com/6fsw46l.png"
   },
 });
 }
