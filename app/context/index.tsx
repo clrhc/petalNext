@@ -1,4 +1,4 @@
-'use client'; 
+'use client';
 import { wagmiAdapter, projectId } from '../config';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { OnchainKitProvider } from '@coinbase/onchainkit';
@@ -7,12 +7,7 @@ import { base } from '@reown/appkit/networks';
 import React, { type ReactNode } from 'react';
 import { cookieToInitialState, WagmiProvider, type Config } from 'wagmi';
 
-// Set up queryClient
-const queryClient = new QueryClient()
-
-if (!projectId) {
-  throw new Error('Project ID is not defined')
-};
+const queryClient = new QueryClient();
 
 const metadata = {
   name: 'Petal Finance',
@@ -21,50 +16,46 @@ const metadata = {
   icons: ['https://avatars.githubusercontent.com/u/179229932'],
 };
 
-// Create the modal
-  createAppKit({
+createAppKit({
   adapters: [wagmiAdapter],
   projectId,
   networks: [base],
   defaultNetwork: base,
   metadata,
   features: { analytics: true },
-
   featuredWalletIds: [
     // Coinbase
     'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa',
     // Farcaster
-    '99a71c7a80284d5c59f5f39562fda701c1b60e6d60a8167db88c8af2cf453fd0'
-  ]
+    '99a71c7a80284d5c59f5f39562fda701c1b60e6d60a8167db88c8af2cf453fd0',
+  ],
 });
 
 function ContextProvider({ children, cookies }: { children: ReactNode; cookies: string | null }) {
-     
-  const initialState = cookieToInitialState(wagmiAdapter.wagmiConfig as Config, cookies)
+  const initialState = cookieToInitialState(wagmiAdapter.wagmiConfig as Config, cookies);
 
   return (
-    <OnchainKitProvider 
-      apiKey={'L9RknrEp7oeLfKo8ZPBTEdYFiOMiqjHm'} 
+    <OnchainKitProvider
+      apiKey="L9RknrEp7oeLfKo8ZPBTEdYFiOMiqjHm"
       chain={base}
       config={{
-        appearance: {
-          mode: "auto",
-        },
+        appearance: { mode: 'auto' },
         wallet: {
-          display: "modal",
-          preference: "all",
+          display: 'app', 
+          preference: 'none',
         },
       }}
       miniKit={{
         enabled: true,
         autoConnect: true,
         notificationProxyUrl: undefined,
-      }}>
-    <WagmiProvider config={wagmiAdapter.wagmiConfig as Config} initialState={initialState}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </WagmiProvider>
+      }}
+    >
+      <WagmiProvider config={wagmiAdapter.wagmiConfig as Config} initialState={initialState}>
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      </WagmiProvider>
     </OnchainKitProvider>
-  )
+  );
 }
 
-export default ContextProvider
+export default ContextProvider;
