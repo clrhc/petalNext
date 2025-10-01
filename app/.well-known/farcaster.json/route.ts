@@ -7,10 +7,10 @@ return Object.fromEntries(
 export async function GET() {
 const URL = 'https://petal.wtf' as string;
 return Response.json({
-   "accountAssociation": {
-    "header": "eyJmaWQiOjI5MzE5NCwidHlwZSI6ImF1dGgiLCJrZXkiOiIweDY4Yjk3RDg5ODk0OUE2NzgxZDc3OUU0Y0U1NEVDRjQyQTJhM2NCNWQifQ",
-    "payload": "eyJkb21haW4iOiIifQ",
-    "signature": "DoUssDrbzR1HEYW4Y8EIlBF7jeKyZEcaDowwlr9pKF8qxMul5t1jE6F6AkWt+H420xYKOucS3qSBYfs+RqNBSRw="
+     "accountAssociation": {
+    "header": "eyJmaWQiOjI5MzE5NCwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweEI1MzFERENDMUZjRjk4QkM4M0ZhMTc0OGZCZDdCNTI5QTZFMTc3Y2MifQ",
+    "payload": "eyJkb21haW4iOiJwZXRhbC53dGYifQ",
+    "signature": "MHhkZTE5MGIzZDM1OWRlNjA2NDc0MWEwMTkxNDA0NTNjYmRkZjNmNDRkMDQxODdjOTBjNTExNDY1NzdmMTY1MGJhMDQ2ZTY0NjZiY2QyNWY2MWEzY2RhNWNlZTE1ZDNmOGFiZGI1YjIwNjlmNDhhY2YyYjNmNWM0OWNkMjgwYWIwNTFj"
   },
    "baseBuilder": {
     "allowedAddresses": ["0x0870dF064d160f40c8F6c966dCa25db9326b23F4"],
