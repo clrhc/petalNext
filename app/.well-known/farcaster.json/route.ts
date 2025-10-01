@@ -7,13 +7,13 @@ return Object.fromEntries(
 export async function GET() {
 const URL = 'https://petal.wtf' as string;
 return Response.json({
-     "accountAssociation": {
-    "header": "",
-    "payload": "",
-    "signature": ""
+    "accountAssociation": {
+    "header": "eyJmaWQiOjI5MzE5NCwidHlwZSI6ImF1dGgiLCJrZXkiOiIweDY4Yjk3RDg5ODk0OUE2NzgxZDc3OUU0Y0U1NEVDRjQyQTJhM2NCNWQifQ",
+    "payload": "eyJkb21haW4iOiJwZXRhbC53dGYifQ",
+    "signature": "MkOBH0JNqtwLM6h/CQlq2GpFp5LgnDIEGacEaEKm9s0DTIMkaoutuO6HHYNlcyp0pkFHmxt7xjp0KtbuVQkAHhs="
   },
    "baseBuilder": {
-    "allowedAddresses": [""],
+    "allowedAddresses": ["0x0870dF064d160f40c8F6c966dCa25db9326b23F4"],
   },
   "miniapp": {
     "name": "Petal Finance",
