@@ -245,14 +245,14 @@ return (
   style={{
     display: Number(userBid?.roundId) === 0 ? 'inline-block' : 'none'
   }}
-> <span style={{ display: 'flex', justifyContent: 'space-between', width: '50%', margin: '0 auto' }}>
+> <span style={{ display: 'flex', justifyContent: 'space-between', width: '60%', margin: '0 auto' }}>
       <div className="ethPrice">
         <span><p>PREVIOUS</p><p>PRICE</p></span>
-        <span><h2>{Number(ethers.formatUnits(String(previousAnswer), 8)).toFixed(2)}</h2></span>
+        <span><h2>{Number(ethers.formatUnits(String(previousAnswer), 8)).toFixed(3)}</h2></span>
       </div>
       <div className="ethPrice">
         <span><p>CURRENT</p><p>PRICE</p></span>
-        <span><h2>{Number(ethers.formatUnits(String(answer), 8)).toFixed(2)}</h2></span>
+        <span><h2>{Number(ethers.formatUnits(String(answer), 8)).toFixed(3)}</h2></span>
       </div>
     </span>
 
@@ -341,12 +341,12 @@ return (
           </div>
           <div className="bidPrice">
             <span><p>BID PRICE</p></span>
-            <span><h2>{Number(ethers.formatUnits(String(userBid.priceBid), 8)).toFixed(2)}</h2></span>
+            <span><h2>{Number(ethers.formatUnits(String(userBid.priceBid), 8)).toFixed(3)}</h2></span>
           </div>
           <div className="bidPrice">
             <span><p>RESULT</p></span>
             <span>
-              <h2>{checkBid === 0 ? 'PENDING' : Number(ethers.formatUnits(String(roundAnswer), 8)).toFixed(2)}</h2>
+              <h2>{checkBid === 0 ? 'PENDING' : Number(ethers.formatUnits(String(roundAnswer), 8)).toFixed(3)}</h2>
             </span>
           </div>
         </span>
