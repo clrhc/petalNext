@@ -8,12 +8,12 @@ export async function GET() {
 const URL = 'https://petal.wtf' as string;
 return Response.json({
      "accountAssociation": {
-    "header": "eyJmaWQiOjI5MzE5NCwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweEI1MzFERENDMUZjRjk4QkM4M0ZhMTc0OGZCZDdCNTI5QTZFMTc3Y2MifQ",
-    "payload": "eyJkb21haW4iOiJwZXRhbC53dGYifQ",
-    "signature": "MHhkZTE5MGIzZDM1OWRlNjA2NDc0MWEwMTkxNDA0NTNjYmRkZjNmNDRkMDQxODdjOTBjNTExNDY1NzdmMTY1MGJhMDQ2ZTY0NjZiY2QyNWY2MWEzY2RhNWNlZTE1ZDNmOGFiZGI1YjIwNjlmNDhhY2YyYjNmNWM0OWNkMjgwYWIwNTFj"
+    "header": "",
+    "payload": "",
+    "signature": ""
   },
    "baseBuilder": {
-    "allowedAddresses": ["0x0870dF064d160f40c8F6c966dCa25db9326b23F4"],
+    "allowedAddresses": [""],
   },
   "miniapp": {
     "name": "Petal Finance",
