@@ -27,10 +27,15 @@ const metadata = {
   projectId,
   networks: [base],
   defaultNetwork: base,
-  metadata: metadata,
-  features: {
-    analytics: true // Optional - defaults to your Cloud configuration
-  }
+  metadata,
+  features: { analytics: true },
+
+  featuredWalletIds: [
+    // Coinbase
+    'fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa',
+    // Farcaster
+    '99a71c7a80284d5c59f5f39562fda701c1b60e6d60a8167db88c8af2cf453fd0'
+  ]
 });
 
 function ContextProvider({ children, cookies }: { children: ReactNode; cookies: string | null }) {
