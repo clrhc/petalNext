@@ -26,7 +26,7 @@ export default function Home() {
     }, []);
 
   const {open} = useAppKit();
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const [isMobile, setIsMobile] = useState(false);
   const [tab, setTab] = useState(0);
 
