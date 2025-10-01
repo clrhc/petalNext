@@ -22,8 +22,10 @@ import { sdk } from '@farcaster/miniapp-sdk';
 export default function Home() {
 
     useEffect(() => {
-        sdk.actions.ready();
-    }, []);
+  (async () => {
+    await sdk.actions.ready();
+  })();
+}, []);
 
   const {open} = useAppKit();
   const { isConnected } = useAccount();
