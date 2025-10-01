@@ -39,12 +39,11 @@ function ContextProvider({ children, cookies }: { children: ReactNode; cookies: 
       apiKey="L9RknrEp7oeLfKo8ZPBTEdYFiOMiqjHm"
       chain={base}
       config={{
-        appearance: { mode: 'auto' },
-        wallet: {
-          display: 'app', 
-          preference: 'none',
-        },
-      }}
+      appearance: { mode: 'auto' },
+      wallet: {
+      display: 'classic',
+     },
+    }}
       miniKit={{
         enabled: true,
         autoConnect: true,
