@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, Source_Code_Pro } from "next/font/google";
+import { Inter } from "next/font/google";
 import { SafeArea } from "@coinbase/onchainkit/minikit";
 import './globals.css';
-
-const inter = Inter({ subsets: ['latin'] });
-
 import { headers } from 'next/headers';
 import ContextProvider from './context';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export async function generateMetadata(): Promise<Metadata> {
     return {
