@@ -17,20 +17,22 @@ import x from './assets/img/x.webp';
 import etherscan from './assets/img/etherscan.png';
 import magiceden from './assets/img/magiceden.png';
 import discord from './assets/img/discord.webp';
-import { sdk } from '@farcaster/miniapp-sdk';
+import { useMiniKit } from "@coinbase/onchainkit/minikit";
 
 export default function Home() {
 
-    useEffect(() => {
-  (async () => {
-    await sdk.actions.ready();
-  })();
-}, []);
-
   const {open} = useAppKit();
+  const { isFrameReady, setFrameReady, context } = useMiniKit();
   const { isConnected } = useAccount();
   const [isMobile, setIsMobile] = useState(false);
   const [tab, setTab] = useState(0);
+
+  // Initialize the  miniapp
+  useEffect(() => {
+    if (!isFrameReady) {
+      setFrameReady();
+    }
+  }, [setFrameReady, isFrameReady]);
 
    useEffect(() => {
     const handleResize = () => {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Inter } from 'next/font/google';
+import { Inter, Source_Code_Pro } from "next/font/google";
+import { SafeArea } from "@coinbase/onchainkit/minikit";
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -9,8 +10,10 @@ import ContextProvider from './context';
 
 export async function generateMetadata(): Promise<Metadata> {
     return {
+        title: 'Petal Finance',
+        description: 'V2 DeFi and Meme Markets',
         other: {
-        'fc:miniapp': JSON.stringify({
+        'fc:frame': JSON.stringify({
             version: 'next',
             imageUrl: 'https://i.imgur.com/6fsw46l.png',
             button: {
@@ -52,10 +55,12 @@ export default async function RootLayout({
   const cookies = headersObj.get('cookie');
 
   return (
+    <ContextProvider cookies={cookies}>
     <html lang="en">
       <body className={inter.className}>
-        <ContextProvider cookies={cookies}>{children}</ContextProvider>
+        <SafeArea>{children}</SafeArea>
       </body>
     </html>
+    </ContextProvider>
   )
 }
