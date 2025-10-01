@@ -1,10 +1,13 @@
 export const minikitConfig = {
   accountAssociation: {
-    header: "",
-    payload: "",
-    signature: ""
+    header: "eyJmaWQiOjI5MzE5NCwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweEI1MzFERENDMUZjRjk4QkM4M0ZhMTc0OGZCZDdCNTI5QTZFMTc3Y2MifQ",
+    payload: "eyJkb21haW4iOiJwZXRhbC53dGYifQ",
+    signature: "MHhkZTE5MGIzZDM1OWRlNjA2NDc0MWEwMTkxNDA0NTNjYmRkZjNmNDRkMDQxODdjOTBjNTExNDY1NzdmMTY1MGJhMDQ2ZTY0NjZiY2QyNWY2MWEzY2RhNWNlZTE1ZDNmOGFiZGI1YjIwNjlmNDhhY2YyYjNmNWM0OWNkMjgwYWIwNTFj"
   },
-  "miniapp": {
+  baseBuilder: {
+    allowedAddresses: ["0x0870dF064d160f40c8F6c966dCa25db9326b23F4","0xB1fadDeca6cBCCD536355a4eFe0E2d5517a1F04F"],
+  },
+  miniapp: {
     version: "1",
     name: "Petal Finance",
     iconUrl: "https://i.imgur.com/cOl0Utj.png",
