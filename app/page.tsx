@@ -30,8 +30,6 @@ export default function Home() {
   const [isMobile, setIsMobile] = useState(false);
   const [tab, setTab] = useState(0);
 
-
-
    useEffect(() => {
     const handleResize = () => {
       const screenWidth = window.innerWidth;
@@ -53,7 +51,6 @@ export default function Home() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
 
 	return(
 	<>
