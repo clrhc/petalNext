@@ -23,14 +23,14 @@ import { sdk } from '@farcaster/miniapp-sdk';
 
 export default function Home() {
 
+    useEffect(() => {
+        sdk.actions.ready();
+    }, []);
+
   const {open} = useAppKit();
   const { isConnected } = useAccount();
   const [isMobile, setIsMobile] = useState(false);
   const [tab, setTab] = useState(0);
-
-   useEffect(() => {
-        sdk.actions.ready();
-    }, []);
 
 
    useEffect(() => {

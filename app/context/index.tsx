@@ -1,5 +1,4 @@
 'use client'; 
-import { MiniKitProvider } from '@coinbase/onchainkit/minikit';
 import { wagmiAdapter, projectId } from '../config';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createAppKit } from '@reown/appkit/react';
@@ -38,14 +37,10 @@ function ContextProvider({ children, cookies }: { children: ReactNode; cookies: 
   const initialState = cookieToInitialState(wagmiAdapter.wagmiConfig as Config, cookies)
 
   return (
-     <MiniKitProvider
-      apiKey={'ea0c4849-d9fa-4333-9121-64c72395cfb4'}
-      chain={base}
-    >
+
     <WagmiProvider config={wagmiAdapter.wagmiConfig as Config} initialState={initialState}>
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </WagmiProvider>
-    </MiniKitProvider>
   )
 }
 
