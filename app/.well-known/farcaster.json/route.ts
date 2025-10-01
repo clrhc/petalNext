@@ -9,8 +9,8 @@ const URL = 'https://petal.wtf' as string;
 return Response.json({
   "accountAssociation": {
     "header": "eyJmaWQiOjI5MzE5NCwidHlwZSI6ImF1dGgiLCJrZXkiOiIweDY4Yjk3RDg5ODk0OUE2NzgxZDc3OUU0Y0U1NEVDRjQyQTJhM2NCNWQifQ",
-    "payload": "eyJkb21haW4iOiIifQ",
-    "signature": "DoUssDrbzR1HEYW4Y8EIlBF7jeKyZEcaDowwlr9pKF8qxMul5t1jE6F6AkWt+H420xYKOucS3qSBYfs+RqNBSRw="
+    "payload": "eyJkb21haW4iOiJwZXRhbC53dGYifQ",
+    "signature": "MkOBH0JNqtwLM6h/CQlq2GpFp5LgnDIEGacEaEKm9s0DTIMkaoutuO6HHYNlcyp0pkFHmxt7xjp0KtbuVQkAHhs="
   },
    "baseBuilder": {
     "allowedAddresses": ["0x0870dF064d160f40c8F6c966dCa25db9326b23F4"],

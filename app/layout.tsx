@@ -37,14 +37,6 @@ export async function generateMetadata(): Promise<Metadata> {
                 },
             },
         }),
-         'baseBuilder': JSON.stringify({
-          allowedAddresses: ["0x0870dF064d160f40c8F6c966dCa25db9326b23F4"],
-        }),
-         'accountAssociation': JSON.stringify({
-          header: "eyJmaWQiOjI5MzE5NCwidHlwZSI6ImF1dGgiLCJrZXkiOiIweDY4Yjk3RDg5ODk0OUE2NzgxZDc3OUU0Y0U1NEVDRjQyQTJhM2NCNWQifQ",
-          payload: "eyJkb21haW4iOiIifQ",
-          signature: "DoUssDrbzR1HEYW4Y8EIlBF7jeKyZEcaDowwlr9pKF8qxMul5t1jE6F6AkWt+H420xYKOucS3qSBYfs+RqNBSRw="
-        }),
         },
     };
     }
