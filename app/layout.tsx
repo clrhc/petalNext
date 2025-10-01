@@ -10,6 +10,36 @@ export async function generateMetadata(): Promise<Metadata> {
     return {
         title: 'Petal Finance',
         description: 'V2 DeFi and Meme Markets',
+        icons: {
+    icon: [
+    { url: "/favicon.ico" },
+    ],
+    shortcut: [{ url: "/logo16.png" },{ url: "/logo32.png" },],
+    apple: [{ url: "/logo.png" },],
+    other: [{ rel: "android-chrome", url: "/logo192.png" },{ rel: "android-chrome", url: "/logo512.png" },],
+    },
+    openGraph: {
+    title: "Petal Finance",
+    description: "Gamified DeFi, bonding curves, XP rewards & more 🌸",
+    url: "https://www.petal.wtf",
+    siteName: "Petal Finance",
+    images: [
+      {
+        url: "/thumbnail.png",
+        width: 1200,
+        height: 627,
+        alt: "Petal Finance",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Petal Finance",
+    description: "Gamified DeFi, bonding curves, XP rewards & more 🌸",
+    images: ["/thumbnail.png"],
+  },
         other: {
         'fc:frame': JSON.stringify({
             version: 'next',
@@ -18,23 +48,7 @@ export async function generateMetadata(): Promise<Metadata> {
                 title: `Petal Finance`,
                 action: {
                     type: 'launch_miniapp',
-                    name: 'Petal Finance',
-                    url: 'https://petal.wtf',
-                    iconUrl: "https://i.imgur.com/cOl0Utj.png",
-                    splashImageUrl: 'https://i.imgur.com/pYoZQlK.png',
-                    splashBackgroundColor: '#1e534c',
-                    subtitle: "Register Now for Free Rewards!",
-                    description: "V2 DeFi and Meme Markets",
-                    homeUrl: "https://petal.wtf",
-                    buttonTitle: "Register Now for Free Rewards!",
-                    screenshotUrls: ["https://i.imgur.com/7DgS91f.png"],
-                    primaryCategory: "finance",
-                    tags: ["miniapp","baseapp","defi"],
-                    heroImageUrl: "https://i.imgur.com/cOl0Utj.png",
-                    tagline: "Register Now for Free Rewards!",
-                    ogTitle: "Petal Finance",
-                    ogDescription: "Register Now for Free Rewards!",
-                    ogImageUrl: "https://i.imgur.com/6fsw46l.png"
+                    name: 'Launch Petal Finance',
                 },
             },
         }),

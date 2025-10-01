@@ -15,6 +15,7 @@ export const minikitConfig = {
     imageUrl: "https://i.imgur.com/6fsw46l.png",
     buttonTitle: "Register Now for Free Rewards!",
     splashImageUrl: "https://i.imgur.com/pYoZQlK.png",
+    webhookUrl: "https://petal.wtf/api/webhook",
     splashBackgroundColor: "#1e534c",
     subtitle: "Register Now for Free Rewards!",
     description: "V2 DeFi and Meme Markets",
@@ -31,7 +32,8 @@ export const minikitConfig = {
     tagline: "Register Now for Free Rewards!",
     ogTitle: "Petal Finance",
     ogDescription: "Register Now for Free Rewards!",
-    ogImageUrl: "https://i.imgur.com/6fsw46l.png"
+    ogImageUrl: "https://i.imgur.com/6fsw46l.png",
+    noindex: false,
   },
 } as const;
 
