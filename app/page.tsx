@@ -19,8 +19,6 @@ import magiceden from './assets/img/magiceden.png';
 import discord from './assets/img/discord.webp';
 import { sdk } from '@farcaster/miniapp-sdk';
 
-
-
 export default function Home() {
 
     useEffect(() => {
@@ -31,6 +29,7 @@ export default function Home() {
   const { isConnected } = useAccount();
   const [isMobile, setIsMobile] = useState(false);
   const [tab, setTab] = useState(0);
+
 
 
    useEffect(() => {
@@ -54,6 +53,7 @@ export default function Home() {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
 
 	return(
 	<>
