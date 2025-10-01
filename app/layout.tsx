@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { SafeArea } from "@coinbase/onchainkit/minikit";
 import './globals.css';
 import { headers } from 'next/headers';
 import ContextProvider from './context';
@@ -57,7 +56,7 @@ export default async function RootLayout({
     <ContextProvider cookies={cookies}>
     <html lang="en">
       <body className={inter.className}>
-        <SafeArea>{children}</SafeArea>
+        {children}
       </body>
     </html>
     </ContextProvider>
