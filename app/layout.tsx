@@ -45,10 +45,10 @@ export async function generateMetadata(): Promise<Metadata> {
             version: 'next',
             imageUrl: 'https://i.imgur.com/6fsw46l.png',
             button: {
-                title: `Petal Finance`,
+                title: `Launch Petal Finance`,
                 action: {
                     type: 'launch_miniapp',
-                    name: 'Launch Petal Finance',
+                    name: 'Petal Finance',
                     url: 'https://petal.wtf',
                     splashImageUrl: "https://i.imgur.com/pYoZQlK.png",
                     splashBackgroundColor: "#1e534c",
