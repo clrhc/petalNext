@@ -34,13 +34,13 @@ export default function PredCoins({contractAddress, dataFeedAddress}: { contract
   const { writeContract } = useWriteContract();
   const provider = new ethers.JsonRpcProvider(
   'https://base-mainnet.public.blastapi.io',
-  { chainId: 8453, name: 'base' }   // <— key bit
+  { chainId: 8453, name: 'base' }  
   );
 
 useEffect(() => {
   if (!isConnected || !address) return;
 
-  // ---- Types & Guards (no `any`) ----
+
   type ChainlinkRoundData = readonly [
     bigint, // roundId
     bigint, // answer
@@ -86,7 +86,7 @@ useEffect(() => {
     running = true;
 
     try {
-      // Primary batch (allowFailure=true so we can selectively apply only successes)
+      
       const primary = await readContracts(config, {
         contracts: [
           {
@@ -120,7 +120,7 @@ useEffect(() => {
         allowFailure: true,
       });
 
-      // Pull out results only if they succeeded
+ 
       const checkBid_ok  = primary[0]?.status === 'success';
       const userBid_ok   = primary[1]?.status === 'success';
       const epoch_ok     = primary[2]?.status === 'success';
@@ -133,7 +133,7 @@ useEffect(() => {
       const answer_   = answer_ok   ? (primary[3].result as bigint) : 0n;
       const round_    = round_ok    ? (primary[4].result as bigint) : 0n;
 
-      // Optional: wallet balance (only set if provider & success)
+   
       try {
       
         if (typeof provider?.getBalance === 'function') {
@@ -142,7 +142,7 @@ useEffect(() => {
         }
       } catch {}
 
-      // Follow-up read depending on whether user has a bid
+   
       if (checkBid_ok && checkBid_ > 0n && userBid_ok && epoch_ok) {
         const targetRoundId = userBid_![0] + epoch_;
         const follow = await readContracts(config, {
@@ -183,7 +183,7 @@ useEffect(() => {
         }
       }
 
-      // Push UI state only from successful reads
+    
       if (checkBid_ok) setCheckBid(Number(checkBid_));
       if (userBid_ok && userBid_) {
         setUserBid({
@@ -197,16 +197,16 @@ useEffect(() => {
       if (epoch_ok)  setEpoch(Number(epoch_));
       if (answer_ok) setAnswer(Number(answer_));
     } catch {
-      // swallow; we only set state on successes above
+  
     } finally {
       running = false;
     }
   };
 
-  // initial load
+
   void init();
 
-  // re-run on every new block
+
   unwatch = watchBlockNumber(config, {
     onBlockNumber: () => { void init(); },
     onError: () => {},

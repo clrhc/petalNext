@@ -24,7 +24,7 @@ import xpCoin from '../assets/img/xpCoin.png';
   if (!isConnected || !address) return;
 
   let unwatch: (() => void) | null = null;
-  let running = false; // prevent overlapping calls
+  let running = false;
 
   const init = async () => {
     if (running) return;
@@ -39,7 +39,7 @@ import xpCoin from '../assets/img/xpCoin.png';
             args: [address as Address],
           },
         ],
-        allowFailure: false, // returns raw decoded values
+        allowFailure: false, 
       });
 
       const userInfo_ = data[0] as [bigint, bigint, string, string];
@@ -52,27 +52,22 @@ import xpCoin from '../assets/img/xpCoin.png';
         String(address),
       ]);
     } catch {
-      // optional: console.error(err);
     } finally {
       running = false;
     }
   };
 
-  // initial load
+
   void init();
 
-  // refresh on every new block
+
   unwatch = watchBlockNumber(config, {
     onBlockNumber: () => {
       void init();
     },
     onError: () => {},
-    // If you want polling instead of WS, uncomment:
-    // poll: true,
-    // pollingInterval: 4000,
   });
 
-  // cleanup
   return () => {
     if (unwatch) unwatch();
   };

@@ -41,13 +41,10 @@ export default function Home() {
       }
     };
 
-    // Set the initial value based on the current window size
     handleResize();
 
-    // Add the event listener
     window.addEventListener("resize", handleResize);
 
-    // Clean up the event listener when the component is unmounted
     return () => {
       window.removeEventListener("resize", handleResize);
     };

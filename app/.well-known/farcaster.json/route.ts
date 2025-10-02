@@ -41,7 +41,7 @@ export async function GET() {
       ogTitle: "Petal Finance",
       ogDescription: "Register Now for Free Rewards!",
       ogImageUrl: "https://i.imgur.com/6fsw46l.png",
-      noindex: "false", // keep as string to satisfy helper type
+      noindex: "false",
     },
   });
 }

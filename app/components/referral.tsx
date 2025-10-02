@@ -28,7 +28,7 @@ export default function ReferralComponent() {
   if (!isConnected || !address) return;
 
   let unwatch: (() => void) | null = null;
-  let running = false; // avoid overlapping calls
+  let running = false; 
 
   const ZERO = '0x0000000000000000000000000000000000000000' as const;
   const userRefKey = String(userRef ?? '').toLowerCase();
@@ -60,7 +60,7 @@ export default function ReferralComponent() {
             args: [newRefKey],
           },
         ],
-        allowFailure: false, // returns raw decoded values
+        allowFailure: false, 
       });
 
       const [userInfoRaw, checkUserRefAddr, checkNewRefAddr] = data as [
@@ -80,26 +80,17 @@ export default function ReferralComponent() {
       setUserCheck(checkUserRefAddr.toLowerCase() !== ZERO);
       setNewCheck(checkNewRefAddr.toLowerCase() !== ZERO);
     } catch {
-      // optional: console.error(err);
     } finally {
       running = false;
     }
   };
 
-  // initial load
   void init();
 
-  // refetch on every new block (no `listen` in @wagmi/core)
   unwatch = watchBlockNumber(config, {
     onBlockNumber: () => { void init(); },
-    // optional:
-    // emitMissed: true,
-    // emitOnBegin: false,
-    // poll: true,
-    // pollingInterval: 4000,
   });
 
-  // cleanup
   return () => {
     if (unwatch) unwatch();
   };
@@ -108,8 +99,8 @@ export default function ReferralComponent() {
   address,
   config,
   Data.referralAddress,
-  userRef,   // re-run when user types a different ref
-  newRef,    // re-run when newRef changes
+  userRef,  
+  newRef,  
 ]);
 
 

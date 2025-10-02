@@ -92,7 +92,6 @@ useEffect(() => {
             args: [tokenAddress as Address, Data.petalFactory as Address],
           },
         ],
-        // keep false: throw if any call fails; nothing gets set on failure
         allowFailure: false,
       });
 
@@ -114,29 +113,23 @@ useEffect(() => {
         Address         // pair address
       ];
 
-      // ---- Only set when valid ----
-      // balances/allowances are fine to set directly
       setWeedBalance(weedBalance_);
       setTokenBalance(tokenBalance_);
       setWeedAllowance(Number(weedAllowance_));
       setTokenAllowance(Number(tokenAllowance_));
 
-      // price: only commit if > 0 (raw wei WEED per 1 token)
       if (tokenPriceTuple_?.[1] && tokenPriceTuple_[1] > 0n) {
         setTokenPrice(Number(tokenPriceTuple_[1]));
       }
 
-      // name: only if non-empty
       if (tokenName_ && tokenName_.length > 0) {
         setTokenName(tokenName_);
       }
 
-      // pair: only if not zero address
       if (tokenPair_ && tokenPair_.toLowerCase() !== '0x0000000000000000000000000000000000000000') {
         setTokenPair(String(tokenPair_));
       }
     } catch {
-      // silent: nothing gets set on failure
     } finally {
       running = false;
     }
@@ -241,10 +234,8 @@ useEffect(() => {
     const isDot = e.key === ".";
     const nav = ["Backspace","Delete","ArrowLeft","ArrowRight","Tab"].includes(e.key);
 
-    // keep "0." if first key is dot
     if (isDot && (slippageText === "0" || slippageText === "")) return;
 
-    // replace leading 0 if first key is 1–9
     if (isNonZero && slippageText === "0") {
       e.preventDefault();
       setSlippageText(e.key);
@@ -252,7 +243,6 @@ useEffect(() => {
       return;
     }
 
-    // block extra leading zero (avoid "00.1")
     if (e.key === "0" && slippageText === "0") { e.preventDefault(); return; }
 
     if (!isDigit && !isDot && !nav) e.preventDefault();

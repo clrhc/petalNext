@@ -2,7 +2,6 @@ import { http, createConfig } from 'wagmi';
 import { base } from 'wagmi/chains';
 import { injected } from 'wagmi/connectors';
 
-// Create the Wagmi config
 export const config = createConfig({
   chains: [base],
   connectors: [injected()],

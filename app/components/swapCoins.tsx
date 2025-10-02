@@ -96,7 +96,6 @@ useEffect(() => {
         allowFailure: true,
       });
 
-      // ✅ Only use results if status === 'success'
       const tokenBalance_ =
         data[0]?.status === "success" ? (data[0].result as bigint) : 0n;
       const tokenLaunched_ =
@@ -114,7 +113,6 @@ useEffect(() => {
           ? (data[6].result as readonly bigint[])
           : [];
 
-      // ✅ Safely extract curve values only if curve call succeeded
       let spot = 0n;
       let ethIn = 0n;
       if (curveRaw && Array.isArray(curveRaw) && curveRaw.length >= 7) {
@@ -127,13 +125,11 @@ useEffect(() => {
       setTokenLaunched(tokenLaunched_);
 
       if (tokenLaunched_) {
-        // ✅ Only set tokenPrice if router result succeeded and > 0
         if (amounts?.[1] && amounts[1] > 0n) {
           setTokenPrice(Number(amounts[1]));
         }
         setTokenAllowance(Number(tokenRouterAllowance_));
       } else {
-        // ✅ Only set tokenPrice if spot result succeeded and > 0
         if (spot > 0n) {
           setTokenPrice(Number(spot));
         }

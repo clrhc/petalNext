@@ -22,7 +22,7 @@ useEffect(() => {
   if (!isConnected || !address) return;
 
   let unwatch: (() => void) | null = null;
-  let running = false; // prevent overlapping calls
+  let running = false; 
 
   const init = async () => {
     if (running) return;
@@ -51,26 +51,17 @@ useEffect(() => {
       setNftBalance(Number(nftBalance_));
       setRewardsAvailable(Number(rewards_));
     } catch {
-      // optional: console.error(err);
     } finally {
       running = false;
     }
   };
 
-  // initial load
   void init();
 
-  // re-run on every new block (@wagmi/core watchBlockNumber has no `listen` option)
   unwatch = watchBlockNumber(config, {
     onBlockNumber: () => { void init(); },
-    // optional:
-    // emitMissed: true,
-    // emitOnBegin: false,
-    // poll: true,
-    // pollingInterval: 4000,
   });
 
-  // cleanup
   return () => {
     if (unwatch) unwatch();
   };

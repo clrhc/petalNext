@@ -61,20 +61,15 @@ export default function CoinInfo(){
     }
   }
 
-  // Run once on mount
+
   void init();
 
-  // Subscribe to new blocks and re-run
+
   unsub = watchBlockNumber(config, {
     onBlockNumber: () => { void init(); },
-    // optional:
-    // emitOnBegin: false,
-    // emitMissed: true,
-    // poll: false, // set true if you want polling instead of websocket
-    // pollingInterval: 4_000,
   });
 
-  // Cleanup on unmount
+
   return () => {
     if (unsub) unsub();
   };
