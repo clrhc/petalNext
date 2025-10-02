@@ -1,19 +1,21 @@
-function withValidProperties(properties: Record<string, undefined | string | string[]>) {
+function withValidProperties<T extends Record<string, any>>(properties: T): Partial<T> {
   return Object.fromEntries(
-    Object.entries(properties).filter(([_, value]) =>
-      Array.isArray(value) ? value.length > 0 : !!value
-    )
-  );
+    Object.entries(properties).filter(([_, value]) => {
+      if (Array.isArray(value)) return value.length > 0;
+      if (value === undefined || value === null || value === "") return false;
+      return true;
+    })
+  ) as Partial<T>;
 }
 
 export async function GET() {
   return Response.json(
     withValidProperties({
-      accountAssociation: {
+      accountAssociation: withValidProperties({
         header: process.env.ACCOUNT_ASSOC_HEADER,
         payload: process.env.ACCOUNT_ASSOC_PAYLOAD,
         signature: process.env.ACCOUNT_ASSOC_SIGNATURE,
-      },
+      }),
       baseBuilder: {
         allowedAddresses: [
           "0x0870dF064d160f40c8F6c966dCa25db9326b23F4",
