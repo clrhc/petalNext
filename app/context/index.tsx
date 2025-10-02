@@ -36,7 +36,7 @@ function ContextProvider({ children, cookies }: { children: ReactNode; cookies: 
 
   return (
     <OnchainKitProvider
-      apiKey="L9RknrEp7oeLfKo8ZPBTEdYFiOMiqjHm"
+      apiKey={process.env.ONCHAINKIT_API_KEY}
       chain={base}
       config={{
       appearance: { mode: 'auto' },
