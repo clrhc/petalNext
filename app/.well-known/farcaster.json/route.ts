@@ -1,13 +1,7 @@
-function withValidProperties(properties: Record<string, undefined | string | string[]>) {
-return Object.fromEntries(
-    Object.entries(properties).filter(([_, value]) => (Array.isArray(value) ? value.length > 0 : !!value))
-);
-}
-
 export async function GET() {
-  const HEADER = process.env.ACCOUNT_ASSOC_HEADER as String;
-  const PAYLOAD = process.env.ACCOUNT_ASSOC_PAYLOAD as String;
-  const SIGNATURE = process.env.ACCOUNT_ASSOC_SIGNATURE as String;
+  const HEADER = process.env.ACCOUNT_ASSOC_HEADER as string;
+  const PAYLOAD = process.env.ACCOUNT_ASSOC_PAYLOAD as string;
+  const SIGNATURE = process.env.ACCOUNT_ASSOC_SIGNATURE as string;
 
   return Response.json({
     accountAssociation:
