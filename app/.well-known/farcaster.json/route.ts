@@ -11,6 +11,7 @@ export async function GET() {
       signature: SIGNATURE,},
     baseBuilder: {
       allowedAddresses: [
+        "0x17D1851694293826E23f8665f1EBa36c1FBC4EC9",
         "0x0870dF064d160f40c8F6c966dCa25db9326b23F4",
         "0xB1fadDeca6cBCCD536355a4eFe0E2d5517a1F04F",
       ],
