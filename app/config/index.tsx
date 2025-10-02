@@ -6,7 +6,7 @@ import { injected, coinbaseWallet } from 'wagmi/connectors'; // ⬅️ removed w
 import { base } from '@reown/appkit/networks';
 import type { CreateConnectorFn } from 'wagmi';
 
-export const projectId = process.env.REOWN_PROJECT_ID;
+export const projectId = process.env.REOWN_PROJECT_ID as string;
 if (!projectId) throw new Error('Project ID is not defined');
 
 export const networks = [base];
