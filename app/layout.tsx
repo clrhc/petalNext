@@ -41,7 +41,7 @@ export async function generateMetadata(): Promise<Metadata> {
     images: ["/thumbnail.png"],
   },
         other: {
-        'fc:frame': JSON.stringify({
+        'fc:miniapp': JSON.stringify({
             version: 'next',
             imageUrl: 'https://i.imgur.com/6fsw46l.png',
             button: {
@@ -49,6 +49,9 @@ export async function generateMetadata(): Promise<Metadata> {
                 action: {
                     type: 'launch_miniapp',
                     name: 'Launch Petal Finance',
+                    url: 'https://petal.wtf',
+                    splashImageUrl: "https://i.imgur.com/pYoZQlK.png",
+                    splashBackgroundColor: "#1e534c",
                 },
             },
         }),
