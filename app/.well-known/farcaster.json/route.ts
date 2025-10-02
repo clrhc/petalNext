@@ -1,32 +1,27 @@
-function withValidProperties(
-  properties: Record<string, undefined | string | string[]>
-) {
-  return Object.fromEntries(
-    Object.entries(properties).filter(([, value]) =>
-      Array.isArray(value) ? value.length > 0 : !!value
-    )
-  );
+function withValidProperties(properties: Record<string, undefined | string | string[]>) {
+return Object.fromEntries(
+    Object.entries(properties).filter(([_, value]) => (Array.isArray(value) ? value.length > 0 : !!value))
+);
 }
 
 export async function GET() {
-  // envs as consts
-  const HEADER = process.env.ACCOUNT_ASSOC_HEADER;
-  const PAYLOAD = process.env.ACCOUNT_ASSOC_PAYLOAD;
-  const SIGNATURE = process.env.ACCOUNT_ASSOC_SIGNATURE;
+  const HEADER = process.env.ACCOUNT_ASSOC_HEADER as String;
+  const PAYLOAD = process.env.ACCOUNT_ASSOC_PAYLOAD as String;
+  const SIGNATURE = process.env.ACCOUNT_ASSOC_SIGNATURE as String;
 
   return Response.json({
-    accountAssociation: withValidProperties({
+    accountAssociation:
+      {
       header: HEADER,
       payload: PAYLOAD,
-      signature: SIGNATURE,
-    }),
+      signature: SIGNATURE,},
     baseBuilder: {
       allowedAddresses: [
         "0x0870dF064d160f40c8F6c966dCa25db9326b23F4",
         "0xB1fadDeca6cBCCD536355a4eFe0E2d5517a1F04F",
       ],
     },
-    miniapp: withValidProperties({
+    miniapp: {
       version: "1",
       name: "Petal Finance",
       iconUrl: "https://i.imgur.com/cOl0Utj.png",
@@ -47,6 +42,6 @@ export async function GET() {
       ogDescription: "Register Now for Free Rewards!",
       ogImageUrl: "https://i.imgur.com/6fsw46l.png",
       noindex: "false", // keep as string to satisfy helper type
-    }),
+    },
   });
 }
