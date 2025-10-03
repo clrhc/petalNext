@@ -152,7 +152,7 @@ useEffect(() => {
         <h3>Public: {totalSupply} / 1000</h3>
         <div className="slidecontainer">
         {isConnected ? <>{claimed < 30 ? <><p>Mint Quantity</p>
-  <input type="range" min="1" max="30" className="slider" value={sliderValue} onChange={(e) => setSliderValue(e.target.value)} />
+  <input type="range" min={1} max={30} step={1} className="slider" value={sliderValue} onChange={(e) => setSliderValue(e.currentTarget.valueAsNumber)}/>
   <p>{sliderValue} {sliderValue < 2 ? <>Mint</>:<>Mints</>} for {Number(sliderValue * 0.004).toFixed(3)} ETH</p></>:<></>}
   {isPending ? <><p className="mintButton" style={{ backgroundImage: `url(${heartBG.src})` }}><Image alt="loading" width="30" src={loadingGif} /></p></>:<>{claimed < 30 ? <><p onClick={() => mintNFT()}className="mintButton" style={{ backgroundImage: `url(${heartBG.src})` }}>MINT</p></>:<><p>Mint Limit Reached For This Wallet</p></>}</>}
   {hash ? <><p className="txLink"><a href={'https://basescan.org/tx/'+String(hash)} target="_blank" rel="noopener noreferrer">YOUR MINT TRANSACTION CAN BE FOUND HERE</a></p></>:<></>}
