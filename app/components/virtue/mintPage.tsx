@@ -158,7 +158,7 @@ useEffect(() => {
   {hash ? <><p className="txLink"><a href={'https://basescan.org/tx/'+String(hash)} target="_blank" rel="noopener noreferrer">YOUR MINT TRANSACTION CAN BE FOUND HERE</a></p></>:<></>}
   {errorMade ? <><p className="errorText">YOUR TX MAY OF RAN OUT OF GAS OR BEEN CANCELLED</p></>:<></>}
   <p>You&apos;ve Claimed {claimed} of 30 For This Wallet</p>
-  <p>Balance: {userBalance} ETH</p>
+  <p>Balance: {userBalance.toFixed(4)} ETH</p>
 </>:<>
   <p className="mintButton" style={{ backgroundImage: `url(${heartBG.src})` }} onClick={() => open()}>CONNECT</p>
 </>}</div>
