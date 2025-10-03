@@ -1,8 +1,8 @@
 'use client';
-import '../globals.css';
+import '../../globals.css';
 import React,{useState} from 'react';
 import PredCoins from './predCoins';
-import Data from '../data.json';
+import Data from '../../data.json';
 
  export default function Predictions(){
 

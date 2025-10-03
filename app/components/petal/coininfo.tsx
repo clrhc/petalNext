@@ -1,13 +1,13 @@
 'use client';
-import '../globals.css';
+import '../../globals.css';
 import React,{useState, useEffect} from 'react';
 import {readContracts, watchBlockNumber} from '@wagmi/core';
 import {ethers} from 'ethers';
 import {Abi, Address, parseUnits} from 'viem';
-import Data from '../data.json';
-import factory from '../abis/factory.json';
-import uniswapRouter from '../abis/uniswapRouter.json';
-import {config} from './wagmiConfig';
+import Data from '../../data.json';
+import factory from '../../abis/factory.json';
+import uniswapRouter from '../../abis/uniswapRouter.json';
+import {config} from '../config/wagmiConfig';
 
 export default function CoinInfo(){
 

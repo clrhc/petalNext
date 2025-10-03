@@ -1,17 +1,17 @@
 'use client';
-import '../globals.css';
+import '../../globals.css';
 import Image from 'next/image';
 import React,{useState, useEffect} from 'react';
 import {readContracts, watchBlockNumber} from '@wagmi/core';
 import {Abi, Address} from 'viem';
 import {useAccount} from "wagmi";
-import {config} from './wagmiConfig';
+import {config} from '../config/wagmiConfig';
 import { useAppKit } from "@reown/appkit/react";
-import referral from '../abis/referral.json';
-import Wallet from '../wallet';
-import Data from '../data.json';
-import petalLogo from '../assets/img/petal.png';
-import xpCoin from '../assets/img/xpCoin.png';
+import referral from '../../abis/referral.json';
+import Wallet from '../../wallet';
+import Data from '../../data.json';
+import petalLogo from '../../assets/img/petal.png';
+import xpCoin from '../../assets/img/xpCoin.png';
 
   export default function NavBar(){
 

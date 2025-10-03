@@ -1,16 +1,16 @@
 'use client';
-import '../globals.css';
+import '../../globals.css';
 import React,{useState, useEffect} from 'react';
-import Data from '../data.json';
+import Data from '../../data.json';
 import {ethers} from 'ethers';
 import { readContracts, watchBlockNumber } from '@wagmi/core';
-import { config } from './wagmiConfig';
+import { config } from '../config/wagmiConfig';
 import {Abi, Address, parseUnits} from 'viem';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
-import factory from '../abis/factory.json';
-import token from '../abis/token.json';
-import uniswapRouter from '../abis/uniswapRouter.json';
-import uniswapFactory from '../abis/uniswapFactory.json';
+import factory from '../../abis/factory.json';
+import token from '../../abis/token.json';
+import uniswapRouter from '../../abis/uniswapRouter.json';
+import uniswapFactory from '../../abis/uniswapFactory.json';
 
 
 export default function SwapMemes({tokenAddress}: { tokenAddress: string; }) {

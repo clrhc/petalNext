@@ -1,13 +1,13 @@
 'use client';
-import '../globals.css';
+import '../../globals.css';
 import React,{useState, useEffect} from 'react';
 import {ethers} from 'ethers';
 import { readContracts, watchBlockNumber } from '@wagmi/core';
-import { config } from './wagmiConfig';
+import { config } from '../config/wagmiConfig';
 import {Abi, Address} from 'viem';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
-import prediction from '../abis/prediction.json';
-import dataFeed from '../abis/dataFeed.json';
+import prediction from '../../abis/prediction.json';
+import dataFeed from '../../abis/dataFeed.json';
 
 export default function PredCoins({contractAddress, dataFeedAddress}: { contractAddress: string; dataFeedAddress: string }){
 

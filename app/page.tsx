@@ -4,15 +4,18 @@ import Image from 'next/image';
 import React,{useState, useEffect} from 'react';
 import {useAccount} from "wagmi";
 import { useAppKit } from "@reown/appkit/react";
-import Referral from './components/referral';
+import Referral from './components/petal/referral';
 import Data from './data.json';
-import Swaps from './components/swaps';
-import Memes from './components/memes';
-import Predictions from './components/predictions';
-import Rewards from './components/rewards';
-import NavBar from './components/navbar';
-import CoinInfo from './components/coininfo';
+import Swaps from './components/petal/swaps';
+import Memes from './components/petal/memes';
+import Predictions from './components/petal/predictions';
+import Rewards from './components/petal/rewards';
+import NavBarPetal from './components/petal/navbar';
+import NavBarVirtue from './components/virtue/navbar';
+import MintPage from './components/virtue/mintPage';
+import CoinInfo from './components/petal/coininfo';
 import petalLogo from './assets/img/petal.png';
+import virtueLogo from './assets/img/virtue.png';
 import opensea from './assets/img/opensea.png';
 import x from './assets/img/x.webp';
 import etherscan from './assets/img/etherscan.png';
@@ -25,6 +28,7 @@ export default function Home() {
   const {open} = useAppKit();
   const { isConnected } = useAccount();
   const [isMobile, setIsMobile] = useState(false);
+  const [page, setPage] = useState(0);
   const [tab, setTab] = useState(0);
 
   useEffect(() => {
@@ -52,8 +56,10 @@ export default function Home() {
 
 	return(
 	<>
+    <div className="switcher"><Image onClick={() => setPage(0)} alt="petalLogo" width="40" className="pointer" src={petalLogo} /><br/><Image onClick={() => setPage(1)} alt="petalLogo" width="40" className="pointer"  src={virtueLogo} /></div>
+      <div className={`${page === 0 ? "bgClassPetal" : "bgClassVirtue"}`}>
       <header>
-      <NavBar />
+      {page === 0 && <><NavBarPetal />
   <div className="homeHeader">
     <span className="heading">
     <h2>WELCOME TO PETAL FINANCE</h2>
@@ -80,11 +86,16 @@ export default function Home() {
     <></>}
        {isMobile && <>
       <CoinInfo /></>}
-  </div>
+  </div></>}
+  {page === 1 && <>
+    <NavBarVirtue />
+    <MintPage />
+  </>}
       </header>
       <footer>
           <span className="community"><p className="socials"><a href="https://discord.gg/TeQkftUA64" target="_blank" rel="noopener noreferrer"><Image alt="opensea" width="25" src={discord} /></a><a href="https://opensea.io/collection/virtuesekai" target="_blank" rel="noopener noreferrer"><Image alt="opensea" width="25" src={opensea} /></a><a href="https://x.com/virtuedefi" target="_blank" rel="noopener noreferrer"><Image alt="x" width="25" src={x} /></a><a href={'https://basescan.org/address/'+String(Data.petalFactory)+'#code'} target="_blank" rel="noopener noreferrer"><Image alt="basescan" width="25" src={etherscan} /></a><a href="https://magiceden.io/collections/base/0xf7805f4f52f4d9c290280dd398ac2b8b9dde6df5" target="_blank" rel="noopener noreferrer"><Image alt="magiceden" width="25" src={magiceden} /></a></p></span>
       </footer>
+    </div>
 	</>	
 	);
 	}

@@ -1,14 +1,14 @@
 'use client';
-import '../globals.css';
+import '../../globals.css';
 import Image from 'next/image';
 import React,{useState, useEffect} from 'react';
-import Data from '../data.json';
+import Data from '../../data.json';
 import { readContracts, watchBlockNumber } from '@wagmi/core';
-import { config } from './wagmiConfig';
+import { config } from '../config/wagmiConfig';
 import {Abi, Address} from 'viem';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
-import referral from '../abis/referral.json';
-import xpCoin from '../assets/img/xpCoin.png';
+import referral from '../../abis/referral.json';
+import xpCoin from '../../assets/img/xpCoin.png';
 
 
 export default function ReferralComponent() {

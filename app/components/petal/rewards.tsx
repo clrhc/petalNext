@@ -1,13 +1,13 @@
 'use client';
-import '../globals.css';
+import '../../globals.css';
 import React,{useState, useEffect} from 'react';
-import Data from '../data.json';
+import Data from '../../data.json';
 import { readContracts, watchBlockNumber } from '@wagmi/core';
-import { config } from './wagmiConfig';
+import { config } from '../config/wagmiConfig';
 import {Abi, Address} from 'viem';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
-import rewards from '../abis/rewards.json';
-import nft from '../abis/nft.json';
+import rewards from '../../abis/rewards.json';
+import nft from '../../abis/nft.json';
 
  export default function Rewards(){
 
