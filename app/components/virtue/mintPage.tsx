@@ -8,7 +8,6 @@ import { useAppKit } from "@reown/appkit/react";
 import { readContracts, watchBlockNumber, getBalance } from '@wagmi/core';
 import { type Address, type Abi, formatUnits } from 'viem';
 import { config } from '../config/wagmiConfig';
-import Wallet from '../wallet/wallet.jsx';
 import nft from '../../abis/nft.json';
 import {useAccount, useChainId, useWriteContract} from "wagmi";
 import vDay from '../../assets/img/SekaiVDay.png';
@@ -19,12 +18,9 @@ import loadingGif from '../../assets/img/loading.gif';
 
   const {open} = useAppKit();
   const { address, isConnected } = useAccount();
-  const [loading, setLoading] = useState(0);
   const [totalSupply, setTotalSupply] = useState(0);
-  const [txMade, setTxMade] = useState(false);
   const [userBalance, setUserBalance] = useState(0);
   const [errorMade, setErrorMade] = useState(false);
-  const [hashTx, setHashTx] = useState('');
   const [mintLive, setMintLive] = useState(false);
   const [sliderValue, setSliderValue] = useState(3);
   const [claimed, setClaimed] = useState(0);
@@ -140,13 +136,13 @@ useEffect(() => {
     setErrorMade(false);
     if(networkId === baseId){
     try{
-     let tx = await writeContract({ 
+     await writeContract({ 
           address: Data.virtueNFT as Address,
           abi: nft.abi as Abi,
           functionName: 'paidMint',
           args: [sliderValue],
           value: ethers.parseUnits(String(0.004*sliderValue), 18),
-       });}catch(error){setErrorMade(true);};
+       });}catch(error){if(error){setErrorMade(true);}};
     }}
 
  return(
@@ -169,7 +165,7 @@ useEffect(() => {
   {isPending ? <><p className="mintButton" style={{ backgroundImage: `url(${heartBG.src})` }}><Image alt="loading" width="30" src={loadingGif} /></p></>:<>{claimed < 30 ? <><p onClick={() => mintNFT()}className="mintButton" style={{ backgroundImage: `url(${heartBG.src})` }}>MINT</p></>:<><p>Mint Limit Reached For This Wallet</p></>}</>}
   {hash ? <><p className="txLink"><a href={'https://basescan.org/tx/'+String(hash)} target="_blank" rel="noopener noreferrer">YOUR MINT TRANSACTION CAN BE FOUND HERE</a></p></>:<></>}
   {errorMade ? <><p className="errorText">YOUR TX MAY OF RAN OUT OF GAS OR BEEN CANCELLED</p></>:<></>}
-  <p>You've Claimed {claimed} of 30 For This Wallet</p>
+  <p>You&apos;ve Claimed {claimed} of 30 For This Wallet</p>
   <p>Balance: {userBalance} ETH</p>
 </>:<>
   <p className="mintButton" style={{ backgroundImage: `url(${heartBG.src})` }} onClick={() => open()}>CONNECT</p>
