@@ -90,7 +90,6 @@ useEffect(() => {
 
         const bal = await getBalance(config, {
           address: address as Address,
-          chainId: baseId,
         });
         const userEth = Number(formatUnits(bal.value, 18)).toFixed(4);
 
