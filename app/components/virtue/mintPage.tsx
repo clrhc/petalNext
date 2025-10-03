@@ -118,7 +118,6 @@ useEffect(() => {
   };
 }, [
   config,
-  baseId,
   Data.virtueNFT,       
   nft?.abi,             
   Boolean(isConnected),  
