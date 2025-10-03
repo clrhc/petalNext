@@ -1,7 +1,7 @@
 'use client';
 import './globals.css';
 import Image from 'next/image';
-import React,{useState, useEffect, useRef} from 'react';
+import React,{useState, useEffect} from 'react';
 import {useAccount} from "wagmi";
 import { useAppKit } from "@reown/appkit/react";
 import Referral from './components/petal/referral';
@@ -27,11 +27,10 @@ import {
   getAuth,
   setPersistence,
   browserLocalPersistence,
-  signInAnonymously,
-  onAuthStateChanged
+  signInAnonymously
 } from "firebase/auth";
 import { getAnalytics, isSupported } from "firebase/analytics";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
@@ -44,7 +43,6 @@ const firebaseConfig = {
 };
 
 const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
 export default function Home() {
 
