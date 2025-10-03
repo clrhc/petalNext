@@ -91,13 +91,13 @@ useEffect(() => {
         const bal = await getBalance(config, {
           address: address as Address,
         });
-        const userEth = Number(formatUnits(bal.value, 18)).toFixed(4);
+        const userEth = Number(formatUnits(bal.value, 18));
 
         setClaimed(claimsCount);
         setUserBalance(userEth);
       } else {
         setClaimed(0);
-        setUserBalance('0.0000');
+        setUserBalance(0);
       }
     } catch (err) {
       console.error('reads failed:', err);
