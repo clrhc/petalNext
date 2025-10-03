@@ -1,23 +1,33 @@
 import { NextResponse } from "next/server";
 import { getApps, initializeApp, cert } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
+import { getFirestore, Firestore } from "firebase-admin/firestore";
 
 export const runtime = "nodejs";
 
-// ✅ Initialize Admin SDK directly here
+// Initialize Admin SDK (server-only)
 if (!getApps().length) {
+  const projectId = process.env.FIREBASE_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  const privateKeyRaw = process.env.FIREBASE_PRIVATE_KEY;
+
+  if (!projectId || !clientEmail || !privateKeyRaw) {
+    throw new Error(
+      "Missing Firebase Admin environment variables: FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY"
+    );
+  }
+
   initializeApp({
     credential: cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: (process.env.FIREBASE_PRIVATE_KEY || "").replace(/\\n/g, "\n"),
+      projectId,
+      clientEmail,
+      privateKey: privateKeyRaw.replace(/\\n/g, "\n"),
     }),
   });
 }
 
-const db = getFirestore();
+const db: Firestore = getFirestore();
 
-function corsHeaders() {
+function corsHeaders(): Record<string, string> {
   return {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, OPTIONS",
@@ -25,7 +35,7 @@ function corsHeaders() {
   };
 }
 
-// ✅ GET /api/json/[tokenId]
+// GET /api/json/[tokenId]
 export async function GET(
   _req: Request,
   { params }: { params: { tokenId: string } }
@@ -46,9 +56,9 @@ export async function GET(
       );
     }
 
-    const metadata = docSnap.data();
+    // Firestore DocumentData is a safe, typed alias for JSON-like data
+    const metadata = docSnap.data(); // type: FirebaseFirestore.DocumentData
 
-    // ✅ Return metadata *exactly* as stored — no wrapping, no extra keys
     return NextResponse.json(metadata, {
       headers: {
         ...corsHeaders(),
@@ -56,16 +66,18 @@ export async function GET(
         "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
       },
     });
-  } catch (e: any) {
+  } catch (e: unknown) {
+    const message =
+      e instanceof Error ? e.message : typeof e === "string" ? e : "Unknown error";
     console.error("🔥 Firestore error:", e);
     return NextResponse.json(
-      { error: "Server error", message: e?.message || e },
+      { error: "Server error", message },
       { status: 500, headers: corsHeaders() }
     );
   }
 }
 
-// ✅ Handle CORS preflight
+// CORS preflight
 export async function OPTIONS() {
   return new NextResponse(null, {
     status: 204,
