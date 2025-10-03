@@ -29,8 +29,6 @@ import loadingGif from '../../assets/img/loading.gif';
   const { data: hash, writeContract, isPending } = useWriteContract();
 
 useEffect(() => {
-  const virtueAddr = Data.virtueNFT as Address;
-  if (!virtueAddr) return;
 
   let unwatch: (() => void) | null = null;
   let running = false;
@@ -44,20 +42,17 @@ useEffect(() => {
         allowFailure: true,
         contracts: [
           {
-            chainId: baseId,
-            address: virtueAddr,
+            address: Data.virtueNFT as Address,
             abi: nft.abi as Abi,
             functionName: 'isMintLive',
           },
           {
-            chainId: baseId,
-            address: virtueAddr,
+            address: Data.virtueNFT as Address,
             abi: nft.abi as Abi,
             functionName: 'publicMints',
           },
           {
-            chainId: baseId,
-            address: virtueAddr,
+            address: Data.virtueNFT as Address,
             abi: nft.abi as Abi,
             functionName: 'minted',
           },
@@ -82,8 +77,7 @@ useEffect(() => {
           allowFailure: true,
           contracts: [
             {
-              chainId: baseId,
-              address: virtueAddr,
+              address:  Data.virtueNFT as Address,
               abi: nft.abi as Abi,
               functionName: 'claims',
               args: [address as Address],
