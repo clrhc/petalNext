@@ -12,7 +12,7 @@ if (!getApps().length) {
 
   if (!projectId || !clientEmail || !privateKeyRaw) {
     throw new Error(
-      "Missing Firebase Admin environment variables: FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY"
+      "Missing Firebase Admin env vars: FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY"
     );
   }
 
@@ -36,12 +36,11 @@ function corsHeaders(): Record<string, string> {
 }
 
 // GET /api/json/[tokenId]
-export async function GET(
-  _req: Request,
-  { params }: { params: { tokenId: string } }
-) {
-  const tokenId = params.tokenId?.trim();
+export async function GET(_req: Request, ctx: unknown) {
+  // Narrow the context locally (no `any`, keeps Next validator happy)
+  const { params } = ctx as { params: { tokenId?: string } };
 
+  const tokenId = params?.tokenId?.trim();
   if (!tokenId || !/^\d+$/.test(tokenId)) {
     return NextResponse.json({ error: "Invalid tokenId" }, { status: 400 });
   }
@@ -56,8 +55,7 @@ export async function GET(
       );
     }
 
-    // Firestore DocumentData is a safe, typed alias for JSON-like data
-    const metadata = docSnap.data(); // type: FirebaseFirestore.DocumentData
+    const metadata = docSnap.data(); // FirebaseFirestore.DocumentData
 
     return NextResponse.json(metadata, {
       headers: {
