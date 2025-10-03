@@ -1,7 +1,7 @@
 'use client';
 import './globals.css';
 import Image from 'next/image';
-import React,{useState, useEffect} from 'react';
+import React,{useState, useEffect, useRef} from 'react';
 import {useAccount} from "wagmi";
 import { useAppKit } from "@reown/appkit/react";
 import Referral from './components/petal/referral';
@@ -22,8 +22,33 @@ import etherscan from './assets/img/etherscan.png';
 import magiceden from './assets/img/magiceden.png';
 import discord from './assets/img/discord.webp';
 import { sdk } from '@farcaster/miniapp-sdk';
+import { initializeApp, getApps, getApp } from "firebase/app";
+import {
+  getAuth,
+  setPersistence,
+  browserLocalPersistence,
+  signInAnonymously,
+  onAuthStateChanged
+} from "firebase/auth";
+import { getAnalytics, isSupported } from "firebase/analytics";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY!,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN!,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID!,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET!,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID!,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID!,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID!,
+};
+
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 export default function Home() {
+
+
 
   const {open} = useAppKit();
   const { isConnected } = useAccount();
@@ -34,6 +59,34 @@ export default function Home() {
   useEffect(() => {
         sdk.actions.ready();
     }, []);
+
+   useEffect(() => {
+    const auth = getAuth(app);
+
+    (async () => {
+      try {
+        // Persist the session in browser storage
+        await setPersistence(auth, browserLocalPersistence);
+
+        // If not already signed in, sign in anonymously
+        if (!auth.currentUser) {
+          await signInAnonymously(auth);
+        }
+      } catch {
+        // ignore auth/persistence errors
+      }
+
+      // Client-only: initialize Analytics if supported
+      if (typeof window !== "undefined") {
+        try {
+          const supported = await isSupported();
+          if (supported) getAnalytics(app);
+        } catch {
+          // ignore analytics unsupported
+        }
+      }
+    })();
+  }, []);
 
    useEffect(() => {
     const handleResize = () => {
