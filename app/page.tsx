@@ -25,7 +25,6 @@ export default function Home() {
   const {open} = useAppKit();
   const { isConnected } = useAccount();
   const [isMobile, setIsMobile] = useState(false);
-  const [page, setPage] = useState(0);
   const [tab, setTab] = useState(0);
 
   useEffect(() => {
