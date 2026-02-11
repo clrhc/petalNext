@@ -64,7 +64,7 @@ export default function Home() {
           </div>
           <div className="statDivider" />
           <div className="statItem">
-            <span className="statValue">6+</span>
+            <span className="statValue">4</span>
             <span className="statLabel">Meme Pools</span>
           </div>
           <div className="statDivider" />
