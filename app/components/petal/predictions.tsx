@@ -6,14 +6,14 @@ import PredCoins from './predCoins';
 import PredHistory from './predHistory';
 import Data from '../../data.json';
 
-import ethIcon from '../../assets/img/tokens/eth.svg';
-import btcIcon from '../../assets/img/tokens/btc.svg';
-import linkIcon from '../../assets/img/tokens/link.svg';
-import bnbIcon from '../../assets/img/tokens/bnb.svg';
-import ltcIcon from '../../assets/img/tokens/ltc.svg';
-import solIcon from '../../assets/img/tokens/sol.svg';
-import xrpIcon from '../../assets/img/tokens/xrp.svg';
-import dogeIcon from '../../assets/img/tokens/doge.svg';
+import ethIcon from '../../assets/img/tokens/eth.png';
+import btcIcon from '../../assets/img/tokens/btc.png';
+import linkIcon from '../../assets/img/tokens/link.png';
+import bnbIcon from '../../assets/img/tokens/bnb.png';
+import ltcIcon from '../../assets/img/tokens/ltc.png';
+import solIcon from '../../assets/img/tokens/sol.png';
+import xrpIcon from '../../assets/img/tokens/xrp.png';
+import dogeIcon from '../../assets/img/tokens/doge.png';
 
 const PAIRS = [
   { label: 'ETH/USD', short: 'ETH', icon: ethIcon, contract: Data.ethPrediction, feed: Data.ethusd },
