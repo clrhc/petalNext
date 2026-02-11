@@ -57,14 +57,31 @@ export default function CoinInfo() {
 
   return (
     <div className="coinInfo">
-      <p>Protocol Stats</p>
-      <p>PETAL Price: {Number(Number(tokenPrice) / 10 ** 18).toFixed(10)} ETH</p>
-      {!petalLaunched && (
-        <p>Bonding Progress: {Number(ethers.formatUnits(String(ethIn), 18)).toFixed(3)} / 40 ETH</p>
-      )}
-      <p>Bonding curve fees fund airdrops pre-graduation and seed WEED liquidity on PETAL launch</p>
-      <p>WEED earned at 3x your net PETAL buys on the curve</p>
-      <p>3% tax on bonding curve and prediction market transactions</p>
+      <div className="coinInfoTitle">Live Protocol Data</div>
+      <div className="coinInfoGrid">
+        <div className="coinInfoItem">
+          <div className="coinInfoIcon">&#x1F4B0;</div>
+          <p><strong>PETAL Price:</strong> {Number(Number(tokenPrice) / 10 ** 18).toFixed(10)} ETH</p>
+        </div>
+        {!petalLaunched && (
+          <div className="coinInfoItem">
+            <div className="coinInfoIcon">&#x1F4CA;</div>
+            <p><strong>Bonding Progress:</strong> {Number(ethers.formatUnits(String(ethIn), 18)).toFixed(3)} / 40 ETH</p>
+          </div>
+        )}
+        <div className="coinInfoItem">
+          <div className="coinInfoIcon">&#x1F33F;</div>
+          <p>Bonding curve fees fund airdrops pre-graduation and seed WEED liquidity on PETAL launch</p>
+        </div>
+        <div className="coinInfoItem">
+          <div className="coinInfoIcon">&#x2728;</div>
+          <p>WEED earned at <strong>3x</strong> your net PETAL buys on the bonding curve</p>
+        </div>
+        <div className="coinInfoItem">
+          <div className="coinInfoIcon">&#x1F4B8;</div>
+          <p><strong>3% tax</strong> on bonding curve and prediction market transactions</p>
+        </div>
+      </div>
     </div>
   );
 }
