@@ -2,6 +2,7 @@
 import '../../globals.css';
 import React, { useState } from 'react';
 import PredCoins from './predCoins';
+import PredHistory from './predHistory';
 import Data from '../../data.json';
 
 const PAIRS = [
@@ -15,7 +16,7 @@ const PAIRS = [
   { label: 'DOGE/USD', short: 'DOGE', contract: Data.dogePrediction, feed: Data.dogeusd },
 ] as const;
 
-type TabType = 'markets' | 'yourbid';
+type TabType = 'markets' | 'yourbid' | 'history';
 
 export default function Predictions() {
   const [activeTab, setActiveTab] = useState<TabType>('markets');
@@ -38,10 +39,38 @@ export default function Predictions() {
         >
           Your Bid
         </div>
+        <div className="predTabDivider" />
+        <div
+          className={`predTab ${activeTab === 'history' ? 'active' : ''}`}
+          onClick={() => setActiveTab('history')}
+        >
+          History
+        </div>
       </div>
 
       {/* Content panel */}
       <div className="predContent">
+        {/* Pair selector shown on all tabs */}
+        {(activeTab === 'yourbid' || activeTab === 'history') && (
+          <div className="predSubHeader">
+            <span className="predOracleTag">
+              <span className="predOracleDot" />
+              {PAIRS[selectedPair].label}
+            </span>
+            <div className="predPairSwitcher">
+              {PAIRS.map((pair, i) => (
+                <span
+                  key={pair.label}
+                  className={`predPairChip ${selectedPair === i ? 'active' : ''}`}
+                  onClick={() => setSelectedPair(i)}
+                >
+                  {pair.short}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
         {activeTab === 'markets' && (
           <>
             {/* Sub header */}
@@ -86,6 +115,12 @@ export default function Predictions() {
             contractAddress={PAIRS[selectedPair].contract}
             dataFeedAddress={PAIRS[selectedPair].feed}
             view="position"
+          />
+        )}
+
+        {activeTab === 'history' && (
+          <PredHistory
+            contractAddress={PAIRS[selectedPair].contract}
           />
         )}
       </div>

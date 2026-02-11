@@ -2047,6 +2047,146 @@ footer {
   border: 1px solid rgba(0, 255, 200, 0.2);
 }
 
+/* Pair switcher chips (Your Bid / History tabs) */
+.predPairSwitcher {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.predPairChip {
+  padding: 5px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--text-muted);
+  background: rgba(6, 20, 20, 0.5);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.predPairChip:hover {
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+.predPairChip.active {
+  color: var(--accent-primary);
+  background: rgba(0, 255, 200, 0.08);
+  border-color: var(--accent-primary);
+}
+
+/* History list */
+.predHistoryList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.predHistoryCard {
+  background: rgba(6, 20, 20, 0.5);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  transition: var(--transition-base);
+}
+
+.predHistoryCard:hover {
+  border-color: var(--border-default);
+}
+
+.predHistoryCard.win {
+  border-left: 3px solid var(--accent-success);
+}
+
+.predHistoryCard.loss {
+  border-left: 3px solid var(--accent-danger);
+}
+
+.predHistoryTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.predHistoryResult {
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: 'Space Grotesk', sans-serif;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+}
+
+.predHistoryResult.win {
+  background: rgba(0, 230, 118, 0.1);
+  color: var(--accent-success);
+  border: 1px solid rgba(0, 230, 118, 0.2);
+}
+
+.predHistoryResult.loss {
+  background: rgba(255, 82, 82, 0.1);
+  color: var(--accent-danger);
+  border: 1px solid rgba(255, 82, 82, 0.2);
+}
+
+.predHistoryDetails {
+  margin-bottom: 12px;
+}
+
+.predHistoryRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 0.85rem;
+  border-bottom: 1px solid rgba(0, 255, 200, 0.04);
+}
+
+.predHistoryRow span:first-child {
+  color: var(--text-muted);
+}
+
+.predHistoryRow span:last-child {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.predHistoryWinnings {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.predHistoryReward {
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.predHistoryReward.eth {
+  background: rgba(0, 230, 118, 0.08);
+  border: 1px solid rgba(0, 230, 118, 0.2);
+  color: var(--accent-success);
+}
+
+.predHistoryReward.petal {
+  background: rgba(0, 255, 200, 0.08);
+  border: 1px solid rgba(0, 255, 200, 0.2);
+  color: var(--accent-primary);
+}
+
+.predHistoryReward.weed {
+  background: rgba(255, 193, 7, 0.08);
+  border: 1px solid rgba(255, 193, 7, 0.2);
+  color: var(--accent-warning);
+}
+
 /* ========================================
    INFO TEXT (Generic)
    ======================================== */
