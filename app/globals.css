@@ -1597,10 +1597,251 @@ footer {
 /* ========================================
    PREDICTION MARKET SPECIFIC
    ======================================== */
+
+/* Wide layout container for predictions */
+.predLayout {
+  width: 100%;
+  max-width: 880px;
+  animation: fadeInUp 0.6s ease-out 0.1s both;
+}
+
+/* PancakeSwap-style tab bar */
+.predTabs {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: rgba(6, 20, 20, 0.6);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.predTab {
+  flex: 1;
+  padding: 18px 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Space Grotesk', sans-serif;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition-base);
+  text-align: center;
+  border: none;
+  background: transparent;
+  position: relative;
+  letter-spacing: 0.3px;
+}
+
+.predTab:hover {
+  color: var(--text-primary);
+  background: rgba(0, 255, 200, 0.03);
+}
+
+.predTab.active {
+  color: var(--accent-primary);
+  background: rgba(0, 255, 200, 0.06);
+}
+
+.predTab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  height: 3px;
+  background: var(--gradient-primary);
+  border-radius: 3px 3px 0 0;
+}
+
+.predTabDivider {
+  width: 1px;
+  height: 28px;
+  background: var(--border-subtle);
+  flex-shrink: 0;
+}
+
+/* Content panel below tabs */
+.predContent {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  border-top: none;
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  padding: 28px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+}
+
+/* Sub header with oracle info + controls */
+.predSubHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.predOracleTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: rgba(0, 255, 200, 0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--accent-primary);
+  letter-spacing: 0.5px;
+}
+
+.predOracleDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  box-shadow: 0 0 8px var(--accent-primary);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.predEpochTag {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Pair card grid */
+.predGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.predPairCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 10px;
+  background: rgba(6, 20, 20, 0.5);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.predPairCard:hover {
+  background: rgba(10, 30, 30, 0.6);
+  border-color: var(--border-default);
+  transform: translateY(-2px);
+}
+
+.predPairCard.selected {
+  background: rgba(0, 255, 200, 0.06);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 20px rgba(0, 255, 200, 0.08);
+}
+
+.predPairCard.selected::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-primary);
+}
+
+.predPairIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.7rem;
+  font-family: 'Space Grotesk', sans-serif;
+  background: rgba(0, 255, 200, 0.08);
+  border: 1px solid rgba(0, 255, 200, 0.15);
+  color: var(--accent-primary);
+}
+
+.predPairName {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.predPairLabel {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* Bid panel (shown when pair selected) */
+.predPanel {
+  background: rgba(6, 20, 20, 0.4);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.predPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.predPanelTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.predPanelClose {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: var(--transition-base);
+}
+
+.predPanelClose:hover {
+  background: rgba(255, 82, 82, 0.1);
+  border-color: rgba(255, 82, 82, 0.3);
+  color: var(--accent-danger);
+}
+
+/* Price display (reused in panel) */
 .predPriceDisplay {
   display: flex;
   justify-content: space-around;
-  gap: 20px;
+  gap: 16px;
   margin-bottom: 20px;
   width: 100%;
 }
@@ -1614,6 +1855,35 @@ footer {
   border-radius: var(--radius-md);
 }
 
+.predPriceLabel {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.predPriceValue {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.predPriceCard.current {
+  border-color: var(--border-active);
+}
+
+.predPriceCard.current .predPriceLabel {
+  color: var(--accent-primary);
+}
+
+.predPriceCard.current .predPriceValue {
+  color: var(--accent-primary);
+}
+
+/* Direction buttons */
 .predDirectionBtns {
   display: flex;
   gap: 12px;
@@ -1658,6 +1928,123 @@ footer {
   background: rgba(255, 82, 82, 0.15);
   border-color: var(--accent-danger);
   box-shadow: 0 0 20px rgba(255, 82, 82, 0.15);
+}
+
+/* Rewards info box */
+.predRewardsBox {
+  padding: 16px;
+  background: rgba(10, 20, 30, 0.4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  margin-top: 20px;
+}
+
+.predRewardsBox .infoText {
+  margin-bottom: 4px;
+}
+
+.predRewardBadges {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.predWinBadge {
+  padding: 4px 10px;
+  background: rgba(0, 230, 118, 0.08);
+  border: 1px solid rgba(0, 230, 118, 0.2);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  color: var(--accent-success);
+}
+
+.predLossBadge {
+  padding: 4px 10px;
+  background: rgba(255, 82, 82, 0.08);
+  border: 1px solid rgba(255, 82, 82, 0.2);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  color: var(--accent-danger);
+}
+
+/* Active bid display */
+.predActiveBid {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.predBidDirection {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.predBidDirection.higher {
+  background: rgba(0, 230, 118, 0.1);
+  border: 1px solid rgba(0, 230, 118, 0.3);
+  color: var(--accent-success);
+}
+
+.predBidDirection.lower {
+  background: rgba(255, 82, 82, 0.1);
+  border: 1px solid rgba(255, 82, 82, 0.3);
+  color: var(--accent-danger);
+}
+
+/* Your Bid tab - empty state */
+.predEmptyState {
+  text-align: center;
+  padding: 48px 20px;
+}
+
+.predEmptyIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(0, 255, 200, 0.05);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 1.5rem;
+}
+
+.predEmptyTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.predEmptyDesc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  max-width: 320px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* Tab count badge */
+.predTabCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-left: 8px;
+  background: rgba(0, 255, 200, 0.1);
+  color: var(--accent-primary);
+  border: 1px solid rgba(0, 255, 200, 0.2);
 }
 
 /* ========================================
@@ -2112,6 +2499,34 @@ footer {
     gap: 12px;
   }
 
+  .predGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .predTabs {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .predTab {
+    padding: 14px 16px;
+    font-size: 0.85rem;
+  }
+
+  .predContent {
+    padding: 20px 16px;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+
+  .predPanel {
+    padding: 20px 16px;
+  }
+
+  .predLayout {
+    margin: 0 12px;
+    max-width: calc(100vw - 24px);
+  }
+
   .connectPrompt {
     padding: 40px 16px;
   }
@@ -2182,5 +2597,27 @@ footer {
   .coinInfo {
     padding: 24px 20px;
     margin: 0 12px 32px;
+  }
+
+  .predContent {
+    padding: 16px 12px;
+  }
+
+  .predPanel {
+    padding: 16px 12px;
+  }
+
+  .predPairCard {
+    padding: 12px 8px;
+  }
+
+  .predPairIcon {
+    width: 30px;
+    height: 30px;
+    font-size: 0.6rem;
+  }
+
+  .predPairName {
+    font-size: 0.75rem;
   }
 }

@@ -17,9 +17,7 @@ export default function PredictPage() {
       </div>
 
       {isConnected ? (
-        <div className="pageCard">
-          <Predictions />
-        </div>
+        <Predictions />
       ) : (
         <div className="connectPrompt">
           <h2>Connect Wallet</h2>

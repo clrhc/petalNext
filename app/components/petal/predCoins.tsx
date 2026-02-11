@@ -9,7 +9,7 @@ import { useAccount, useChainId, useWriteContract } from "wagmi";
 import prediction from '../../abis/prediction.json';
 import dataFeed from '../../abis/dataFeed.json';
 
-export default function PredCoins({ contractAddress, dataFeedAddress }: { contractAddress: string; dataFeedAddress: string }) {
+export default function PredCoins({ contractAddress, dataFeedAddress, view }: { contractAddress: string; dataFeedAddress: string; view: 'bid' | 'position' }) {
 
   type CurrentBid = {
     roundId: string;
@@ -186,120 +186,165 @@ export default function PredCoins({ contractAddress, dataFeedAddress }: { contra
     onBlur: () => { if (bidText === '' || bidText === '.') { setBidText('0'); setBidValue(0); } },
   };
 
+  const hasActiveBid = Number(userBid?.roundId) > 0;
+
+  /* ──── "Your Bid" tab view ──── */
+  if (view === 'position') {
+    if (!hasActiveBid) {
+      return (
+        <div className="predEmptyState">
+          <div className="predEmptyIcon">--</div>
+          <p className="predEmptyTitle">No Active Bid</p>
+          <p className="predEmptyDesc">
+            You don&apos;t have an active prediction. Go to the Markets tab to place a bid on a crypto pair.
+          </p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="predActiveBid">
+        <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+          <span className={`predBidDirection ${userBid.higher ? 'higher' : 'lower'}`}>
+            BID {userBid.higher ? 'HIGHER' : 'LOWER'}
+          </span>
+        </div>
+
+        <div className="bidPrice">
+          <span><p>Bid Price</p></span>
+          <span><h2>${Number(ethers.formatUnits(String(userBid.priceBid), 8)).toFixed(3)}</h2></span>
+        </div>
+        <div className="bidPrice">
+          <span><p>Result</p></span>
+          <span>
+            <h2>{checkBid === 0 ? 'PENDING' : '$' + Number(ethers.formatUnits(String(roundAnswer), 8)).toFixed(3)}</h2>
+          </span>
+        </div>
+
+        <div className="winnings">
+          <p style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '8px' }}>WINNINGS</p>
+          <p style={{ textAlign: 'center', color: 'var(--accent-primary)' }}>
+            {Number(Number(ethers.formatUnits(userBid.amountBid, 18)) / Number(Number(2000000000000) / 10 ** 18) * 3).toFixed(2)} WEED
+          </p>
+          {checkBid === 1 && (
+            <>
+              <p style={{ textAlign: 'center', color: 'var(--accent-success)' }}>
+                {Number(Number(ethers.formatUnits(userBid.amountBid, 18)) / Number(Number(2000000000000) / 10 ** 18) * 1).toFixed(2)} PETAL
+              </p>
+              <p style={{ textAlign: 'center', color: 'var(--accent-success)' }}>
+                {Number(ethers.formatUnits(userBid.amountBid, 18)).toFixed(4)} ETH
+              </p>
+            </>
+          )}
+        </div>
+
+        {checkBid > 0 && (
+          <p onClick={() => resolveBid()} className="enterButton pointer">Resolve Bid</p>
+        )}
+      </div>
+    );
+  }
+
+  /* ──── "Markets" tab bid view ──── */
+
+  // If user has an active bid, show it inline instead of the bid form
+  if (hasActiveBid) {
+    return (
+      <>
+        <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+          <span className={`predBidDirection ${userBid.higher ? 'higher' : 'lower'}`}>
+            BID {userBid.higher ? 'HIGHER' : 'LOWER'}
+          </span>
+        </div>
+
+        <div className="bidPrice">
+          <span><p>Bid Price</p></span>
+          <span><h2>${Number(ethers.formatUnits(String(userBid.priceBid), 8)).toFixed(3)}</h2></span>
+        </div>
+        <div className="bidPrice">
+          <span><p>Result</p></span>
+          <span>
+            <h2>{checkBid === 0 ? 'PENDING' : '$' + Number(ethers.formatUnits(String(roundAnswer), 8)).toFixed(3)}</h2>
+          </span>
+        </div>
+
+        <div className="winnings">
+          <p style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '8px' }}>WINNINGS</p>
+          <p style={{ textAlign: 'center', color: 'var(--accent-primary)' }}>
+            {Number(Number(ethers.formatUnits(userBid.amountBid, 18)) / Number(Number(2000000000000) / 10 ** 18) * 3).toFixed(2)} WEED
+          </p>
+          {checkBid === 1 && (
+            <>
+              <p style={{ textAlign: 'center', color: 'var(--accent-success)' }}>
+                {Number(Number(ethers.formatUnits(userBid.amountBid, 18)) / Number(Number(2000000000000) / 10 ** 18) * 1).toFixed(2)} PETAL
+              </p>
+              <p style={{ textAlign: 'center', color: 'var(--accent-success)' }}>
+                {Number(ethers.formatUnits(userBid.amountBid, 18)).toFixed(4)} ETH
+              </p>
+            </>
+          )}
+        </div>
+
+        {checkBid > 0 && (
+          <p onClick={() => resolveBid()} className="enterButton pointer">Resolve Bid</p>
+        )}
+      </>
+    );
+  }
+
   return (
     <>
-      {/* New Bid Interface */}
-      <span style={{ display: Number(userBid?.roundId) === 0 ? 'block' : 'none' }}>
-
-        {/* Price Display Cards */}
-        <div className="predPriceDisplay">
-          <div className="predPriceCard">
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>Previous Price</p>
-            <h2 style={{ fontSize: '1.5rem', margin: 0 }}>${Number(ethers.formatUnits(String(previousAnswer), 8)).toFixed(2)}</h2>
-          </div>
-          <div className="predPriceCard" style={{ borderColor: 'var(--border-active)' }}>
-            <p style={{ fontSize: '0.75rem', color: 'var(--accent-primary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>Current Price</p>
-            <h2 style={{ fontSize: '1.5rem', margin: 0, color: 'var(--accent-primary)' }}>${Number(ethers.formatUnits(String(answer), 8)).toFixed(2)}</h2>
-          </div>
+      {/* Price Display Cards */}
+      <div className="predPriceDisplay">
+        <div className="predPriceCard">
+          <p className="predPriceLabel">Previous Price</p>
+          <h2 className="predPriceValue">${Number(ethers.formatUnits(String(previousAnswer), 8)).toFixed(2)}</h2>
         </div>
-
-        {/* Bid Input */}
-        <div style={{ position: 'relative' }}>
-          <span className="inputAfter" style={{ position: 'absolute', fontSize: '0.9rem', right: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontWeight: 600 }}>ETH</span>
-          <input className="inputBox inputText userText outlineTeal" placeholder="0 ETH" {...numInputProps} />
+        <div className="predPriceCard current">
+          <p className="predPriceLabel">Current Price</p>
+          <h2 className="predPriceValue">${Number(ethers.formatUnits(String(answer), 8)).toFixed(2)}</h2>
         </div>
-        <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(6)} ETH</p>
+      </div>
 
-        {/* Direction Buttons */}
-        <div className="predDirectionBtns">
-          <div
-            className={`btnHigher ${bidState ? 'active' : ''}`}
-            onClick={() => setBidState(true)}
-          >
-            HIGHER
-          </div>
-          <div
-            className={`btnLower ${!bidState ? 'active' : ''}`}
-            onClick={() => setBidState(false)}
-          >
-            LOWER
-          </div>
+      {/* Bid Input */}
+      <div style={{ position: 'relative' }}>
+        <span className="inputAfter">ETH</span>
+        <input className="inputBox inputText userText outlineTeal" placeholder="0 ETH" {...numInputProps} />
+      </div>
+      <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(6)} ETH</p>
+
+      {/* Direction Buttons */}
+      <div className="predDirectionBtns">
+        <div
+          className={`btnHigher ${bidState ? 'active' : ''}`}
+          onClick={() => setBidState(true)}
+        >
+          HIGHER
         </div>
-
-        <p className="infoText">Next price check in {epoch} epoch(s)</p>
-
-        {bidValue > 0 && (
-          <p onClick={() => bidPrediction()} className="enterButton pointer" style={{ marginTop: '16px' }}>Place Bid</p>
-        )}
-
-        {/* Rewards Info */}
-        <div style={{ marginTop: '20px', padding: '16px', background: 'rgba(10, 20, 30, 0.4)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
-          <p className="infoText" style={{ marginBottom: '4px' }}>1 ETH = {Number(1 / Number(Number(2000000000000) / 10 ** 18) * 1).toFixed(2)} PETAL</p>
-          <p className="infoText" style={{ marginBottom: '8px' }}>1 ETH = {Number(1 / Number(Number(2000000000000) / 10 ** 18) * 3).toFixed(2)} WEED</p>
-          <p className="infoText"><span className="taxBadge">3% Tax</span></p>
-          <div style={{ marginTop: '12px', display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <span style={{ padding: '4px 10px', background: 'rgba(0, 230, 118, 0.08)', border: '1px solid rgba(0, 230, 118, 0.2)', borderRadius: 'var(--radius-full)', fontSize: '0.75rem', color: 'var(--accent-success)' }}>
-              Win = PETAL + WEED + ETH
-            </span>
-            <span style={{ padding: '4px 10px', background: 'rgba(255, 82, 82, 0.08)', border: '1px solid rgba(255, 82, 82, 0.2)', borderRadius: 'var(--radius-full)', fontSize: '0.75rem', color: 'var(--accent-danger)' }}>
-              Loss = WEED only
-            </span>
-          </div>
+        <div
+          className={`btnLower ${!bidState ? 'active' : ''}`}
+          onClick={() => setBidState(false)}
+        >
+          LOWER
         </div>
-      </span>
+      </div>
 
-      {/* Active Bid Display */}
-      {Number(userBid.roundId) > 0 && (
-        <>
-          <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-            <span style={{
-              display: 'inline-block',
-              padding: '6px 16px',
-              borderRadius: 'var(--radius-full)',
-              fontSize: '0.85rem',
-              fontWeight: 700,
-              background: userBid.higher ? 'rgba(0, 230, 118, 0.1)' : 'rgba(255, 82, 82, 0.1)',
-              border: `1px solid ${userBid.higher ? 'rgba(0, 230, 118, 0.3)' : 'rgba(255, 82, 82, 0.3)'}`,
-              color: userBid.higher ? 'var(--accent-success)' : 'var(--accent-danger)',
-            }}>
-              BID {userBid.higher ? 'HIGHER' : 'LOWER'}
-            </span>
-          </div>
+      <p className="infoText">Next price check in {epoch} epoch(s)</p>
 
-          <div className="bidPrice">
-            <span><p>Bid Price</p></span>
-            <span><h2>${Number(ethers.formatUnits(String(userBid.priceBid), 8)).toFixed(3)}</h2></span>
-          </div>
-          <div className="bidPrice">
-            <span><p>Result</p></span>
-            <span>
-              <h2>{checkBid === 0 ? 'PENDING' : '$' + Number(ethers.formatUnits(String(roundAnswer), 8)).toFixed(3)}</h2>
-            </span>
-          </div>
-
-          {/* Winnings Card */}
-          <div className="winnings">
-            <p style={{ textAlign: 'center', fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '8px' }}>WINNINGS</p>
-            <p style={{ textAlign: 'center', color: 'var(--accent-primary)' }}>
-              {Number(Number(ethers.formatUnits(userBid.amountBid, 18)) / Number(Number(2000000000000) / 10 ** 18) * 3).toFixed(2)} WEED
-            </p>
-            {checkBid === 1 && (
-              <>
-                <p style={{ textAlign: 'center', color: 'var(--accent-success)' }}>
-                  {Number(Number(ethers.formatUnits(userBid.amountBid, 18)) / Number(Number(2000000000000) / 10 ** 18) * 1).toFixed(2)} PETAL
-                </p>
-                <p style={{ textAlign: 'center', color: 'var(--accent-success)' }}>
-                  {Number(ethers.formatUnits(userBid.amountBid, 18)).toFixed(4)} ETH
-                </p>
-              </>
-            )}
-          </div>
-
-          {checkBid > 0 && (
-            <p onClick={() => resolveBid()} className="enterButton pointer">Resolve Bid</p>
-          )}
-        </>
+      {bidValue > 0 && (
+        <p onClick={() => bidPrediction()} className="enterButton pointer" style={{ marginTop: '16px' }}>Place Bid</p>
       )}
+
+      {/* Rewards Info */}
+      <div className="predRewardsBox">
+        <p className="infoText" style={{ marginBottom: '4px' }}>1 ETH = {Number(1 / Number(Number(2000000000000) / 10 ** 18) * 1).toFixed(2)} PETAL</p>
+        <p className="infoText" style={{ marginBottom: '8px' }}>1 ETH = {Number(1 / Number(Number(2000000000000) / 10 ** 18) * 3).toFixed(2)} WEED</p>
+        <p className="infoText"><span className="taxBadge">3% Tax</span></p>
+        <div className="predRewardBadges">
+          <span className="predWinBadge">Win = PETAL + WEED + ETH</span>
+          <span className="predLossBadge">Loss = WEED only</span>
+        </div>
+      </div>
     </>
   );
 }
