@@ -151,79 +151,155 @@ export default function SwapMemes({ tokenAddress }: { tokenAddress: string; }) {
     onBlur: () => { if (text === "" || text === ".") { setText("0"); setNum(0); } },
   });
 
+  const weedBal = Number(ethers.formatUnits(weedBalance, 18));
+  const tokBal = Number(ethers.formatUnits(tokenBalance, 18));
+  const pricePerToken = Number(tokenPrice) / 1e18;
+
   return (
     <>
       {/* Buy/Sell Toggle */}
-      <div className="swapButtons">
-        <p className={swapState === 0 ? "tealActive" : ""} onClick={() => setSwapState(0)}>Buy {tokenName}</p>
-        <p className={swapState === 1 ? "tealActive" : ""} onClick={() => setSwapState(1)}>Sell {tokenName}</p>
+      <div className="swapTabBar">
+        <div className={`swapTabBtn ${swapState === 0 ? 'active' : ''}`} onClick={() => setSwapState(0)}>
+          Buy
+        </div>
+        <div className={`swapTabBtn ${swapState === 1 ? 'active' : ''}`} onClick={() => setSwapState(1)}>
+          Sell
+        </div>
       </div>
 
-      {/* Slippage */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px', marginBottom: '12px' }}>
-        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Slippage</span>
-        <div style={{ position: 'relative' }}>
-          <input className="inputText slipBox outlineTeal" placeholder="1" {...numInputProps(slippageText, setSlippageText, setSlippage)} />
-          <span style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', fontSize: '0.85rem', color: 'var(--text-muted)' }}>%</span>
+      {/* Slippage Settings */}
+      <div className="swapSettingsBar">
+        <span className="swapSettingsLabel">Slippage</span>
+        <div className="swapSlipWrap">
+          <input
+            className="swapSlipInput"
+            placeholder="1"
+            {...numInputProps(slippageText, setSlippageText, setSlippage)}
+          />
         </div>
       </div>
 
       {swapState === 0 ? (
         <>
-          {/* Buy: WEED Input */}
-          <div style={{ position: 'relative' }}>
-            <span className="inputAfter" style={{ position: 'absolute', fontSize: '0.9rem', right: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontWeight: 600 }}>WEED</span>
-            <input className="inputBox inputText userText outlineTeal" placeholder="0 WEED" {...numInputProps(buyText, setBuyText, setBuyValue)} />
+          {/* From: WEED */}
+          <div className="swapTokenGroup">
+            <div className="swapTokenGroupLabel">
+              <span>From</span>
+              <span>Balance: {weedBal.toFixed(2)}</span>
+            </div>
+            <div className="swapTokenInputRow">
+              <input placeholder="0.0" {...numInputProps(buyText, setBuyText, setBuyValue)} />
+              <div className="swapTokenBadge">WEED</div>
+            </div>
           </div>
-          <p className="rightSide">Balance: {Number(ethers.formatUnits(weedBalance, 18)).toFixed(2)} WEED</p>
 
-          {/* Buy: Token Output */}
-          <div style={{ position: 'relative' }}>
-            <span className="inputAfter" style={{ position: 'absolute', right: '16px', fontSize: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontWeight: 600 }}>{tokenName}</span>
-            <input className="inputBox inputText newText outlineTeal" placeholder={`0 ${tokenName}`} value={String(Number(buyValue / (Number(tokenPrice) / 1e18)).toFixed(4))} type="number" readOnly />
+          {/* Arrow */}
+          <div className="swapArrowWrap">
+            <div className="swapArrowBtn">&#8595;</div>
           </div>
-          <p className="rightSide">Balance: {Number(ethers.formatUnits(tokenBalance, 18)).toFixed(2)} {tokenName}</p>
 
+          {/* To: Token */}
+          <div className="swapTokenGroup">
+            <div className="swapTokenGroupLabel">
+              <span>To (estimated)</span>
+              <span>Balance: {tokBal.toFixed(2)}</span>
+            </div>
+            <div className="swapTokenInputRow">
+              <input
+                placeholder="0.0"
+                value={pricePerToken > 0 ? Number(buyValue / pricePerToken).toFixed(4) : '0'}
+                readOnly
+              />
+              <div className="swapTokenBadge">{tokenName}</div>
+            </div>
+          </div>
+
+          {/* Action Button */}
           {buyValue > 0 && (
             <>
               {buyValue * 10 ** 18 > weedAllowance ? (
-                <p onClick={() => approveWeed()} className="enterButton pointer">Approve WEED</p>
+                <div onClick={() => approveWeed()} className="swapActionBtn pointer">
+                  Approve WEED
+                </div>
               ) : (
-                <p onClick={() => buyRouter()} className="enterButton pointer">Buy</p>
+                <div onClick={() => buyRouter()} className="swapActionBtn pointer">
+                  Buy {tokenName}
+                </div>
               )}
             </>
           )}
-          <p className="infoText">1 WEED = {Number(1 / Number(Number(tokenPrice) / 10 ** 18)).toFixed(4)} {tokenName}</p>
         </>
       ) : (
         <>
-          {/* Sell: Token Input */}
-          <div style={{ position: 'relative' }}>
-            <span className="inputAfter" style={{ position: 'absolute', fontSize: '0.9rem', right: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontWeight: 600 }}>{tokenName}</span>
-            <input className="inputBox inputText userText outlineTeal" placeholder={`0 ${tokenName}`} {...numInputProps(sellText, setSellText, setSellValue)} />
+          {/* From: Token */}
+          <div className="swapTokenGroup">
+            <div className="swapTokenGroupLabel">
+              <span>From</span>
+              <span>Balance: {tokBal.toFixed(2)}</span>
+            </div>
+            <div className="swapTokenInputRow">
+              <input placeholder="0.0" {...numInputProps(sellText, setSellText, setSellValue)} />
+              <div className="swapTokenBadge">{tokenName}</div>
+            </div>
           </div>
-          <p className="rightSide">Balance: {Number(ethers.formatUnits(tokenBalance, 18)).toFixed(2)} {tokenName}</p>
 
-          {/* Sell: WEED Output */}
-          <div style={{ position: 'relative' }}>
-            <span className="inputAfter" style={{ position: 'absolute', right: '16px', fontSize: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontWeight: 600 }}>WEED</span>
-            <input className="inputBox inputText newText outlineTeal" placeholder="0 WEED" value={String(Number(sellValue * (Number(tokenPrice) / 1e18)).toFixed(4))} type="number" readOnly />
+          {/* Arrow */}
+          <div className="swapArrowWrap">
+            <div className="swapArrowBtn">&#8595;</div>
           </div>
-          <p className="rightSide">Balance: {Number(ethers.formatUnits(weedBalance, 18)).toFixed(2)} WEED</p>
 
+          {/* To: WEED */}
+          <div className="swapTokenGroup">
+            <div className="swapTokenGroupLabel">
+              <span>To (estimated)</span>
+              <span>Balance: {weedBal.toFixed(2)}</span>
+            </div>
+            <div className="swapTokenInputRow">
+              <input
+                placeholder="0.0"
+                value={pricePerToken > 0 ? Number(sellValue * pricePerToken).toFixed(4) : '0'}
+                readOnly
+              />
+              <div className="swapTokenBadge">WEED</div>
+            </div>
+          </div>
+
+          {/* Action Button */}
           {sellValue > 0 && (
             <>
               {sellValue * 10 ** 18 > tokenAllowance ? (
-                <p onClick={() => approveRouter()} className="enterButton pointer">Approve</p>
+                <div onClick={() => approveRouter()} className="swapActionBtn pointer">
+                  Approve {tokenName}
+                </div>
               ) : (
-                <p onClick={() => sellRouter()} className="enterButton pointer">Sell</p>
+                <div onClick={() => sellRouter()} className="swapActionBtn pointer">
+                  Sell {tokenName}
+                </div>
               )}
             </>
           )}
-          <p className="infoText">1 {tokenName} = {Number(Number(tokenPrice) / 10 ** 18).toFixed(10)} WEED</p>
         </>
       )}
 
+      {/* Trade Info */}
+      <div className="swapInfoSection">
+        <div className="swapInfoRow">
+          <span>Rate</span>
+          <span>
+            {swapState === 0
+              ? `1 WEED = ${pricePerToken > 0 ? Number(1 / pricePerToken).toFixed(4) : '—'} ${tokenName}`
+              : `1 ${tokenName} = ${pricePerToken > 0 ? pricePerToken.toFixed(10) : '—'} WEED`
+            }
+          </span>
+        </div>
+        <div className="swapInfoDivider" />
+        <div className="swapInfoRow">
+          <span>Slippage</span>
+          <span>{slippage}%</span>
+        </div>
+      </div>
+
+      {/* Chart */}
       {tokenPair && (
         <div id="dexscreener-embed">
           <iframe src={`https://dexscreener.com/base/${tokenPair}?embed=1&loadChartSettings=0&trades=0&tabs=0&info=0&chartLeftToolbar=0&chartTimeframesToolbar=0&chartDefaultOnMobile=1&chartTheme=dark&theme=dark&chartStyle=1&chartType=usd&interval=15`} />

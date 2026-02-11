@@ -16,15 +16,15 @@ export default function Memes() {
 
   return (
     <>
-      <div className="swapButtons">
+      <div className="swapTabBar">
         {MEME_TOKENS.map((tok, i) => (
-          <p
+          <div
             key={tok.label}
-            className={swapMeme === i ? "tealActive" : ""}
+            className={`swapTabBtn ${swapMeme === i ? 'active' : ''}`}
             onClick={() => setSwapMeme(i)}
           >
             {tok.label}
-          </p>
+          </div>
         ))}
       </div>
       <SwapMemes tokenAddress={MEME_TOKENS[swapMeme].address} />

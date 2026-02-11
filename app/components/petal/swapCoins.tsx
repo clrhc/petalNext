@@ -191,89 +191,164 @@ export default function SwapCoins({ tokenAddress, factoryAddress }: { tokenAddre
     onBlur: () => { if (text === "" || text === ".") { setText("0"); setNum(0); } },
   });
 
+  const ethBal = Number(ethers.formatUnits(String(ethBalance), 18));
+  const tokBal = Number(ethers.formatUnits(tokenBalance, 18));
+  const pricePerToken = Number(tokenPrice) / 1e18;
+  const bondTarget = String(tokenName).toLowerCase() === 'virtue' ? 4 : 40;
+  const bondCurrent = Number(ethers.formatUnits(String(ethIn), 18));
+  const bondPercent = bondTarget > 0 ? Math.min((bondCurrent / bondTarget) * 100, 100) : 0;
+
   return (
     <>
-      {/* Buy/Sell Toggle + Slippage */}
-      <div className="swapButtons">
-        <p className={swapState === 0 ? "tealActive" : ""} onClick={() => setSwapState(0)}>
-          Buy {tokenName}
-        </p>
-        <p className={swapState === 1 ? "tealActive" : ""} onClick={() => setSwapState(1)}>
-          Sell {tokenName}
-        </p>
+      {/* Buy/Sell Toggle */}
+      <div className="swapTabBar">
+        <div className={`swapTabBtn ${swapState === 0 ? 'active' : ''}`} onClick={() => setSwapState(0)}>
+          Buy
+        </div>
+        <div className={`swapTabBtn ${swapState === 1 ? 'active' : ''}`} onClick={() => setSwapState(1)}>
+          Sell
+        </div>
       </div>
 
-      {/* Slippage Control */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '8px', marginBottom: '12px' }}>
-        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Slippage</span>
-        <div style={{ position: 'relative' }}>
+      {/* Slippage Settings */}
+      <div className="swapSettingsBar">
+        <span className="swapSettingsLabel">Slippage</span>
+        <div className="swapSlipWrap">
           <input
-            className="inputText slipBox outlineTeal"
+            className="swapSlipInput"
             placeholder="1"
             {...numInputProps(slippageText, setSlippageText, setSlippage)}
           />
-          <span style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', fontSize: '0.85rem', color: 'var(--text-muted)' }}>%</span>
         </div>
       </div>
 
       {swapState === 0 ? (
         <>
-          {/* Buy: ETH Input */}
-          <div style={{ position: 'relative' }}>
-            <span className="inputAfter" style={{ position: 'absolute', fontSize: '0.9rem', right: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontWeight: 600 }}>ETH</span>
-            <input className="inputBox inputText userText outlineTeal" placeholder="0 ETH" {...numInputProps(buyText, setBuyText, setBuyValue)} />
+          {/* From: ETH */}
+          <div className="swapTokenGroup">
+            <div className="swapTokenGroupLabel">
+              <span>From</span>
+              <span>Balance: {ethBal.toFixed(4)}</span>
+            </div>
+            <div className="swapTokenInputRow">
+              <input placeholder="0.0" {...numInputProps(buyText, setBuyText, setBuyValue)} />
+              <div className="swapTokenBadge">ETH</div>
+            </div>
           </div>
-          <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(4)} ETH</p>
 
-          {/* Buy: Token Output */}
-          <div style={{ position: 'relative' }}>
-            <span className="inputAfter" style={{ position: 'absolute', right: '16px', fontSize: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontWeight: 600 }}>{tokenName}</span>
-            <input className="inputBox inputText newText outlineTeal" placeholder={`0 ${tokenName}`} value={String(Number(buyValue / (Number(tokenPrice) / 1e18) - ((buyValue / (Number(tokenPrice) / 1e18) / 100) * 3)).toFixed(4))} type="number" readOnly />
+          {/* Arrow */}
+          <div className="swapArrowWrap">
+            <div className="swapArrowBtn">&#8595;</div>
           </div>
-          <p className="rightSide">Balance: {Number(ethers.formatUnits(tokenBalance, 18)).toFixed(2)} {tokenName}</p>
 
+          {/* To: Token */}
+          <div className="swapTokenGroup">
+            <div className="swapTokenGroupLabel">
+              <span>To (estimated)</span>
+              <span>Balance: {tokBal.toFixed(2)}</span>
+            </div>
+            <div className="swapTokenInputRow">
+              <input
+                placeholder="0.0"
+                value={pricePerToken > 0 ? Number(buyValue / pricePerToken - ((buyValue / pricePerToken / 100) * 3)).toFixed(4) : '0'}
+                readOnly
+              />
+              <div className="swapTokenBadge">{tokenName}</div>
+            </div>
+          </div>
+
+          {/* Action Button */}
           {buyValue > 0 && (
-            <p onClick={() => tokenLaunched ? buyRouter() : buyFactory()} className="enterButton pointer">Buy</p>
-          )}
-
-          <p className="infoText">1 ETH = {Number(1 / Number(Number(tokenPrice) / 10 ** 18)).toFixed(4)} {tokenName}</p>
-          <p className="infoText"><span className="taxBadge">3% Tax</span></p>
-          {!tokenLaunched && (
-            <p className="infoText" style={{ marginTop: '8px' }}>ETH To Bond: {Number(ethers.formatUnits(String(ethIn), 18)).toFixed(3)} / {String(tokenName).toLowerCase() === 'virtue' ? '4 ETH' : '40 ETH'}</p>
+            <div onClick={() => tokenLaunched ? buyRouter() : buyFactory()} className="swapActionBtn pointer">
+              Buy {tokenName}
+            </div>
           )}
         </>
       ) : (
         <>
-          {/* Sell: Token Input */}
-          <div style={{ position: 'relative' }}>
-            <span className="inputAfter" style={{ position: 'absolute', fontSize: '0.9rem', right: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontWeight: 600 }}>{tokenName}</span>
-            <input className="inputBox inputText userText outlineTeal" placeholder={`0 ${tokenName}`} {...numInputProps(sellText, setSellText, setSellValue)} />
+          {/* From: Token */}
+          <div className="swapTokenGroup">
+            <div className="swapTokenGroupLabel">
+              <span>From</span>
+              <span>Balance: {tokBal.toFixed(2)}</span>
+            </div>
+            <div className="swapTokenInputRow">
+              <input placeholder="0.0" {...numInputProps(sellText, setSellText, setSellValue)} />
+              <div className="swapTokenBadge">{tokenName}</div>
+            </div>
           </div>
-          <p className="rightSide">Balance: {Number(ethers.formatUnits(tokenBalance, 18)).toFixed(2)} {tokenName}</p>
 
-          {/* Sell: ETH Output */}
-          <div style={{ position: 'relative' }}>
-            <span className="inputAfter" style={{ position: 'absolute', right: '16px', fontSize: '0.9rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontWeight: 600 }}>ETH</span>
-            <input className="inputBox inputText newText outlineTeal" placeholder="0 ETH" value={String(Number(sellValue * (Number(tokenPrice) / 1e18) - ((sellValue * (Number(tokenPrice) / 1e18) / 100) * 3)).toFixed(8))} type="number" readOnly />
+          {/* Arrow */}
+          <div className="swapArrowWrap">
+            <div className="swapArrowBtn">&#8595;</div>
           </div>
-          <p className="rightSide">Balance: {Number(ethers.formatUnits(String(ethBalance), 18)).toFixed(4)} ETH</p>
 
+          {/* To: ETH */}
+          <div className="swapTokenGroup">
+            <div className="swapTokenGroupLabel">
+              <span>To (estimated)</span>
+              <span>Balance: {ethBal.toFixed(4)}</span>
+            </div>
+            <div className="swapTokenInputRow">
+              <input
+                placeholder="0.0"
+                value={pricePerToken > 0 ? Number(sellValue * pricePerToken - ((sellValue * pricePerToken / 100) * 3)).toFixed(8) : '0'}
+                readOnly
+              />
+              <div className="swapTokenBadge">ETH</div>
+            </div>
+          </div>
+
+          {/* Action Button */}
           {sellValue > 0 && (
             <>
               {sellValue * 10 ** 18 > tokenAllowance ? (
-                <p onClick={() => tokenLaunched ? approveRouter() : approveFactory()} className="enterButton pointer">Approve</p>
+                <div onClick={() => tokenLaunched ? approveRouter() : approveFactory()} className="swapActionBtn pointer">
+                  Approve {tokenName}
+                </div>
               ) : (
-                <p onClick={() => tokenLaunched ? sellRouter() : sellFactory()} className="enterButton pointer">Sell</p>
+                <div onClick={() => tokenLaunched ? sellRouter() : sellFactory()} className="swapActionBtn pointer">
+                  Sell {tokenName}
+                </div>
               )}
             </>
           )}
-
-          <p className="infoText">1 {tokenName} = {Number(Number(tokenPrice) / 10 ** 18).toFixed(10)} ETH</p>
-          <p className="infoText"><span className="taxBadge">3% Tax</span></p>
-          {!tokenLaunched && (
-            <p className="infoText" style={{ marginTop: '8px' }}>ETH To Bond: {Number(ethers.formatUnits(String(ethIn), 18)).toFixed(3)} / {String(tokenName).toLowerCase() === 'virtue' ? '4 ETH' : '40 ETH'}</p>
-          )}
         </>
+      )}
+
+      {/* Trade Info */}
+      <div className="swapInfoSection">
+        <div className="swapInfoRow">
+          <span>Rate</span>
+          <span>
+            {swapState === 0
+              ? `1 ETH = ${pricePerToken > 0 ? Number(1 / pricePerToken).toFixed(4) : '—'} ${tokenName}`
+              : `1 ${tokenName} = ${pricePerToken > 0 ? pricePerToken.toFixed(10) : '—'} ETH`
+            }
+          </span>
+        </div>
+        <div className="swapInfoDivider" />
+        <div className="swapInfoRow">
+          <span>Tax</span>
+          <span><span className="taxBadge">3%</span></span>
+        </div>
+        <div className="swapInfoRow">
+          <span>Slippage</span>
+          <span>{slippage}%</span>
+        </div>
+      </div>
+
+      {/* Bonding Curve Progress (pre-launch only) */}
+      {!tokenLaunched && (
+        <div className="swapBondProgress">
+          <div className="swapBondLabel">
+            <span>Bonding Curve</span>
+            <span>{bondCurrent.toFixed(3)} / {bondTarget} ETH</span>
+          </div>
+          <div className="swapBondTrack">
+            <div className="swapBondFill" style={{ width: `${bondPercent}%` }} />
+          </div>
+        </div>
       )}
     </>
   );
