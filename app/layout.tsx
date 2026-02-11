@@ -1,14 +1,11 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { headers } from 'next/headers';
 import ContextProvider from './context';
 
-const inter = Inter({ subsets: ['latin'] });
-
 export async function generateMetadata(): Promise<Metadata> {
     return {
-        title: 'Petal Finance',
-        description: 'V2 DeFi and Meme Markets',
+        title: 'Petal Protocol',
+        description: 'The DeFi Protocol for Meme Markets — Bonding Curves, Prediction Markets & Liquidity Pools on Base',
         icons: {
     icon: [
     { url: "/favicon.ico" },
@@ -18,16 +15,16 @@ export async function generateMetadata(): Promise<Metadata> {
     other: [{ rel: "android-chrome", url: "/logo192.png" },{ rel: "android-chrome", url: "/logo512.png" },],
     },
     openGraph: {
-    title: "Petal Finance",
-    description: "Gamified DeFi, bonding curves, XP rewards & more 🌸",
+    title: "Petal Protocol",
+    description: "The DeFi Protocol for Meme Markets — Bonding Curves, Prediction Markets & Liquidity Pools on Base",
     url: "https://www.petal.wtf",
-    siteName: "Petal Finance",
+    siteName: "Petal Protocol",
     images: [
       {
         url: "/thumbnail.png",
         width: 1200,
         height: 627,
-        alt: "Petal Finance",
+        alt: "Petal Protocol",
       },
     ],
     locale: "en_US",
@@ -35,8 +32,8 @@ export async function generateMetadata(): Promise<Metadata> {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Petal Finance",
-    description: "Gamified DeFi, bonding curves, XP rewards & more 🌸",
+    title: "Petal Protocol",
+    description: "The DeFi Protocol for Meme Markets — Bonding Curves, Prediction Markets & Liquidity Pools on Base",
     images: ["/thumbnail.png"],
   },
         other: {
@@ -44,13 +41,13 @@ export async function generateMetadata(): Promise<Metadata> {
             version: 'next',
             imageUrl: 'https://i.imgur.com/6fsw46l.png',
             button: {
-                title: `Launch Petal Finance`,
+                title: `Launch Petal Protocol`,
                 action: {
                     type: 'launch_miniapp',
-                    name: 'Petal Finance',
+                    name: 'Petal Protocol',
                     url: 'https://petal.wtf',
                     splashImageUrl: "https://i.imgur.com/pYoZQlK.png",
-                    splashBackgroundColor: "#1e534c",
+                    splashBackgroundColor: "#040d0d",
                 },
             },
         }),
@@ -71,7 +68,7 @@ export default async function RootLayout({
   return (
     <ContextProvider cookies={cookies}>
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         {children}
       </body>
     </html>
