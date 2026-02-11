@@ -17,9 +17,7 @@ export default function MemesPage() {
       </div>
 
       {isConnected ? (
-        <div className="pageCard">
-          <Memes />
-        </div>
+        <Memes />
       ) : (
         <div className="connectPrompt">
           <h2>Connect Wallet</h2>

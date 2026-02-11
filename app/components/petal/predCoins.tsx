@@ -31,6 +31,7 @@ export default function PredCoins({ contractAddress, dataFeedAddress, view }: { 
   const [bidValue, setBidValue] = useState(0);
   const [bidText, setBidText] = useState("0");
   const [bidState, setBidState] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
   const provider = new ethers.JsonRpcProvider(
@@ -145,19 +146,25 @@ export default function PredCoins({ contractAddress, dataFeedAddress, view }: { 
 
   const bidPrediction = async () => {
     if (networkId === baseId) {
-      await writeContract({
-        abi: prediction.abi, address: contractAddress as Address, functionName: 'bid',
-        args: [ethers.parseUnits(String(bidValue)), bidState],
-        value: ethers.parseUnits(String(bidValue)),
-      });
+      setIsLoading(true);
+      try {
+        await writeContract({
+          abi: prediction.abi, address: contractAddress as Address, functionName: 'bid',
+          args: [ethers.parseUnits(String(bidValue)), bidState],
+          value: ethers.parseUnits(String(bidValue)),
+        });
+      } finally { setIsLoading(false); }
     }
   };
 
   const resolveBid = async () => {
     if (networkId === baseId) {
-      await writeContract({
-        abi: prediction.abi, address: contractAddress as Address, functionName: 'resolveBid',
-      });
+      setIsLoading(true);
+      try {
+        await writeContract({
+          abi: prediction.abi, address: contractAddress as Address, functionName: 'resolveBid',
+        });
+      } finally { setIsLoading(false); }
     }
   };
 
@@ -239,7 +246,7 @@ export default function PredCoins({ contractAddress, dataFeedAddress, view }: { 
         </div>
 
         {checkBid > 0 && (
-          <p onClick={() => resolveBid()} className="enterButton pointer">Resolve Bid</p>
+          <p onClick={() => resolveBid()} className={`enterButton pointer ${isLoading ? 'btn-loading' : ''}`}>{isLoading ? 'Processing...' : 'Resolve Bid'}</p>
         )}
       </div>
     );
@@ -286,7 +293,7 @@ export default function PredCoins({ contractAddress, dataFeedAddress, view }: { 
         </div>
 
         {checkBid > 0 && (
-          <p onClick={() => resolveBid()} className="enterButton pointer">Resolve Bid</p>
+          <p onClick={() => resolveBid()} className={`enterButton pointer ${isLoading ? 'btn-loading' : ''}`}>{isLoading ? 'Processing...' : 'Resolve Bid'}</p>
         )}
       </>
     );
@@ -332,7 +339,7 @@ export default function PredCoins({ contractAddress, dataFeedAddress, view }: { 
       <p className="infoText">Next price check in {epoch} epoch(s)</p>
 
       {bidValue > 0 && (
-        <p onClick={() => bidPrediction()} className="enterButton pointer" style={{ marginTop: '16px' }}>Place Bid</p>
+        <p onClick={() => bidPrediction()} className={`enterButton pointer ${isLoading ? 'btn-loading' : ''}`} style={{ marginTop: '16px' }}>{isLoading ? 'Processing...' : 'Place Bid'}</p>
       )}
 
       {/* Rewards Info */}

@@ -31,6 +31,7 @@ export default function SwapMemes({ tokenAddress }: { tokenAddress: string; }) {
   const [swapState, setSwapState] = useState(0);
   const [tokenName, setTokenName] = useState("");
   const [tokenPair, setTokenPair] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
 
@@ -90,39 +91,51 @@ export default function SwapMemes({ tokenAddress }: { tokenAddress: string; }) {
 
   const approveRouter = async () => {
     if (networkId === baseId) {
-      await writeContract({
-        abi: token.abi, address: tokenAddress as Address, functionName: 'approve',
-        args: [Data.uniswapRouter, ethers.parseUnits(String(1000000000))],
-      });
+      setIsLoading(true);
+      try {
+        await writeContract({
+          abi: token.abi, address: tokenAddress as Address, functionName: 'approve',
+          args: [Data.uniswapRouter, ethers.parseUnits(String(1000000000))],
+        });
+      } finally { setIsLoading(false); }
     }
   };
 
   const approveWeed = async () => {
     if (networkId === baseId) {
-      await writeContract({
-        abi: token.abi, address: Data.petalFactory as Address, functionName: 'approve',
-        args: [Data.uniswapRouter, ethers.parseUnits(String(1000000000))],
-      });
+      setIsLoading(true);
+      try {
+        await writeContract({
+          abi: token.abi, address: Data.petalFactory as Address, functionName: 'approve',
+          args: [Data.uniswapRouter, ethers.parseUnits(String(1000000000))],
+        });
+      } finally { setIsLoading(false); }
     }
   };
 
   const buyRouter = async () => {
     if (networkId === baseId) {
-      await writeContract({
-        abi: uniswapRouter.abi, address: Data.uniswapRouter as Address,
-        functionName: 'swapExactTokensForTokensSupportingFeeOnTransferTokens',
-        args: [ethers.parseUnits(String(buyValue)), ethers.parseUnits((buyValue / (Number(tokenPrice) / 1e18) - (((buyValue / (Number(tokenPrice) / 1e18)) / 100) * slippage)).toFixed(18), 18), [Data.petalFactory, tokenAddress], address, String(Number((Date.now() / 1000) + 10000).toFixed(0))],
-      });
+      setIsLoading(true);
+      try {
+        await writeContract({
+          abi: uniswapRouter.abi, address: Data.uniswapRouter as Address,
+          functionName: 'swapExactTokensForTokensSupportingFeeOnTransferTokens',
+          args: [ethers.parseUnits(String(buyValue)), ethers.parseUnits((buyValue / (Number(tokenPrice) / 1e18) - (((buyValue / (Number(tokenPrice) / 1e18)) / 100) * slippage)).toFixed(18), 18), [Data.petalFactory, tokenAddress], address, String(Number((Date.now() / 1000) + 10000).toFixed(0))],
+        });
+      } finally { setIsLoading(false); }
     }
   };
 
   const sellRouter = async () => {
     if (networkId === baseId) {
-      await writeContract({
-        abi: uniswapRouter.abi, address: Data.uniswapRouter as Address,
-        functionName: 'swapExactTokensForTokensSupportingFeeOnTransferTokens',
-        args: [ethers.parseUnits(String(sellValue)), ethers.parseUnits((sellValue * (Number(tokenPrice) / 1e18) - ((sellValue * (Number(tokenPrice) / 1e18) / 100) * slippage)).toFixed(18), 18), [tokenAddress, Data.petalFactory], address, String(Number((Date.now() / 1000) + 10000).toFixed(0))],
-      });
+      setIsLoading(true);
+      try {
+        await writeContract({
+          abi: uniswapRouter.abi, address: Data.uniswapRouter as Address,
+          functionName: 'swapExactTokensForTokensSupportingFeeOnTransferTokens',
+          args: [ethers.parseUnits(String(sellValue)), ethers.parseUnits((sellValue * (Number(tokenPrice) / 1e18) - ((sellValue * (Number(tokenPrice) / 1e18) / 100) * slippage)).toFixed(18), 18), [tokenAddress, Data.petalFactory], address, String(Number((Date.now() / 1000) + 10000).toFixed(0))],
+        });
+      } finally { setIsLoading(false); }
     }
   };
 
@@ -158,7 +171,7 @@ export default function SwapMemes({ tokenAddress }: { tokenAddress: string; }) {
   return (
     <>
       {/* Buy/Sell Toggle */}
-      <div className="swapTabBar">
+      <div className="swapTabBar" style={{ '--active-tab': swapState, '--tab-count': 2 } as React.CSSProperties}>
         <div className={`swapTabBtn ${swapState === 0 ? 'active' : ''}`} onClick={() => setSwapState(0)}>
           Buy
         </div>
@@ -180,7 +193,7 @@ export default function SwapMemes({ tokenAddress }: { tokenAddress: string; }) {
       </div>
 
       {swapState === 0 ? (
-        <>
+        <div key="buy" className="panelFadeIn">
           {/* From: WEED */}
           <div className="swapTokenGroup">
             <div className="swapTokenGroupLabel">
@@ -218,19 +231,19 @@ export default function SwapMemes({ tokenAddress }: { tokenAddress: string; }) {
           {buyValue > 0 && (
             <>
               {buyValue * 10 ** 18 > weedAllowance ? (
-                <div onClick={() => approveWeed()} className="swapActionBtn pointer">
-                  Approve WEED
+                <div onClick={() => approveWeed()} className={`swapActionBtn pointer ${isLoading ? 'btn-loading' : ''}`}>
+                  {isLoading ? 'Processing...' : 'Approve WEED'}
                 </div>
               ) : (
-                <div onClick={() => buyRouter()} className="swapActionBtn pointer">
-                  Buy {tokenName}
+                <div onClick={() => buyRouter()} className={`swapActionBtn pointer ${isLoading ? 'btn-loading' : ''}`}>
+                  {isLoading ? 'Processing...' : `Buy ${tokenName}`}
                 </div>
               )}
             </>
           )}
-        </>
+        </div>
       ) : (
-        <>
+        <div key="sell" className="panelFadeIn">
           {/* From: Token */}
           <div className="swapTokenGroup">
             <div className="swapTokenGroupLabel">
@@ -268,17 +281,17 @@ export default function SwapMemes({ tokenAddress }: { tokenAddress: string; }) {
           {sellValue > 0 && (
             <>
               {sellValue * 10 ** 18 > tokenAllowance ? (
-                <div onClick={() => approveRouter()} className="swapActionBtn pointer">
-                  Approve {tokenName}
+                <div onClick={() => approveRouter()} className={`swapActionBtn pointer ${isLoading ? 'btn-loading' : ''}`}>
+                  {isLoading ? 'Processing...' : `Approve ${tokenName}`}
                 </div>
               ) : (
-                <div onClick={() => sellRouter()} className="swapActionBtn pointer">
-                  Sell {tokenName}
+                <div onClick={() => sellRouter()} className={`swapActionBtn pointer ${isLoading ? 'btn-loading' : ''}`}>
+                  {isLoading ? 'Processing...' : `Sell ${tokenName}`}
                 </div>
               )}
             </>
           )}
-        </>
+        </div>
       )}
 
       {/* Trade Info */}

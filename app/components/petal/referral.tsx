@@ -22,6 +22,7 @@ export default function ReferralComponent() {
   const [newCheck, setNewCheck] = useState(false);
   const [error, setError] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
 
@@ -83,19 +84,25 @@ export default function ReferralComponent() {
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && networkId === baseId) {
-      await writeContract({
-        abi: referral.abi, address: Data.referralAddress as Address,
-        functionName: 'register', args: [userRef, newRef],
-      });
+      setIsLoading(true);
+      try {
+        await writeContract({
+          abi: referral.abi, address: Data.referralAddress as Address,
+          functionName: 'register', args: [userRef, newRef],
+        });
+      } finally { setIsLoading(false); }
     }
   };
 
   const register = async () => {
     if (networkId === baseId) {
-      await writeContract({
-        abi: referral.abi, address: Data.referralAddress as Address,
-        functionName: 'register', args: [userRef, newRef],
-      });
+      setIsLoading(true);
+      try {
+        await writeContract({
+          abi: referral.abi, address: Data.referralAddress as Address,
+          functionName: 'register', args: [userRef, newRef],
+        });
+      } finally { setIsLoading(false); }
     }
   };
 
@@ -154,7 +161,7 @@ export default function ReferralComponent() {
           )}
 
           {userRef.length > 0 && newRef.length > 0 && !error && userCheck && !newCheck && (
-            <p onClick={() => register()} className="enterButton pointer">Register</p>
+            <p onClick={() => register()} className={`enterButton pointer ${isLoading ? 'btn-loading' : ''}`}>{isLoading ? 'Processing...' : 'Register'}</p>
           )}
         </>
       ) : (

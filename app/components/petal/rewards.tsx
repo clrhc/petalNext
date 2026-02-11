@@ -17,6 +17,7 @@ export default function Rewards() {
   const { writeContract } = useWriteContract();
   const [rewardsAvailable, setRewardsAvailable] = useState(0);
   const [nftBalance, setNftBalance] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!isConnected || !address) return;
@@ -57,9 +58,12 @@ export default function Rewards() {
 
   const claimRewards = async () => {
     if (networkId === baseId) {
-      await writeContract({
-        abi: rewards.abi, address: Data.petalRewards as Address, functionName: 'claimRewards',
-      });
+      setIsLoading(true);
+      try {
+        await writeContract({
+          abi: rewards.abi, address: Data.petalRewards as Address, functionName: 'claimRewards',
+        });
+      } finally { setIsLoading(false); }
     }
   };
 
@@ -99,7 +103,7 @@ export default function Rewards() {
           </div>
         </div>
 
-        <p onClick={() => claimRewards()} className="enterButton pointer">Claim Rewards</p>
+        <p onClick={() => claimRewards()} className={`enterButton pointer ${isLoading ? 'btn-loading' : ''}`}>{isLoading ? 'Processing...' : 'Claim Rewards'}</p>
 
         <p className="infoText" style={{ marginTop: '16px' }}>1,000 PETAL + 30K WEED + 30K VIRTUE per unclaimed NFT</p>
       </div>

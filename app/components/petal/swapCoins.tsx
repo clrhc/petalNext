@@ -30,6 +30,7 @@ export default function SwapCoins({ tokenAddress, factoryAddress }: { tokenAddre
   const [sellText, setSellText] = useState("0");
   const [swapState, setSwapState] = useState(0);
   const [tokenName, setTokenName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
   const provider = new ethers.JsonRpcProvider(
@@ -110,59 +111,77 @@ export default function SwapCoins({ tokenAddress, factoryAddress }: { tokenAddre
 
   const approveFactory = async () => {
     if (networkId === baseId) {
-      await writeContract({
-        abi: factory.abi, address: tokenAddress as Address, functionName: 'approve',
-        args: [factoryAddress, ethers.parseUnits(String(100000000))],
-      });
+      setIsLoading(true);
+      try {
+        await writeContract({
+          abi: factory.abi, address: tokenAddress as Address, functionName: 'approve',
+          args: [factoryAddress, ethers.parseUnits(String(100000000))],
+        });
+      } finally { setIsLoading(false); }
     }
   };
 
   const buyFactory = async () => {
     if (networkId === baseId) {
-      await writeContract({
-        abi: factory.abi, address: factoryAddress as Address, functionName: 'buy',
-        args: [tokenAddress, ethers.parseUnits((buyValue / (Number(tokenPrice) / 1e18) - (((buyValue / (Number(tokenPrice) / 1e18)) / 100) * 3 + ((buyValue / (Number(tokenPrice) / 1e18)) / 100) * slippage)).toFixed(18), 18), address],
-        value: ethers.parseUnits(String(buyValue)),
-      });
+      setIsLoading(true);
+      try {
+        await writeContract({
+          abi: factory.abi, address: factoryAddress as Address, functionName: 'buy',
+          args: [tokenAddress, ethers.parseUnits((buyValue / (Number(tokenPrice) / 1e18) - (((buyValue / (Number(tokenPrice) / 1e18)) / 100) * 3 + ((buyValue / (Number(tokenPrice) / 1e18)) / 100) * slippage)).toFixed(18), 18), address],
+          value: ethers.parseUnits(String(buyValue)),
+        });
+      } finally { setIsLoading(false); }
     }
   };
 
   const sellFactory = async () => {
     if (networkId === baseId) {
-      await writeContract({
-        abi: factory.abi, address: factoryAddress as Address, functionName: 'sell',
-        args: [tokenAddress, ethers.parseUnits(String(sellValue)), ethers.parseUnits((sellValue * (Number(tokenPrice) / 1e18) - ((sellValue * (Number(tokenPrice) / 1e18) / 100) * 3) - ((sellValue * (Number(tokenPrice) / 1e18) / 100) * slippage)).toFixed(18), 18), address],
-      });
+      setIsLoading(true);
+      try {
+        await writeContract({
+          abi: factory.abi, address: factoryAddress as Address, functionName: 'sell',
+          args: [tokenAddress, ethers.parseUnits(String(sellValue)), ethers.parseUnits((sellValue * (Number(tokenPrice) / 1e18) - ((sellValue * (Number(tokenPrice) / 1e18) / 100) * 3) - ((sellValue * (Number(tokenPrice) / 1e18) / 100) * slippage)).toFixed(18), 18), address],
+        });
+      } finally { setIsLoading(false); }
     }
   };
 
   const approveRouter = async () => {
     if (networkId === baseId) {
-      await writeContract({
-        abi: token.abi, address: tokenAddress as Address, functionName: 'approve',
-        args: [Data.uniswapRouter, ethers.parseUnits(String(1000000000))],
-      });
+      setIsLoading(true);
+      try {
+        await writeContract({
+          abi: token.abi, address: tokenAddress as Address, functionName: 'approve',
+          args: [Data.uniswapRouter, ethers.parseUnits(String(1000000000))],
+        });
+      } finally { setIsLoading(false); }
     }
   };
 
   const sellRouter = async () => {
     if (networkId === baseId) {
-      await writeContract({
-        abi: uniswapRouter.abi, address: Data.uniswapRouter as Address,
-        functionName: 'swapExactTokensForETHSupportingFeeOnTransferTokens',
-        args: [ethers.parseUnits(String(sellValue)), ethers.parseUnits((sellValue * (Number(tokenPrice) / 1e18) - ((sellValue * (Number(tokenPrice) / 1e18) / 100) * 3) - ((sellValue * (Number(tokenPrice) / 1e18) / 100) * slippage)).toFixed(18), 18), [tokenAddress, Data.WETH], address, String(Number((Date.now() / 1000) + 10000).toFixed(0))],
-      });
+      setIsLoading(true);
+      try {
+        await writeContract({
+          abi: uniswapRouter.abi, address: Data.uniswapRouter as Address,
+          functionName: 'swapExactTokensForETHSupportingFeeOnTransferTokens',
+          args: [ethers.parseUnits(String(sellValue)), ethers.parseUnits((sellValue * (Number(tokenPrice) / 1e18) - ((sellValue * (Number(tokenPrice) / 1e18) / 100) * 3) - ((sellValue * (Number(tokenPrice) / 1e18) / 100) * slippage)).toFixed(18), 18), [tokenAddress, Data.WETH], address, String(Number((Date.now() / 1000) + 10000).toFixed(0))],
+        });
+      } finally { setIsLoading(false); }
     }
   };
 
   const buyRouter = async () => {
     if (networkId === baseId) {
-      await writeContract({
-        abi: uniswapRouter.abi, address: Data.uniswapRouter as Address,
-        functionName: 'swapExactETHForTokensSupportingFeeOnTransferTokens',
-        args: [ethers.parseUnits((buyValue / (Number(tokenPrice) / 1e18) - (((buyValue / (Number(tokenPrice) / 1e18)) / 100) * 3 + ((buyValue / (Number(tokenPrice) / 1e18)) / 100) * slippage)).toFixed(18), 18), [Data.WETH, tokenAddress], address, String(Number((Date.now() / 1000) + 10000).toFixed(0))],
-        value: ethers.parseUnits(String(buyValue)),
-      });
+      setIsLoading(true);
+      try {
+        await writeContract({
+          abi: uniswapRouter.abi, address: Data.uniswapRouter as Address,
+          functionName: 'swapExactETHForTokensSupportingFeeOnTransferTokens',
+          args: [ethers.parseUnits((buyValue / (Number(tokenPrice) / 1e18) - (((buyValue / (Number(tokenPrice) / 1e18)) / 100) * 3 + ((buyValue / (Number(tokenPrice) / 1e18)) / 100) * slippage)).toFixed(18), 18), [Data.WETH, tokenAddress], address, String(Number((Date.now() / 1000) + 10000).toFixed(0))],
+          value: ethers.parseUnits(String(buyValue)),
+        });
+      } finally { setIsLoading(false); }
     }
   };
 
@@ -201,7 +220,7 @@ export default function SwapCoins({ tokenAddress, factoryAddress }: { tokenAddre
   return (
     <>
       {/* Buy/Sell Toggle */}
-      <div className="swapTabBar">
+      <div className="swapTabBar" style={{ '--active-tab': swapState, '--tab-count': 2 } as React.CSSProperties}>
         <div className={`swapTabBtn ${swapState === 0 ? 'active' : ''}`} onClick={() => setSwapState(0)}>
           Buy
         </div>
@@ -223,7 +242,7 @@ export default function SwapCoins({ tokenAddress, factoryAddress }: { tokenAddre
       </div>
 
       {swapState === 0 ? (
-        <>
+        <div key="buy" className="panelFadeIn">
           {/* From: ETH */}
           <div className="swapTokenGroup">
             <div className="swapTokenGroupLabel">
@@ -259,13 +278,13 @@ export default function SwapCoins({ tokenAddress, factoryAddress }: { tokenAddre
 
           {/* Action Button */}
           {buyValue > 0 && (
-            <div onClick={() => tokenLaunched ? buyRouter() : buyFactory()} className="swapActionBtn pointer">
-              Buy {tokenName}
+            <div onClick={() => tokenLaunched ? buyRouter() : buyFactory()} className={`swapActionBtn pointer ${isLoading ? 'btn-loading' : ''}`}>
+              {isLoading ? 'Processing...' : `Buy ${tokenName}`}
             </div>
           )}
-        </>
+        </div>
       ) : (
-        <>
+        <div key="sell" className="panelFadeIn">
           {/* From: Token */}
           <div className="swapTokenGroup">
             <div className="swapTokenGroupLabel">
@@ -303,17 +322,17 @@ export default function SwapCoins({ tokenAddress, factoryAddress }: { tokenAddre
           {sellValue > 0 && (
             <>
               {sellValue * 10 ** 18 > tokenAllowance ? (
-                <div onClick={() => tokenLaunched ? approveRouter() : approveFactory()} className="swapActionBtn pointer">
-                  Approve {tokenName}
+                <div onClick={() => tokenLaunched ? approveRouter() : approveFactory()} className={`swapActionBtn pointer ${isLoading ? 'btn-loading' : ''}`}>
+                  {isLoading ? 'Processing...' : `Approve ${tokenName}`}
                 </div>
               ) : (
-                <div onClick={() => tokenLaunched ? sellRouter() : sellFactory()} className="swapActionBtn pointer">
-                  Sell {tokenName}
+                <div onClick={() => tokenLaunched ? sellRouter() : sellFactory()} className={`swapActionBtn pointer ${isLoading ? 'btn-loading' : ''}`}>
+                  {isLoading ? 'Processing...' : `Sell ${tokenName}`}
                 </div>
               )}
             </>
           )}
-        </>
+        </div>
       )}
 
       {/* Trade Info */}

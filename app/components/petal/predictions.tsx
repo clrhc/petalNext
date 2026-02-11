@@ -32,10 +32,12 @@ export default function Predictions() {
   const [activeTab, setActiveTab] = useState<TabType>('markets');
   const [selectedPair, setSelectedPair] = useState(0);
 
+  const tabIndex = activeTab === 'markets' ? 0 : activeTab === 'yourbid' ? 1 : 2;
+
   return (
     <div className="predLayout">
       {/* PancakeSwap-style tab bar */}
-      <div className="predTabs">
+      <div className="predTabs" style={{ '--active-pred-tab': tabIndex } as React.CSSProperties}>
         <div
           className={`predTab ${activeTab === 'markets' ? 'active' : ''}`}
           onClick={() => setActiveTab('markets')}
@@ -81,63 +83,65 @@ export default function Predictions() {
           </div>
         )}
 
-        {activeTab === 'markets' && (
-          <>
-            {/* Sub header */}
-            <div className="predSubHeader">
-              <span className="predOracleTag">
-                <span className="predOracleDot" />
-                Chainlink Data Feeds
-              </span>
-            </div>
-
-            {/* Pair card grid */}
-            <div className="predGrid">
-              {PAIRS.map((pair, i) => (
-                <div
-                  key={pair.label}
-                  className={`predPairCard ${selectedPair === i ? 'selected' : ''}`}
-                  onClick={() => setSelectedPair(i)}
-                >
-                  <div className="predPairIcon">
-                    <Image alt={pair.short} src={pair.icon} width={36} height={36} />
-                  </div>
-                  <span className="predPairName">{pair.label}</span>
-                  <span className="predPairLabel">Predict</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Bid panel for selected pair */}
-            <div className="predPanel">
-              <div className="predPanelHeader">
-                <div className="predPairIcon">
-                  <Image alt={PAIRS[selectedPair].short} src={PAIRS[selectedPair].icon} width={36} height={36} />
-                </div>
-                <span className="predPanelTitle">{PAIRS[selectedPair].label}</span>
+        <div key={activeTab} className="panelFadeIn">
+          {activeTab === 'markets' && (
+            <>
+              {/* Sub header */}
+              <div className="predSubHeader">
+                <span className="predOracleTag">
+                  <span className="predOracleDot" />
+                  Chainlink Data Feeds
+                </span>
               </div>
-              <PredCoins
-                contractAddress={PAIRS[selectedPair].contract}
-                dataFeedAddress={PAIRS[selectedPair].feed}
-                view="bid"
-              />
-            </div>
-          </>
-        )}
 
-        {activeTab === 'yourbid' && (
-          <PredCoins
-            contractAddress={PAIRS[selectedPair].contract}
-            dataFeedAddress={PAIRS[selectedPair].feed}
-            view="position"
-          />
-        )}
+              {/* Pair card grid */}
+              <div className="predGrid">
+                {PAIRS.map((pair, i) => (
+                  <div
+                    key={pair.label}
+                    className={`predPairCard ${selectedPair === i ? 'selected' : ''}`}
+                    onClick={() => setSelectedPair(i)}
+                  >
+                    <div className="predPairIcon">
+                      <Image alt={pair.short} src={pair.icon} width={36} height={36} />
+                    </div>
+                    <span className="predPairName">{pair.label}</span>
+                    <span className="predPairLabel">Predict</span>
+                  </div>
+                ))}
+              </div>
 
-        {activeTab === 'history' && (
-          <PredHistory
-            contractAddress={PAIRS[selectedPair].contract}
-          />
-        )}
+              {/* Bid panel for selected pair */}
+              <div className="predPanel" key={selectedPair}>
+                <div className="predPanelHeader">
+                  <div className="predPairIcon">
+                    <Image alt={PAIRS[selectedPair].short} src={PAIRS[selectedPair].icon} width={36} height={36} />
+                  </div>
+                  <span className="predPanelTitle">{PAIRS[selectedPair].label}</span>
+                </div>
+                <PredCoins
+                  contractAddress={PAIRS[selectedPair].contract}
+                  dataFeedAddress={PAIRS[selectedPair].feed}
+                  view="bid"
+                />
+              </div>
+            </>
+          )}
+
+          {activeTab === 'yourbid' && (
+            <PredCoins
+              contractAddress={PAIRS[selectedPair].contract}
+              dataFeedAddress={PAIRS[selectedPair].feed}
+              view="position"
+            />
+          )}
+
+          {activeTab === 'history' && (
+            <PredHistory
+              contractAddress={PAIRS[selectedPair].contract}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

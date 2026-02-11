@@ -62,6 +62,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 88px;
 }
 
 html, body {
@@ -79,6 +80,209 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   position: relative;
+}
+
+/* ========================================
+   GLOBAL :ACTIVE PRESS FEEDBACK
+   ======================================== */
+.swapTabBtn:active,
+.predTab:active,
+.predPairCard:active,
+.predPairChip:active,
+.btnHigher:active,
+.btnLower:active,
+.navLinks a:active,
+.swapButtons p:active,
+.predPanelClose:active,
+.pointer:active {
+  transform: scale(0.97);
+  transition-duration: 0.08s;
+}
+
+.ctaPrimary:active,
+.ctaSecondary:active,
+.swapActionBtn:active,
+.enterButton:active,
+.connectBtn:active,
+.walletButtons:active {
+  transform: translateY(-1px) scale(0.98);
+  transition-duration: 0.08s;
+}
+
+.featureCard:active,
+.howStep:active {
+  transform: translateY(-4px) scale(0.98);
+  transition-duration: 0.08s;
+}
+
+.socials a:active {
+  transform: translateY(-1px) scale(0.97);
+  transition-duration: 0.08s;
+}
+
+/* ========================================
+   PANEL FADE-IN ANIMATION
+   ======================================== */
+@keyframes panelFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.panelFadeIn {
+  animation: panelFade 0.2s ease-out both;
+}
+
+/* ========================================
+   BUTTON LOADING PULSE
+   ======================================== */
+.btn-loading {
+  pointer-events: none;
+  position: relative;
+  animation: btnPulse 1.5s ease-in-out infinite;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.12) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: btnShimmer 1.5s ease-in-out infinite;
+  border-radius: inherit;
+}
+
+@keyframes btnPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
+}
+
+@keyframes btnShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ========================================
+   SLIDING TAB INDICATOR
+   ======================================== */
+.swapTabBar {
+  position: relative;
+}
+
+.swapTabBar::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc((100% - 8px) / var(--tab-count, 2));
+  height: calc(100% - 8px);
+  background: rgba(0, 255, 200, 0.1);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 15px rgba(0, 255, 200, 0.08);
+  transition: transform var(--transition-base);
+  transform: translateX(calc(var(--active-tab, 0) * 100%));
+  z-index: 0;
+  pointer-events: none;
+}
+
+.predTabs {
+  position: relative;
+}
+
+.predTabs::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: calc(100% / 3);
+  height: 3px;
+  background: var(--gradient-primary);
+  border-radius: 3px 3px 0 0;
+  transition: transform var(--transition-base);
+  transform: translateX(calc(var(--active-pred-tab, 0) * 100%));
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ========================================
+   STAGGERED PAGE ENTRANCE
+   ======================================== */
+.pageTitle > * {
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.pageTitle .pageBadge {
+  animation-delay: 0s;
+}
+
+.pageTitle h1 {
+  animation-delay: 0.08s;
+}
+
+.pageTitle p {
+  animation-delay: 0.16s;
+}
+
+.predGrid .predPairCard:nth-child(1) { animation: fadeInUp 0.4s ease-out 0.05s both; }
+.predGrid .predPairCard:nth-child(2) { animation: fadeInUp 0.4s ease-out 0.1s both; }
+.predGrid .predPairCard:nth-child(3) { animation: fadeInUp 0.4s ease-out 0.15s both; }
+.predGrid .predPairCard:nth-child(4) { animation: fadeInUp 0.4s ease-out 0.2s both; }
+.predGrid .predPairCard:nth-child(5) { animation: fadeInUp 0.4s ease-out 0.25s both; }
+.predGrid .predPairCard:nth-child(6) { animation: fadeInUp 0.4s ease-out 0.3s both; }
+.predGrid .predPairCard:nth-child(7) { animation: fadeInUp 0.4s ease-out 0.35s both; }
+.predGrid .predPairCard:nth-child(8) { animation: fadeInUp 0.4s ease-out 0.4s both; }
+
+.connectPrompt > * {
+  animation: fadeInUp 0.5s ease-out both;
+}
+
+.connectPrompt h2 {
+  animation-delay: 0s;
+}
+
+.connectPrompt p {
+  animation-delay: 0.08s;
+}
+
+.connectPrompt .connectBtn {
+  animation-delay: 0.16s;
+}
+
+/* ========================================
+   HOVER & INTERACTION POLISH
+   ======================================== */
+.predPairChip:hover {
+  transform: translateY(-1px);
+}
+
+.predHistoryCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.predPriceCard {
+  transition: var(--transition-base);
+}
+
+.swapInfoSection {
+  transition: var(--transition-base);
+}
+
+.swapArrowBtn {
+  transition: var(--transition-base);
+}
+
+.swapArrowBtn:hover {
+  color: var(--accent-primary);
+}
+
+.predPairCard.selected {
+  transform: translateY(-2px);
 }
 
 /* Animated background mesh */
@@ -825,9 +1029,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .swapTabBtn.active {
-  background: rgba(0, 255, 200, 0.1);
   color: var(--accent-primary);
-  box-shadow: 0 0 15px rgba(0, 255, 200, 0.08);
+  position: relative;
+  z-index: 1;
 }
 
 /* Token input group (From / To sections) */
@@ -1967,16 +2171,7 @@ footer {
   background: rgba(0, 255, 200, 0.06);
 }
 
-.predTab.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 16px;
-  right: 16px;
-  height: 3px;
-  background: var(--gradient-primary);
-  border-radius: 3px 3px 0 0;
-}
+/* Tab underline now handled by .predTabs::before sliding indicator */
 
 .predTabDivider {
   width: 1px;
@@ -2096,6 +2291,21 @@ footer {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.memeTokenInitial {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 255, 200, 0.1);
+  border: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--accent-primary);
 }
 
 .predPairIcon img {
@@ -2553,7 +2763,6 @@ footer {
 .pageTitle {
   text-align: center;
   margin-bottom: 32px;
-  animation: fadeInUp 0.6s ease-out;
 }
 
 .pageTitle h1 {
