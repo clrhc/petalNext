@@ -21,6 +21,7 @@ export default function ReferralComponent() {
   const [userCheck, setUserCheck] = useState(false);
   const [newCheck, setNewCheck] = useState(false);
   const [error, setError] = useState(false);
+  const [copied, setCopied] = useState(false);
   const networkId = useChainId();
   const { writeContract } = useWriteContract();
 
@@ -98,17 +99,24 @@ export default function ReferralComponent() {
     }
   };
 
+  const copyRefCode = () => {
+    navigator.clipboard.writeText(userInfo[2]);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <>
       {userInfo[0] < 1 ? (
         <>
-          <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-            <h3 style={{ fontSize: '1.2rem', marginBottom: '8px', color: 'var(--text-primary)' }}>Join the Protocol</h3>
-            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.9rem' }}>
-              Register with a referral code and create your own. Default referral: <strong style={{ color: 'var(--accent-primary)' }}>PETAL</strong>
+          <div className="refInfo">
+            <h3 style={{ fontSize: '1.2rem', marginBottom: '8px', color: 'var(--text-primary)', fontWeight: 700 }}>Join the Protocol</h3>
+            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6, fontSize: '0.9rem', margin: '0 0 4px' }}>
+              Register with a referral code and create your own.
+              Default code: <strong style={{ color: 'var(--accent-primary)' }}>PETAL</strong>
             </p>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '8px' }}>
-              Earn VIRTUE, PETAL and WEED on registration
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+              Earn VIRTUE, PETAL, and WEED on registration
             </p>
           </div>
 
@@ -154,18 +162,38 @@ export default function ReferralComponent() {
           {userInfo.length === 5 && (
             <div className="refInfo">
               <h3 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '16px' }}>
-                #{userInfo[0] < 10 && '00'}{userInfo[0] >= 10 && userInfo[0] < 100 && '0'}{userInfo[0]}
+                #{String(userInfo[0]).padStart(3, '0')}
               </h3>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '16px' }}>
                 <span className="xpText">
                   <h3 style={{ color: 'var(--accent-primary)', fontWeight: 700 }}>XP: {userInfo[1]}</h3>
                   <Image alt="XP" width={24} height={24} src={xpCoin} />
                 </span>
               </div>
-              <h3>Referral: <span style={{ color: 'var(--accent-primary)' }}>{userInfo[2]}</span></h3>
-              <h3 style={{ fontSize: '0.8rem', wordBreak: 'break-all', color: 'var(--text-muted)' }}>{address}</h3>
-              <div style={{ marginTop: '16px', padding: '12px', background: 'rgba(0, 255, 200, 0.03)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
-                <h3 style={{ color: 'var(--accent-primary)' }}>Collect XP for future rewards!</h3>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}>
+                <h3>Code: <span style={{ color: 'var(--accent-primary)' }}>{userInfo[2]}</span></h3>
+                <span
+                  onClick={copyRefCode}
+                  style={{
+                    padding: '4px 10px',
+                    fontSize: '0.75rem',
+                    background: copied ? 'rgba(0, 230, 118, 0.1)' : 'rgba(0, 255, 200, 0.05)',
+                    border: `1px solid ${copied ? 'rgba(0, 230, 118, 0.3)' : 'var(--border-subtle)'}`,
+                    borderRadius: 'var(--radius-full)',
+                    cursor: 'pointer',
+                    color: copied ? 'var(--accent-success)' : 'var(--text-secondary)',
+                    transition: 'var(--transition-base)',
+                  }}
+                >
+                  {copied ? 'Copied' : 'Copy'}
+                </span>
+              </div>
+
+              <h3 style={{ fontSize: '0.75rem', wordBreak: 'break-all', color: 'var(--text-muted)', marginBottom: '16px' }}>{address}</h3>
+
+              <div style={{ padding: '12px', background: 'rgba(0, 255, 200, 0.03)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
+                <h3 style={{ color: 'var(--accent-primary)', fontSize: '0.9rem' }}>Share your code to earn XP and unlock future rewards</h3>
               </div>
             </div>
           )}

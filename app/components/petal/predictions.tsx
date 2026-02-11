@@ -32,8 +32,8 @@ export default function Predictions() {
         ))}
       </div>
 
-      <p className="infoText" style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>
-        Powered by Chainlink Data Feeds
+      <p className="infoText" style={{ marginBottom: '16px' }}>
+        Oracle prices via Chainlink Data Feeds
       </p>
 
       <PredCoins

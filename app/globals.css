@@ -171,10 +171,13 @@ h1, h2, h3, h4, h5, h6 {
 .logoSpan {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   cursor: pointer;
   position: relative;
   z-index: 2;
+  text-decoration: none;
+  color: inherit;
+  flex-shrink: 0;
 }
 
 .logo {
@@ -191,13 +194,49 @@ h1, h2, h3, h4, h5, h6 {
 
 .logoText {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: 700;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
+}
+
+/* ========================================
+   NAVIGATION LINKS
+   ======================================== */
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  background: rgba(6, 20, 20, 0.4);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+}
+
+.navLinks a {
+  padding: 8px 18px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-full);
+  transition: var(--transition-base);
+  white-space: nowrap;
+}
+
+.navLinks a:hover {
+  color: var(--text-primary);
+  background: rgba(0, 255, 200, 0.05);
+}
+
+.navLinks a.active {
+  background: var(--gradient-primary);
+  color: var(--bg-primary);
+  font-weight: 600;
+  box-shadow: 0 2px 12px rgba(0, 255, 200, 0.2);
 }
 
 .xpNav {
@@ -1004,9 +1043,9 @@ footer {
    ======================================== */
 .featureGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  max-width: 960px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  max-width: 1040px;
   margin: 0 auto 48px;
   padding: 0 20px;
   animation: fadeInUp 0.8s ease-out 0.5s both;
@@ -1215,21 +1254,205 @@ footer {
 }
 
 /* ========================================
+   PAGE LAYOUT (Multi-page)
+   ======================================== */
+.pageContainer {
+  position: relative;
+  width: 100%;
+  min-height: calc(100vh - 72px);
+  padding: 120px 20px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+}
+
+.pageTitle {
+  text-align: center;
+  margin-bottom: 32px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.pageTitle h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.pageTitle p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.pageCard {
+  width: 100%;
+  max-width: 520px;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.6s ease-out 0.1s both;
+}
+
+.pageCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--gradient-primary);
+  opacity: 0.5;
+}
+
+.connectPrompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 60px 20px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.connectPrompt h2 {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+
+.connectPrompt p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  max-width: 360px;
+  line-height: 1.5;
+}
+
+.connectBtn {
+  display: inline-block;
+  padding: 14px 36px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--bg-primary);
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition-base);
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.connectBtn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+  opacity: 0;
+  transition: var(--transition-base);
+}
+
+.connectBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 255, 200, 0.3), 0 0 40px rgba(0, 255, 200, 0.15);
+}
+
+.connectBtn:hover::before {
+  opacity: 1;
+}
+
+/* Badge for page context */
+.pageBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(0, 255, 200, 0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--accent-primary);
+  margin-bottom: 12px;
+}
+
+/* ========================================
+   TABULAR NUMERICS
+   ======================================== */
+.ethPrice h2,
+.statValue,
+.bidPrice h2,
+.xpNav p,
+.refInfo h3:first-child,
+.infoText,
+.rightSide {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* ========================================
    RESPONSIVE DESIGN
    ======================================== */
 @media (max-width: 960px) {
   .nav {
     padding: 0 16px;
-    height: 64px;
+    height: auto;
+    min-height: 64px;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  .logoSpan {
+    order: 1;
+  }
+
+  .navRight {
+    order: 2;
+  }
+
+  .navLinks {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 4px 2px;
+    margin: 4px 0 8px;
+    border-radius: var(--radius-lg);
+    background: rgba(6, 20, 20, 0.3);
+    border: 1px solid var(--border-subtle);
+  }
+
+  .navLinks::-webkit-scrollbar {
+    display: none;
+  }
+
+  .navLinks a {
+    padding: 6px 14px;
+    font-size: 0.78rem;
   }
 
   .logoText {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
   }
 
   .logo {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
   }
 
   .xpNav {
@@ -1257,7 +1480,11 @@ footer {
   }
 
   .homeHeader {
-    padding-top: 90px;
+    padding-top: 130px;
+  }
+
+  .pageContainer {
+    padding-top: 130px;
   }
 
   .heading h2 {
@@ -1298,6 +1525,13 @@ footer {
     font-size: 0.85rem;
   }
 
+  .pageCard {
+    margin: 0 12px;
+    padding: 20px 16px;
+    max-width: calc(100vw - 24px);
+    border-radius: var(--radius-lg);
+  }
+
   .coinInfo {
     max-width: calc(100vw - 24px);
     padding: 20px;
@@ -1333,7 +1567,7 @@ footer {
   }
 
   .featureGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
     padding: 0 12px;
   }
@@ -1369,9 +1603,18 @@ footer {
     flex-direction: column;
     gap: 12px;
   }
+
+  .connectPrompt {
+    padding: 40px 16px;
+  }
 }
 
 @media (max-width: 480px) {
+  .navLinks a {
+    padding: 5px 10px;
+    font-size: 0.72rem;
+  }
+
   .menuButtons p {
     padding: 7px 10px;
     font-size: 0.72rem;
@@ -1391,5 +1634,17 @@ footer {
 
   .refDiv {
     padding: 16px 14px;
+  }
+
+  .pageCard {
+    padding: 16px 14px;
+  }
+
+  .pageTitle h1 {
+    font-size: 1.3rem;
+  }
+
+  .featureGrid {
+    grid-template-columns: 1fr;
   }
 }

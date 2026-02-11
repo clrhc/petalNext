@@ -67,34 +67,35 @@ export default function Rewards() {
     <>
       <div className="refInfo">
         <div style={{ marginBottom: '20px', padding: '16px', background: 'rgba(0, 255, 200, 0.03)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
-          <h3 style={{ color: 'var(--accent-primary)', marginBottom: '4px' }}>Collect XP for future rewards!</h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-            Limited mints at{' '}
+          <h3 style={{ color: 'var(--accent-primary)', marginBottom: '4px', fontSize: '0.95rem' }}>Accumulate XP for future reward snapshots</h3>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>
+            Mint VirtueSekai NFTs at{' '}
             <a className="virtueLink" href="https://virtue.wtf" rel="noopener noreferrer" target="_blank">Virtue.wtf</a>
+            {' '}for bonus claims
           </p>
         </div>
 
         <div style={{ display: 'grid', gap: '12px', marginBottom: '20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', background: 'rgba(10, 20, 30, 0.4)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>VirtueSekai NFTs</span>
+            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>VirtueSekai NFTs Held</span>
             <span style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)' }}>{nftBalance}</span>
           </div>
         </div>
 
-        <h3 style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1px' }}>Rewards Available</h3>
+        <h3 style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '1.5px' }}>Claimable Rewards</h3>
 
         <div style={{ display: 'grid', gap: '8px', marginBottom: '20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px', background: 'rgba(10, 20, 30, 0.3)', borderRadius: 'var(--radius-sm)' }}>
             <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>PETAL</span>
-            <span style={{ color: 'var(--accent-primary)', fontWeight: 700, fontSize: '1rem' }}>{rewardsAvailable}</span>
+            <span style={{ color: 'var(--accent-primary)', fontWeight: 700, fontSize: '1rem' }}>{rewardsAvailable.toLocaleString()}</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px', background: 'rgba(10, 20, 30, 0.3)', borderRadius: 'var(--radius-sm)' }}>
             <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>WEED</span>
-            <span style={{ color: 'var(--accent-primary)', fontWeight: 700, fontSize: '1rem' }}>{rewardsAvailable * 30}</span>
+            <span style={{ color: 'var(--accent-primary)', fontWeight: 700, fontSize: '1rem' }}>{(rewardsAvailable * 30).toLocaleString()}</span>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 16px', background: 'rgba(10, 20, 30, 0.3)', borderRadius: 'var(--radius-sm)' }}>
             <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>VIRTUE</span>
-            <span style={{ color: 'var(--accent-primary)', fontWeight: 700, fontSize: '1rem' }}>{rewardsAvailable * 30}</span>
+            <span style={{ color: 'var(--accent-primary)', fontWeight: 700, fontSize: '1rem' }}>{(rewardsAvailable * 30).toLocaleString()}</span>
           </div>
         </div>
 

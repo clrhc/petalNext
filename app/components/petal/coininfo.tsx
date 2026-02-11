@@ -57,14 +57,14 @@ export default function CoinInfo() {
 
   return (
     <div className="coinInfo">
+      <p>Protocol Stats</p>
       <p>PETAL Price: {Number(Number(tokenPrice) / 10 ** 18).toFixed(10)} ETH</p>
       {!petalLaunched && (
         <p>Bonding Progress: {Number(ethers.formatUnits(String(ethIn), 18)).toFixed(3)} / 40 ETH</p>
       )}
-      <p>Fees fund airdrops pre-bond and WEED liquidity on PETAL graduation</p>
-      <p>Airdrop eligibility: PETAL held + meme market volume</p>
-      <p>WEED earned at 3x your net PETAL buys on the bonding curve</p>
-      <p>3% global tax on all transactions (except meme markets)</p>
+      <p>Bonding curve fees fund airdrops pre-graduation and seed WEED liquidity on PETAL launch</p>
+      <p>WEED earned at 3x your net PETAL buys on the curve</p>
+      <p>3% tax on bonding curve and prediction market transactions</p>
     </div>
   );
 }

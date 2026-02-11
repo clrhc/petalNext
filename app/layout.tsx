@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import { headers } from 'next/headers';
 import ContextProvider from './context';
+import NavBarPetal from './components/petal/navbar';
+import Footer from './components/petal/footer';
+import './globals.css';
 
 export async function generateMetadata(): Promise<Metadata> {
     return {
         title: 'Petal Protocol',
-        description: 'The DeFi Protocol for Meme Markets — Bonding Curves, Prediction Markets & Liquidity Pools on Base',
+        description: 'Illiquid meme market on Base — Bonding curves, prediction markets, and token rewards powered by PETAL.',
         icons: {
     icon: [
     { url: "/favicon.ico" },
@@ -16,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     openGraph: {
     title: "Petal Protocol",
-    description: "The DeFi Protocol for Meme Markets — Bonding Curves, Prediction Markets & Liquidity Pools on Base",
+    description: "Illiquid meme market on Base — Bonding curves, prediction markets, and token rewards powered by PETAL.",
     url: "https://www.petal.wtf",
     siteName: "Petal Protocol",
     images: [
@@ -33,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
   twitter: {
     card: "summary_large_image",
     title: "Petal Protocol",
-    description: "The DeFi Protocol for Meme Markets — Bonding Curves, Prediction Markets & Liquidity Pools on Base",
+    description: "Illiquid meme market on Base — Bonding curves, prediction markets, and token rewards powered by PETAL.",
     images: ["/thumbnail.png"],
   },
         other: {
@@ -69,7 +72,22 @@ export default async function RootLayout({
     <ContextProvider cookies={cookies}>
     <html lang="en">
       <body>
+        <div className="particlesBg">
+          <div className="particle" />
+          <div className="particle" />
+          <div className="particle" />
+          <div className="particle" />
+          <div className="particle" />
+          <div className="particle" />
+          <div className="particle" />
+          <div className="particle" />
+        </div>
+
+        <NavBarPetal />
+
         {children}
+
+        <Footer />
       </body>
     </html>
     </ContextProvider>
