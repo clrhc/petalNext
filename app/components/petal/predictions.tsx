@@ -1,19 +1,29 @@
 'use client';
 import '../../globals.css';
 import React, { useState } from 'react';
+import Image from 'next/image';
 import PredCoins from './predCoins';
 import PredHistory from './predHistory';
 import Data from '../../data.json';
 
+import ethIcon from '../../assets/img/tokens/eth.svg';
+import btcIcon from '../../assets/img/tokens/btc.svg';
+import linkIcon from '../../assets/img/tokens/link.svg';
+import bnbIcon from '../../assets/img/tokens/bnb.svg';
+import ltcIcon from '../../assets/img/tokens/ltc.svg';
+import solIcon from '../../assets/img/tokens/sol.svg';
+import xrpIcon from '../../assets/img/tokens/xrp.svg';
+import dogeIcon from '../../assets/img/tokens/doge.svg';
+
 const PAIRS = [
-  { label: 'ETH/USD', short: 'ETH', contract: Data.ethPrediction, feed: Data.ethusd },
-  { label: 'BTC/USD', short: 'BTC', contract: Data.btcPrediction, feed: Data.btcusd },
-  { label: 'LINK/USD', short: 'LINK', contract: Data.linkPrediction, feed: Data.linkusd },
-  { label: 'BNB/USD', short: 'BNB', contract: Data.bnbPrediction, feed: Data.bnbusd },
-  { label: 'LTC/USD', short: 'LTC', contract: Data.ltcPrediction, feed: Data.ltcusd },
-  { label: 'SOL/USD', short: 'SOL', contract: Data.solPrediction, feed: Data.solusd },
-  { label: 'XRP/USD', short: 'XRP', contract: Data.xrpPrediction, feed: Data.xrpusd },
-  { label: 'DOGE/USD', short: 'DOGE', contract: Data.dogePrediction, feed: Data.dogeusd },
+  { label: 'ETH/USD', short: 'ETH', icon: ethIcon, contract: Data.ethPrediction, feed: Data.ethusd },
+  { label: 'BTC/USD', short: 'BTC', icon: btcIcon, contract: Data.btcPrediction, feed: Data.btcusd },
+  { label: 'LINK/USD', short: 'LINK', icon: linkIcon, contract: Data.linkPrediction, feed: Data.linkusd },
+  { label: 'BNB/USD', short: 'BNB', icon: bnbIcon, contract: Data.bnbPrediction, feed: Data.bnbusd },
+  { label: 'LTC/USD', short: 'LTC', icon: ltcIcon, contract: Data.ltcPrediction, feed: Data.ltcusd },
+  { label: 'SOL/USD', short: 'SOL', icon: solIcon, contract: Data.solPrediction, feed: Data.solusd },
+  { label: 'XRP/USD', short: 'XRP', icon: xrpIcon, contract: Data.xrpPrediction, feed: Data.xrpusd },
+  { label: 'DOGE/USD', short: 'DOGE', icon: dogeIcon, contract: Data.dogePrediction, feed: Data.dogeusd },
 ] as const;
 
 type TabType = 'markets' | 'yourbid' | 'history';
@@ -89,7 +99,9 @@ export default function Predictions() {
                   className={`predPairCard ${selectedPair === i ? 'selected' : ''}`}
                   onClick={() => setSelectedPair(i)}
                 >
-                  <div className="predPairIcon">{pair.short}</div>
+                  <div className="predPairIcon">
+                    <Image alt={pair.short} src={pair.icon} width={36} height={36} />
+                  </div>
                   <span className="predPairName">{pair.label}</span>
                   <span className="predPairLabel">Predict</span>
                 </div>
@@ -99,6 +111,9 @@ export default function Predictions() {
             {/* Bid panel for selected pair */}
             <div className="predPanel">
               <div className="predPanelHeader">
+                <div className="predPairIcon">
+                  <Image alt={PAIRS[selectedPair].short} src={PAIRS[selectedPair].icon} width={36} height={36} />
+                </div>
                 <span className="predPanelTitle">{PAIRS[selectedPair].label}</span>
               </div>
               <PredCoins

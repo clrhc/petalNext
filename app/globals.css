@@ -2091,15 +2091,18 @@ footer {
   width: 36px;
   height: 36px;
   border-radius: 50%;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 0.7rem;
-  font-family: 'Space Grotesk', sans-serif;
-  background: rgba(0, 255, 200, 0.08);
-  border: 1px solid rgba(0, 255, 200, 0.15);
-  color: var(--accent-primary);
+  flex-shrink: 0;
+}
+
+.predPairIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .predPairName {
@@ -2127,7 +2130,7 @@ footer {
 .predPanelHeader {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 10px;
   margin-bottom: 20px;
   padding-bottom: 16px;
   border-bottom: 1px solid var(--border-subtle);
