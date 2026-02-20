@@ -14,6 +14,7 @@ export default function RewardsPage() {
         <span className="pageBadge">Token Rewards</span>
         <h1>Claim Rewards</h1>
         <p>Earn PETAL, WEED, and VIRTUE from referrals and VirtueSekai NFT holdings. Rewards accumulate automatically.</p>
+        <p className="pageDisclaimer">Rewards are only available for Base network mints of VirtueSekai NFT.</p>
       </div>
 
       {isConnected ? (
