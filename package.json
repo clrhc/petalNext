@@ -34,6 +34,9 @@
     "viem": "^2.37.9",
     "wagmi": "^2.17.5"
   },
+  "overrides": {
+    "@reown/appkit-common": "1.8.9"
+  },
   "devDependencies": {
     "@farcaster/quick-auth": "^0.0.7",
     "@types/node": "^20.19.19",
