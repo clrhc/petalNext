@@ -27,6 +27,8 @@ export async function POST(request: Request) {
             priceImpactPct: ultraData.priceImpactPct || '0',
             requestId: ultraData.requestId,
             isUltra: true,
+            gasless: ultraData.gasless === true,
+            feeBps: ultraData.feeBps ?? 0,
           });
         }
       }

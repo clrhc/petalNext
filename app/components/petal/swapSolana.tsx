@@ -16,6 +16,8 @@ interface QuoteData {
   outAmount: string;
   priceImpactPct: string;
   isUltra: boolean;
+  gasless: boolean;
+  feeBps: number;
   requestId?: string;
 }
 
@@ -329,9 +331,33 @@ export default function SwapSolana() {
           <>
             <div className="swapInfoDivider" />
             <div className="swapInfoRow">
-              <span>Fee</span>
-              <span><span className="taxBadge" style={{ background: 'rgba(0,255,200,0.1)', borderColor: 'rgba(0,255,200,0.2)', color: 'var(--accent-primary)' }}>Gasless</span></span>
+              <span>Gas Fee</span>
+              <span>
+                {quoteData.gasless ? (
+                  <span className="taxBadge" style={{ background: 'rgba(0,255,200,0.1)', borderColor: 'rgba(0,255,200,0.2)', color: 'var(--accent-primary)' }}>No SOL Needed</span>
+                ) : (
+                  <span className="taxBadge">Standard</span>
+                )}
+              </span>
             </div>
+            {quoteData.gasless && (
+              <>
+                <div className="swapInfoDivider" />
+                <div className="swapInfoRow">
+                  <span>Gas Covered</span>
+                  <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>Deducted from output</span>
+                </div>
+              </>
+            )}
+            {quoteData.feeBps > 0 && (
+              <>
+                <div className="swapInfoDivider" />
+                <div className="swapInfoRow">
+                  <span>Platform Fee</span>
+                  <span>{(quoteData.feeBps / 100).toFixed(2)}%</span>
+                </div>
+              </>
+            )}
           </>
         )}
         <div className="swapInfoDivider" />

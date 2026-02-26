@@ -17,7 +17,7 @@ export default function SwapPage() {
         <h1>Trade PETAL</h1>
         <p>
           {isSolana
-            ? 'Buy and sell PETAL on Solana via Jupiter aggregator. Swaps over ~$10 are gasless.'
+            ? 'Buy and sell PETAL on Solana via Jupiter. Eligible swaps require no SOL for gas — fees are covered from swap output.'
             : 'Buy and sell PETAL on the automated bonding curve. Price increases with demand — early participants benefit most.'}
         </p>
       </div>

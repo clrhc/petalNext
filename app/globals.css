@@ -2937,11 +2937,23 @@ footer {
 .networkDot--base {
   background: var(--accent-primary);
   box-shadow: 0 0 6px var(--accent-primary);
+  animation: networkPulseBase 2s ease-in-out infinite;
 }
 
 .networkDot--solana {
   background: #9945ff;
   box-shadow: 0 0 6px #9945ff;
+  animation: networkPulseSolana 2s ease-in-out infinite;
+}
+
+@keyframes networkPulseBase {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--accent-primary); }
+  50% { opacity: 0.5; box-shadow: 0 0 12px var(--accent-primary), 0 0 4px var(--accent-primary); }
+}
+
+@keyframes networkPulseSolana {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px #9945ff; }
+  50% { opacity: 0.5; box-shadow: 0 0 12px #9945ff, 0 0 4px #9945ff; }
 }
 
 /* ========================================

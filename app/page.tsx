@@ -28,12 +28,12 @@ export default function Home() {
         <span className="heading">
           <div className="heroBadge">
             <span className="heroBadgeDot" />
-            Live on Base
+            Live on Base & Solana
           </div>
           <h2>The DeFi Engine<br />Built for Degens</h2>
           <p>
             Trade on autonomous bonding curves, predict crypto prices with Chainlink oracles,
-            and earn rewards across an ecosystem of meme-powered liquidity pools — all on Base.
+            and earn rewards across an ecosystem of meme-powered liquidity pools — on Base and Solana.
           </p>
           <div className="heroCtas">
             {!isConnected ? (
@@ -54,6 +54,11 @@ export default function Home() {
 
         <div className="statsBar">
           <div className="statItem">
+            <span className="statValue">2</span>
+            <span className="statLabel">Chains</span>
+          </div>
+          <div className="statDivider" />
+          <div className="statItem">
             <span className="statValue">8</span>
             <span className="statLabel">Oracle Pairs</span>
           </div>
@@ -67,11 +72,6 @@ export default function Home() {
             <span className="statValue">4</span>
             <span className="statLabel">Meme Pools</span>
           </div>
-          <div className="statDivider" />
-          <div className="statItem">
-            <span className="statValue">3%</span>
-            <span className="statLabel">Protocol Fee</span>
-          </div>
         </div>
 
         <div className="featureGrid" id="features">
@@ -80,7 +80,7 @@ export default function Home() {
               <span className="featureIcon">&#x1F331;</span>
             </div>
             <h3>Bonding Curve</h3>
-            <p>PETAL trades on an automated bonding curve with algorithmically determined pricing. As supply grows, so does the price — no DEX listing until the curve fills at 40 ETH.</p>
+            <p>PETAL trades on an automated bonding curve on Base with algorithmically determined pricing. On Solana, trade PETAL via Jupiter with gas-free eligible swaps.</p>
             <Link href="/swap" className="featureLink" style={{ textDecoration: 'none' }}>
               Trade Now <span>&rarr;</span>
             </Link>
@@ -123,13 +123,13 @@ export default function Home() {
             <div className="howStep">
               <div className="howStepNumber">1</div>
               <h4>Connect Wallet</h4>
-              <p>Link your wallet to Base network to start interacting with the ecosystem.</p>
+              <p>Link your wallet to Base or Solana to start interacting with the ecosystem.</p>
             </div>
             <div className="howStepArrow">&rarr;</div>
             <div className="howStep">
               <div className="howStepNumber">2</div>
               <h4>Trade or Predict</h4>
-              <p>Buy PETAL on the curve, swap meme tokens, or place predictions on price movements.</p>
+              <p>Buy PETAL on the bonding curve or via Jupiter, swap meme tokens, or place predictions on price movements.</p>
             </div>
             <div className="howStepArrow">&rarr;</div>
             <div className="howStep">
