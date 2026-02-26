@@ -1,8 +1,8 @@
-import { http, createConfig } from 'wagmi';
+import { http, createConfig, type Config } from 'wagmi';
 import { base } from 'wagmi/chains';
 import { injected } from 'wagmi/connectors';
 
-export const config = createConfig({
+export const config: Config = createConfig({
   chains: [base],
   connectors: [injected()],
   transports: {
