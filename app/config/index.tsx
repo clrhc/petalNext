@@ -3,7 +3,8 @@
 import { cookieStorage, createStorage } from '@wagmi/core';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 import { SolanaAdapter } from '@reown/appkit-adapter-solana';
-import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
+import { PhantomWalletAdapter } from '@solana/wallet-adapter-phantom';
+import { SolflareWalletAdapter } from '@solana/wallet-adapter-solflare';
 import { injected, coinbaseWallet } from 'wagmi/connectors';
 import { base, solana } from '@reown/appkit/networks';
 import type { AppKitNetwork } from '@reown/appkit/networks';
