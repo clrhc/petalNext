@@ -1,11 +1,12 @@
 'use client';
 import '../globals.css';
-import { useAccount } from "wagmi";
+import { useNetwork } from '../hooks/useNetwork';
 import { useAppKit } from "@reown/appkit/react";
 import Referral from '../components/petal/referral';
+import SolanaComingSoon from '../components/petal/SolanaComingSoon';
 
 export default function ReferralPage() {
-  const { isConnected } = useAccount();
+  const { isConnected, isSolana } = useNetwork();
   const { open } = useAppKit();
 
   return (
@@ -16,15 +17,17 @@ export default function ReferralPage() {
         <p>Register with a referral code and invite others. Earn XP, PETAL, WEED, and VIRTUE for every sign-up.</p>
       </div>
 
-      {isConnected ? (
-        <div className="pageCard">
-          <Referral />
-        </div>
-      ) : (
+      {!isConnected ? (
         <div className="connectPrompt">
           <h2>Connect Wallet</h2>
           <p>Connect your wallet to register and start earning referral rewards.</p>
           <span className="connectBtn" onClick={() => open()}>Connect Wallet</span>
+        </div>
+      ) : isSolana ? (
+        <SolanaComingSoon featureName="Referral Program" />
+      ) : (
+        <div className="pageCard">
+          <Referral />
         </div>
       )}
     </div>

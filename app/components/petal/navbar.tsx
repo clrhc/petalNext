@@ -6,11 +6,12 @@ import { usePathname } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 import { readContracts, watchBlockNumber } from '@wagmi/core';
 import { Abi, Address } from 'viem';
-import { useAccount } from "wagmi";
 import { config } from '../config/wagmiConfig';
 import { useAppKit } from "@reown/appkit/react";
+import { useNetwork } from '../../hooks/useNetwork';
 import referral from '../../abis/referral.json';
 import Wallet from '../../wallet';
+import NetworkButton from './NetworkButton';
 import Data from '../../data.json';
 import petalLogo from '../../assets/img/petal.png';
 import xpCoin from '../../assets/img/xpCoin.png';
@@ -25,13 +26,13 @@ const NAV_LINKS = [
 
 export default function NavBar() {
   const pathname = usePathname();
-  const { address, isConnected } = useAccount();
+  const { isConnected, address, isEvm } = useNetwork();
   const { open } = useAppKit();
   const [userInfo, setUserInfo] = useState<[number, number, string, string, string]>([0, 0, '', '', '']);
   const [hoverWallet, setHoverWallet] = useState(false);
 
   useEffect(() => {
-    if (!isConnected || !address) return;
+    if (!isConnected || !address || !isEvm) return;
 
     let unwatch: (() => void) | null = null;
     let running = false;
@@ -79,10 +80,10 @@ export default function NavBar() {
     return () => {
       if (unwatch) unwatch();
     };
-  }, [isConnected, address, config, Data.referralAddress]);
+  }, [isConnected, address, isEvm, config, Data.referralAddress]);
 
-  const isLoading = isConnected && (userInfo.length !== 5 || userInfo[4] !== address);
-  const isRegistered = userInfo[0] > 0 && userInfo.length === 5 && address === userInfo[4];
+  const isLoading = isEvm && isConnected && (userInfo.length !== 5 || userInfo[4] !== address);
+  const isRegistered = isEvm && userInfo[0] > 0 && userInfo.length === 5 && address === userInfo[4];
 
   return (
     <>
@@ -113,6 +114,8 @@ export default function NavBar() {
               <Image alt="XP" width={20} height={20} src={xpCoin} />
             </span>
           )}
+
+          <NetworkButton />
 
           <span
             className="walletButtons"

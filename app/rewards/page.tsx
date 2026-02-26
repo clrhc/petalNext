@@ -1,11 +1,12 @@
 'use client';
 import '../globals.css';
-import { useAccount } from "wagmi";
+import { useNetwork } from '../hooks/useNetwork';
 import { useAppKit } from "@reown/appkit/react";
 import Rewards from '../components/petal/rewards';
+import SolanaComingSoon from '../components/petal/SolanaComingSoon';
 
 export default function RewardsPage() {
-  const { isConnected } = useAccount();
+  const { isConnected, isSolana } = useNetwork();
   const { open } = useAppKit();
 
   return (
@@ -17,15 +18,17 @@ export default function RewardsPage() {
         <p className="pageDisclaimer">Rewards are only available for Base network mints of VirtueSekai NFT.</p>
       </div>
 
-      {isConnected ? (
-        <div className="pageCard">
-          <Rewards />
-        </div>
-      ) : (
+      {!isConnected ? (
         <div className="connectPrompt">
           <h2>Connect Wallet</h2>
           <p>Connect your wallet to view and claim your rewards.</p>
           <span className="connectBtn" onClick={() => open()}>Connect Wallet</span>
+        </div>
+      ) : isSolana ? (
+        <SolanaComingSoon featureName="Rewards claiming" />
+      ) : (
+        <div className="pageCard">
+          <Rewards />
         </div>
       )}
     </div>

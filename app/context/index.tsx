@@ -1,5 +1,5 @@
 'use client';
-import { wagmiAdapter, projectId } from '../config';
+import { wagmiAdapter, solanaAdapter, projectId, networks } from '../config';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { OnchainKitProvider } from '@coinbase/onchainkit';
 import { createAppKit } from '@reown/appkit/react';
@@ -17,9 +17,9 @@ const metadata = {
 };
 
 createAppKit({
-  adapters: [wagmiAdapter],
+  adapters: [wagmiAdapter, solanaAdapter],
   projectId,
-  networks: [base],
+  networks,
   defaultNetwork: base,
   metadata,
   features: { analytics: true },

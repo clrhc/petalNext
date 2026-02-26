@@ -1,14 +1,20 @@
 import React from 'react';
-import { useAccount } from 'wagmi';
+import { useAppKitAccount } from '@reown/appkit/react';
 
 export default function Wallet() {
-  const { address, isConnected } = useAccount();
+  const { address, isConnected } = useAppKitAccount();
+
+  const truncated = address
+    ? address.length > 20
+      ? address.slice(0, 6) + '...' + address.slice(-4)
+      : address.slice(0, 4) + '...' + address.slice(-4)
+    : '';
 
   return (
     <>
       {isConnected ? (
         <div>
-          <p>{String(address).slice(0, 6) + '...' + String(address).slice(38, 42)}</p>
+          <p>{truncated}</p>
         </div>
       ) : (
         <div>

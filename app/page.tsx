@@ -2,8 +2,8 @@
 import './globals.css';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useAccount } from "wagmi";
 import { useAppKit } from "@reown/appkit/react";
+import { useNetwork } from './hooks/useNetwork';
 import petalLogo from './assets/img/petal.png';
 import CoinInfo from './components/petal/coininfo';
 import { sdk } from '@farcaster/miniapp-sdk';
@@ -11,7 +11,7 @@ import { useEffect } from 'react';
 
 export default function Home() {
   const { open } = useAppKit();
-  const { isConnected } = useAccount();
+  const { isConnected } = useNetwork();
 
   useEffect(() => {
     sdk.actions.ready();
