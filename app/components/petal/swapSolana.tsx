@@ -285,6 +285,13 @@ export default function SwapSolana() {
   const toBalance = isBuy ? tokenBalance : solBalance;
   const priceImpact = quoteData ? parseFloat(quoteData.priceImpactPct) : 0;
 
+  // Estimated WEED reward for buy quotes (3x PETAL output)
+  const estimatedWeed = useMemo(() => {
+    if (!isBuy || !quoteData?.outAmount) return null;
+    const petalOut = parseInt(quoteData.outAmount) / Math.pow(10, tokenDecimals);
+    return petalOut * 3;
+  }, [isBuy, quoteData, tokenDecimals]);
+
   return (
     <>
       {/* Buy/Sell Toggle */}
@@ -308,6 +315,18 @@ export default function SwapSolana() {
           />
         </div>
       </div>
+
+      {/* WEED Reward Banner — only on Buy tab */}
+      {isBuy && WEED_MINT && (
+        <div className="swapInfoSection" style={{ marginTop: 0, marginBottom: 12, textAlign: 'center', border: '1px solid rgba(0,255,200,0.15)', background: 'rgba(0,255,200,0.04)' }}>
+          <p style={{ fontSize: '0.82rem', color: 'var(--accent-primary)', fontWeight: 600, margin: 0 }}>
+            Buy PETAL and earn 3x WEED rewards
+          </p>
+          <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', margin: '4px 0 0' }}>
+            Net-new PETAL purchases are rewarded with 3x the amount in WEED tokens
+          </p>
+        </div>
+      )}
 
       <div className="panelFadeIn">
         {/* From */}
@@ -443,6 +462,17 @@ export default function SwapSolana() {
                 </div>
               </>
             )}
+          </>
+        )}
+        {isBuy && estimatedWeed !== null && estimatedWeed > 0 && (
+          <>
+            <div className="swapInfoDivider" />
+            <div className="swapInfoRow">
+              <span>WEED Reward (3x)</span>
+              <span style={{ color: 'var(--accent-primary)' }}>
+                +{estimatedWeed.toLocaleString(undefined, { maximumFractionDigits: 2 })} WEED
+              </span>
+            </div>
           </>
         )}
         {WEED_MINT && weedBalance !== null && (
