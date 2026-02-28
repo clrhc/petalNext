@@ -8,6 +8,7 @@ import Data from '../../data.json';
 
 const SOL_MINT = 'So11111111111111111111111111111111111111112';
 const TOKEN_MINT = Data.solanaToken;
+const WEED_MINT = Data.solanaWeed;
 const SOL_DECIMALS = 9;
 const TOKEN_NAME = 'PETAL';
 
@@ -39,6 +40,9 @@ export default function SwapSolana() {
   const [loading, setLoading] = useState(false);
   const [txSignature, setTxSignature] = useState('');
   const [error, setError] = useState('');
+  const [weedBalance, setWeedBalance] = useState<number | null>(null);
+  const [weedMinting, setWeedMinting] = useState(false);
+  const [weedReward, setWeedReward] = useState<{ amount: string; sig: string } | null>(null);
   const quoteAbort = useRef<AbortController | null>(null);
 
   const rpcUrl = process.env.NEXT_PUBLIC_HELIUS_RPC_URL || 'https://api.mainnet-beta.solana.com';
@@ -61,6 +65,14 @@ export default function SwapSolana() {
         setTokenDecimals(info.tokenAmount.decimals);
       } else {
         setTokenBalance(0);
+      }
+      if (WEED_MINT) {
+        const weedAccounts = await connection.getParsedTokenAccountsByOwner(pubkey, { mint: new PublicKey(WEED_MINT) });
+        if (weedAccounts.value.length > 0) {
+          setWeedBalance(weedAccounts.value[0].account.data.parsed.info.tokenAmount.uiAmount);
+        } else {
+          setWeedBalance(0);
+        }
       }
     } catch {
       // RPC error, leave balances as-is
@@ -127,12 +139,37 @@ export default function SwapSolana() {
     return () => clearTimeout(timer);
   }, [inputValue, swapState, address, slippage, tokenDecimals]);
 
+  // Claim WEED reward after a successful buy
+  const claimWeedReward = useCallback(async (sig: string) => {
+    if (!address || !WEED_MINT) return;
+    setWeedMinting(true);
+    try {
+      const res = await fetch('/api/swap/solana/reward', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ txSignature: sig, userWallet: address }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setWeedReward({ amount: data.weedAmountUI.toLocaleString(), sig: data.mintSignature });
+        setTimeout(fetchBalances, 3000);
+      }
+      // Silently ignore errors (409 duplicate, 400 not a buy, etc.)
+    } catch {
+      // Network error, don't block the user
+    } finally {
+      setWeedMinting(false);
+    }
+  }, [address, fetchBalances]);
+
   // Execute swap
   const executeSwap = async () => {
     if (!quoteData || !walletProvider || !address) return;
+    const isBuyTx = swapState === 0;
     setLoading(true);
     setError('');
     setTxSignature('');
+    setWeedReward(null);
 
     try {
       const txBytes = Uint8Array.from(atob(quoteData.transaction), c => c.charCodeAt(0));
@@ -174,6 +211,11 @@ export default function SwapSolana() {
       setInputText('0');
       setInputValue(0);
       setTimeout(fetchBalances, 3000);
+
+      // Trigger WEED reward for buy transactions only
+      if (isBuyTx && WEED_MINT) {
+        setTimeout(() => claimWeedReward(signature), 5000);
+      }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Swap failed';
       setError(message);
@@ -226,10 +268,10 @@ export default function SwapSolana() {
     <>
       {/* Buy/Sell Toggle */}
       <div className="swapTabBar" style={{ '--active-tab': swapState, '--tab-count': 2 } as React.CSSProperties}>
-        <div className={`swapTabBtn ${swapState === 0 ? 'active' : ''}`} onClick={() => { setSwapState(0); setInputText('0'); setInputValue(0); setQuoteData(null); setError(''); setTxSignature(''); }}>
+        <div className={`swapTabBtn ${swapState === 0 ? 'active' : ''}`} onClick={() => { setSwapState(0); setInputText('0'); setInputValue(0); setQuoteData(null); setError(''); setTxSignature(''); setWeedReward(null); }}>
           Buy
         </div>
-        <div className={`swapTabBtn ${swapState === 1 ? 'active' : ''}`} onClick={() => { setSwapState(1); setInputText('0'); setInputValue(0); setQuoteData(null); setError(''); setTxSignature(''); }}>
+        <div className={`swapTabBtn ${swapState === 1 ? 'active' : ''}`} onClick={() => { setSwapState(1); setInputText('0'); setInputValue(0); setQuoteData(null); setError(''); setTxSignature(''); setWeedReward(null); }}>
           Sell
         </div>
       </div>
@@ -303,6 +345,28 @@ export default function SwapSolana() {
           </div>
         )}
 
+        {weedMinting && (
+          <div className="swapInfoSection" style={{ marginTop: 12, textAlign: 'center' }}>
+            <p className="infoText" style={{ color: 'var(--accent-primary)' }}>Minting WEED reward...</p>
+          </div>
+        )}
+
+        {weedReward && (
+          <div className="swapInfoSection" style={{ marginTop: 12, textAlign: 'center' }}>
+            <p className="infoText" style={{ color: 'var(--accent-success)' }}>
+              +{weedReward.amount} WEED rewarded!{' '}
+              <a
+                href={`https://solscan.io/tx/${weedReward.sig}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="virtueLink"
+              >
+                View on Solscan
+              </a>
+            </p>
+          </div>
+        )}
+
         {error && (
           <div className="swapInfoSection" style={{ marginTop: 12, textAlign: 'center' }}>
             <p className="infoText" style={{ color: 'var(--accent-danger)' }}>{error}</p>
@@ -358,6 +422,15 @@ export default function SwapSolana() {
                 </div>
               </>
             )}
+          </>
+        )}
+        {WEED_MINT && weedBalance !== null && (
+          <>
+            <div className="swapInfoDivider" />
+            <div className="swapInfoRow">
+              <span>WEED Balance</span>
+              <span>{weedBalance.toLocaleString(undefined, { maximumFractionDigits: 2 })}</span>
+            </div>
           </>
         )}
         <div className="swapInfoDivider" />
