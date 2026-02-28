@@ -150,16 +150,37 @@ export default function SwapSolana() {
         body: JSON.stringify({ txSignature: sig, userWallet: address }),
       });
       const data = await res.json();
-      if (res.ok) {
+      if (res.ok && data.mintSignature) {
         setWeedReward({ amount: data.weedAmountUI.toLocaleString(), sig: data.mintSignature });
         setTimeout(fetchBalances, 3000);
       }
       // Silently ignore errors (409 duplicate, 400 not a buy, etc.)
     } catch {
-      // Network error, don't block the user
+      // Network error — reward is saved as pending in KV, will retry on page load
     } finally {
       setWeedMinting(false);
     }
+  }, [address, fetchBalances]);
+
+  // Check for pending rewards on mount (handles user leaving page before reward)
+  useEffect(() => {
+    if (!address || !WEED_MINT) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`/api/swap/solana/reward?wallet=${address}`);
+        if (!res.ok || cancelled) return;
+        const data = await res.json();
+        if (data.results && data.results.length > 0 && !cancelled) {
+          const last = data.results[data.results.length - 1];
+          setWeedReward({ amount: last.weedAmountUI.toLocaleString(), sig: last.mintSignature });
+          setTimeout(fetchBalances, 3000);
+        }
+      } catch {
+        // Silent — will retry next page load
+      }
+    })();
+    return () => { cancelled = true; };
   }, [address, fetchBalances]);
 
   // Execute swap
