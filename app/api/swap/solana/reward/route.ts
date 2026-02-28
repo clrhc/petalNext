@@ -203,11 +203,17 @@ async function processReward(txSignature: string, userWallet: string) {
     throw e;
   }
 
-  // Update KV: mark tx processed + raise high water mark
-  const newBasis = previousBasis + rewardablePetal;
+  // Update KV: mark tx processed, raise high water mark, track total WEED given
+  const newBasis = result.postBalance > previousBasis + rewardablePetal
+    ? result.postBalance
+    : previousBasis + rewardablePetal;
+  const givenKey = `weed:given:${userWallet}`;
+  const prevGiven = await kv.get<string>(givenKey);
+  const totalGiven = (prevGiven ? BigInt(prevGiven) : BigInt(0)) + weedAmountRaw;
   await Promise.all([
     kv.set(txKey, '1', { ex: 60 * 60 * 24 * 30 }),
     kv.set(basisKey, newBasis.toString()),
+    kv.set(givenKey, totalGiven.toString()),
   ]);
   processedTxs.add(txSignature);
 
@@ -224,12 +230,15 @@ async function processReward(txSignature: string, userWallet: string) {
   }
 
   const weedAmountUI = Number(weedAmountRaw) / Math.pow(10, WEED_DECIMALS);
-  console.log('[reward] DONE — rewarded', weedAmountUI, 'WEED');
+  const totalGivenUI = Number(totalGiven) / Math.pow(10, WEED_DECIMALS);
+  console.log('[reward] DONE — rewarded', weedAmountUI, 'WEED | totalGiven:', totalGivenUI, 'WEED | basis:', newBasis.toString());
 
   return {
     mintSignature: mintSig,
     weedAmount: weedAmountRaw.toString(),
     weedAmountUI,
+    totalWeedGiven: totalGiven.toString(),
+    totalWeedGivenUI: totalGivenUI,
   };
 }
 
