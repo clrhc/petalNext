@@ -20,7 +20,7 @@ export default function ReferralPage() {
       {!isConnected ? (
         <div className="connectPrompt">
           <h2>Connect Wallet</h2>
-          <p>Connect your wallet to register and start earning referral rewards.</p>
+          <p>Connect your wallet to register and start earning referral XP.</p>
           <span className="connectBtn" onClick={() => open()}>Connect Wallet</span>
         </div>
       ) : isSolana ? (

@@ -8,7 +8,7 @@ import './globals.css';
 export async function generateMetadata(): Promise<Metadata> {
     return {
         title: 'Petal Protocol',
-        description: 'Illiquid meme market on Base — Bonding curves, prediction markets, and token rewards powered by PETAL.',
+        description: 'Illiquid meme market on Base — Bonding curves, prediction markets, and meme-powered liquidity pools.',
         icons: {
     icon: [
     { url: "/favicon.ico" },
@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     openGraph: {
     title: "Petal Protocol",
-    description: "Illiquid meme market on Base — Bonding curves, prediction markets, and token rewards powered by PETAL.",
+    description: "Illiquid meme market on Base — Bonding curves, prediction markets, and meme-powered liquidity pools.",
     url: "https://www.petal.wtf",
     siteName: "Petal Protocol",
     images: [
@@ -36,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
   twitter: {
     card: "summary_large_image",
     title: "Petal Protocol",
-    description: "Illiquid meme market on Base — Bonding curves, prediction markets, and token rewards powered by PETAL.",
+    description: "Illiquid meme market on Base — Bonding curves, prediction markets, and meme-powered liquidity pools.",
     images: ["/thumbnail.png"],
   },
         other: {

@@ -20,7 +20,6 @@ const NAV_LINKS = [
   { href: '/swap', label: 'Trade' },
   { href: '/memes', label: 'Memes' },
   { href: '/predict', label: 'Predict' },
-  { href: '/rewards', label: 'Rewards' },
   { href: '/referral', label: 'Referral' },
 ];
 

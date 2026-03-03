@@ -33,7 +33,7 @@ export default function Home() {
           <h2>The DeFi Engine<br />Built for Degens</h2>
           <p>
             Trade on autonomous bonding curves, predict crypto prices with Chainlink oracles,
-            and earn rewards across an ecosystem of meme-powered liquidity pools — on Base and Solana.
+            and swap across an ecosystem of meme-powered liquidity pools — on Base and Solana.
           </p>
           <div className="heroCtas">
             {!isConnected ? (
@@ -90,7 +90,7 @@ export default function Home() {
               <span className="featureIcon">&#x1F52E;</span>
             </div>
             <h3>Price Predictions</h3>
-            <p>Go higher or lower on 8 crypto pairs powered by Chainlink price feeds. Correct predictions earn PETAL, WEED, and ETH rewards from the pool.</p>
+            <p>Go higher or lower on 8 crypto pairs powered by Chainlink price feeds. Correct predictions earn PETAL, WEED, and ETH from the pool.</p>
             <Link href="/predict" className="featureLink" style={{ textDecoration: 'none' }}>
               Predict Now <span>&rarr;</span>
             </Link>
@@ -109,10 +109,10 @@ export default function Home() {
             <div className="featureIconWrap featureIconWrap--gold">
               <span className="featureIcon">&#x1F381;</span>
             </div>
-            <h3>Rewards & Referrals</h3>
-            <p>Earn XP through referrals and protocol activity. Claim PETAL, WEED, and VIRTUE rewards. VirtueSekai NFT holders receive bonus allocations.</p>
-            <Link href="/rewards" className="featureLink" style={{ textDecoration: 'none' }}>
-              Earn Rewards <span>&rarr;</span>
+            <h3>Referrals</h3>
+            <p>Earn XP through referrals and protocol activity. Invite friends and climb the leaderboard together.</p>
+            <Link href="/referral" className="featureLink" style={{ textDecoration: 'none' }}>
+              Refer Friends <span>&rarr;</span>
             </Link>
           </div>
         </div>
@@ -134,7 +134,7 @@ export default function Home() {
             <div className="howStepArrow">&rarr;</div>
             <div className="howStep">
               <div className="howStepNumber">3</div>
-              <h4>Earn Rewards</h4>
+              <h4>Earn Tokens</h4>
               <p>Collect PETAL, WEED, and ETH from correct predictions, referrals, and protocol activity.</p>
             </div>
           </div>

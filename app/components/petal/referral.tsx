@@ -200,7 +200,7 @@ export default function ReferralComponent() {
               <h3 style={{ fontSize: '0.75rem', wordBreak: 'break-all', color: 'var(--text-muted)', marginBottom: '16px' }}>{address}</h3>
 
               <div style={{ padding: '12px', background: 'rgba(0, 255, 200, 0.03)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-subtle)' }}>
-                <h3 style={{ color: 'var(--accent-primary)', fontSize: '0.9rem' }}>Share your code to earn XP and unlock future rewards</h3>
+                <h3 style={{ color: 'var(--accent-primary)', fontSize: '0.9rem' }}>Share your code to earn XP and grow your network</h3>
               </div>
             </div>
           )}
